@@ -26,6 +26,8 @@
         <maven.compiler.target>17</maven.compiler.target>
         <java.version>17</java.version>
 
+        <okhttp.version>4.9.3</okhttp.version>
+        <kotest.version>5.1.0</kotest.version>
         <common.version>2.2022.05.05_06.41-84855089824b</common.version>
     </properties>
 
@@ -86,7 +88,7 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.9.3</version>
+            <version>${okhttp.version}</version>
         </dependency>
 
         <dependency>
@@ -96,9 +98,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mockito.kotlin</groupId>
-            <artifactId>mockito-kotlin</artifactId>
-            <version>4.0.0</version>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-runner-junit5-jvm</artifactId>
+            <version>${kotest.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-assertions-core-jvm</artifactId>
+            <version>${kotest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -109,7 +117,7 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>mockwebserver</artifactId>
-            <version>4.9.3</version>
+            <version>${okhttp.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

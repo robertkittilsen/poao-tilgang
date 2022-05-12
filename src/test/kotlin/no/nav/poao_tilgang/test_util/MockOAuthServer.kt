@@ -1,7 +1,6 @@
 package no.nav.poao_tilgang.test_util
 
 import no.nav.security.mock.oauth2.MockOAuth2Server
-import java.util.concurrent.atomic.AtomicBoolean
 
 open class MockOAuthServer {
 
@@ -9,16 +8,10 @@ open class MockOAuthServer {
 
 	companion object {
 		private val server = MockOAuth2Server()
-		private var isStarted = AtomicBoolean(false)
 	}
 
 	init {
-		if (!isStarted.get()) {
-			isStarted.set(true)
-
-			server.start()
-		}
-
+		server.start()
 		System.setProperty("MOCK_AZURE_AD_DISCOVERY_URL", server.wellKnownUrl(azureAdIssuer).toString())
 	}
 
