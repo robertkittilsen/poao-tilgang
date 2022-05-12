@@ -17,12 +17,6 @@ class NavAnsattAdGroupController {
 		return emptyList()
 	}
 
-	@Protected
-	@GetMapping
-	fun hentInnloggetNavAnsattAdGrupper(): List<AdGroupDto> {
-		return emptyList()
-	}
-
 	data class AdGroupDto(
 		val id: UUID,
 		val name: String

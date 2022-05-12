@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 
 @Configuration
-@Profile("!local")
 @EnableJwtTokenValidation
 class ApplicationConfig {
 
@@ -18,7 +17,7 @@ class ApplicationConfig {
 	fun logFilterRegistrationBean(): FilterRegistrationBean<LogFilter> {
 		val registration = FilterRegistrationBean<LogFilter>()
 		registration.filter = LogFilter(
-			EnvironmentUtils.requireApplicationName(), EnvironmentUtils.isDevelopment().orElse(false)
+			"poao-tilgang", EnvironmentUtils.isDevelopment().orElse(false)
 		)
 		registration.order = 1
 		registration.addUrlPatterns("/*")
