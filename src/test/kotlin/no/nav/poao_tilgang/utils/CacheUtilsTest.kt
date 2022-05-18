@@ -3,8 +3,8 @@ package no.nav.poao_tilgang.utils
 import com.github.benmanes.caffeine.cache.Caffeine
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import no.nav.amt.tiltak.tilgangskontroll.utils.CacheUtils.tryCacheFirstNotNull
-import no.nav.amt.tiltak.tilgangskontroll.utils.CacheUtils.tryCacheFirstNullable
+import no.nav.poao_tilgang.utils.CacheUtils.tryCacheFirstNotNull
+import no.nav.poao_tilgang.utils.CacheUtils.tryCacheFirstNullable
 import java.util.concurrent.atomic.AtomicInteger
 
 class CacheUtilsTest : FunSpec({
