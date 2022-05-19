@@ -8,10 +8,12 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ActiveProfiles("test")
+@Import(TestConfig::class)
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ControllerIntegrationTest {
@@ -28,6 +30,11 @@ class ControllerIntegrationTest {
 		fun shutdown() {
 			oAuthServer.shutdownMockServer()
 		}
+	}
+
+	init {
+		System.setProperty("MICROSOFT_GRAPH_URL", "http://localhost")
+		System.setProperty("SKJERMET_PERSON_URL", "http://localhost")
 	}
 
 	fun serverUrl() = "http://localhost:$port"
