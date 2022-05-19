@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ActiveProfiles("test")
@@ -29,6 +31,13 @@ class ControllerIntegrationTest {
 		@AfterAll
 		fun shutdown() {
 			oAuthServer.shutdownMockServer()
+		}
+
+		@JvmStatic
+		@DynamicPropertySource
+		fun registerProperties(registry: DynamicPropertyRegistry) {
+			registry.add("no.nav.security.jwt.issuer.azuread.discovery-url", oAuthServer::getDiscoveryUrl)
+			registry.add("no.nav.security.jwt.issuer.azuread.accepted-audience") { "test" }
 		}
 	}
 

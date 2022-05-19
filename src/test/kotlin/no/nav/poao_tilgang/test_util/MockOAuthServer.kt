@@ -12,7 +12,10 @@ open class MockOAuthServer {
 
 	init {
 		server.start()
-		System.setProperty("MOCK_AZURE_AD_DISCOVERY_URL", server.wellKnownUrl(azureAdIssuer).toString())
+	}
+
+	fun getDiscoveryUrl(issuer: String = azureAdIssuer): String {
+		return server.wellKnownUrl(issuer).toString()
 	}
 
 	fun shutdownMockServer() {
