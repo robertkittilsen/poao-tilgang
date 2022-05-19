@@ -1,6 +1,6 @@
 package no.nav.poao_tilgang.domain
 
-object AdGroups {
+object AdGrupper {
     const val MODIA_ADMIN                   = "0000-GA-Modia_Admin"
     const val MODIA_OPPFOLGING              = "0000-ga-modia-oppfolging"
     const val MODIA_GENERELL                = "0000-ga-bd06_modiagenerelltilgang"

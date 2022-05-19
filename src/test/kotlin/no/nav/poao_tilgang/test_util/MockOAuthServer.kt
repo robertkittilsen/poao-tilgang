@@ -22,7 +22,7 @@ open class MockOAuthServer {
 		server.shutdown()
 	}
 
-	fun azureAdToken(
+	fun issueAzureAdToken(
 		subject: String = "test",
 		audience: String = "test",
 		claims: Map<String, Any> = emptyMap()

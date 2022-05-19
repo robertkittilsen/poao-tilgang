@@ -13,5 +13,5 @@ interface MicrosoftGraphClient {
 
 data class AdGruppe(
 	val id: UUID,
-	val navn: String
+	val name: String
 )

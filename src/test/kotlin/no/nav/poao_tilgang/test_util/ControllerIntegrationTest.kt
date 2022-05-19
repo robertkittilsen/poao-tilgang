@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.test_util
 
+import no.nav.poao_tilgang.test_util.mock_clients.MockMicrosoftGraphHttpClient
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -27,10 +28,14 @@ class ControllerIntegrationTest {
 
 	companion object {
 		val oAuthServer = MockOAuthServer()
+		val mockMicrosoftGraphHttpClient = MockMicrosoftGraphHttpClient()
+		val mockSkjermetPersonHttpClient = MockHttpClient()
 
 		@AfterAll
 		fun shutdown() {
 			oAuthServer.shutdownMockServer()
+			mockMicrosoftGraphHttpClient.shutdown()
+			mockSkjermetPersonHttpClient.shutdown()
 		}
 
 		@JvmStatic
@@ -38,6 +43,9 @@ class ControllerIntegrationTest {
 		fun registerProperties(registry: DynamicPropertyRegistry) {
 			registry.add("no.nav.security.jwt.issuer.azuread.discovery-url", oAuthServer::getDiscoveryUrl)
 			registry.add("no.nav.security.jwt.issuer.azuread.accepted-audience") { "test" }
+
+			registry.add("microsoft_graph.url", mockMicrosoftGraphHttpClient::serverUrl)
+			registry.add("skjermet_person.url", mockSkjermetPersonHttpClient::serverUrl)
 		}
 	}
 
@@ -47,14 +55,6 @@ class ControllerIntegrationTest {
 	}
 
 	fun serverUrl() = "http://localhost:$port"
-
-	fun azureAdToken(
-		subject: String = "test",
-		audience: String = "test",
-		claims: Map<String, Any> = emptyMap()
-	): String {
-		return oAuthServer.azureAdToken(subject, audience, claims)
-	}
 
 	fun sendRequest(
 		method: String,
