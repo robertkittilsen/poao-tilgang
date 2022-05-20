@@ -2,20 +2,34 @@ package no.nav.poao_tilgang.controller
 
 import io.kotest.matchers.shouldBe
 import no.nav.poao_tilgang.domain.AdGruppe
-import no.nav.poao_tilgang.test_util.ControllerIntegrationTest
+import no.nav.poao_tilgang.test_util.IntegrationTest
+import no.nav.poao_tilgang.utils.RestUtils.toJsonRequestBody
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class NavAnsattAdGroupControllerIntegrationTest : ControllerIntegrationTest() {
+class AdGruppeControllerIntegrationTest : IntegrationTest() {
 
 	@Test
 	fun `hentAdGrupperForNavAnsatt - should return 401 when not authenticated`() {
 		val response = sendRequest(
-			method = "GET",
-			path = "/api/v1/ad-gruppe?navIdent=Z1234",
+			method = "POST",
+			path = "/api/v1/ad-gruppe",
+			body = """{"navIdent": "Z1234"}"""".toJsonRequestBody()
 		)
 
 		response.code shouldBe 401
+	}
+
+	@Test
+	fun `hentAdGrupperForNavAnsatt - should return 403 when not machine-to-machine request`() {
+		val response = sendRequest(
+			method = "POST",
+			path = "/api/v1/ad-gruppe",
+			body = """{"navIdent": "Z1234"}"""".toJsonRequestBody(),
+			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdToken()}")
+		)
+
+		response.code shouldBe 403
 	}
 
 	@Test
@@ -29,10 +43,10 @@ class NavAnsattAdGroupControllerIntegrationTest : ControllerIntegrationTest() {
 		)
 
 		val response = sendRequest(
-			method = "GET",
-			path = "/api/v1/ad-gruppe?navIdent=Z1234",
-			body = null,
-			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdToken()}")
+			method = "POST",
+			path = "/api/v1/ad-gruppe",
+			body = """{"navIdent": "Z1234"}"""".toJsonRequestBody(),
+			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdM2MToken()}")
 		)
 
 		val expectedJson = """

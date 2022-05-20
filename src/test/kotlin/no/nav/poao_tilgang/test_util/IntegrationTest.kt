@@ -19,7 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @Import(TestConfig::class)
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ControllerIntegrationTest {
+class IntegrationTest {
 
 	@LocalServerPort
 	private var port: Int = 0
