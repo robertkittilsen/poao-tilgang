@@ -1,6 +1,7 @@
 package no.nav.poao_tilgang.test_util
 
 import no.nav.poao_tilgang.test_util.mock_clients.MockMicrosoftGraphHttpClient
+import no.nav.poao_tilgang.test_util.mock_clients.MockSkjermetPersonHttpClient
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -29,7 +30,7 @@ class IntegrationTest {
 	companion object {
 		val oAuthServer = MockOAuthServer()
 		val mockMicrosoftGraphHttpClient = MockMicrosoftGraphHttpClient()
-		val mockSkjermetPersonHttpClient = MockHttpClient()
+		val mockSkjermetPersonHttpClient = MockSkjermetPersonHttpClient()
 
 		@AfterAll
 		fun shutdown() {

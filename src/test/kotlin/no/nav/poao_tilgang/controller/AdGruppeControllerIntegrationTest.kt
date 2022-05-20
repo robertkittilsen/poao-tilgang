@@ -33,7 +33,7 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `hentAdGrupperForNavAnsatt - should return 200 when authenticated`() {
+	fun `hentAdGrupperForNavAnsatt - should return 200 with correct response`() {
 		mockMicrosoftGraphHttpClient.enqueueHentAzureAdIdResponse(
 			UUID.randomUUID()
 		)
