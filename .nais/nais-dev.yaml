@@ -33,6 +33,8 @@ spec:
   azure:
     application:
       enabled: true
+  secureLogs:
+    enabled: true
   env:
     - name: MICROSOFT_GRAPH_SCOPE
       value: https://graph.microsoft.com/.default
