@@ -37,10 +37,14 @@ class SkjermetPersonService(
 			}
 		}
 
+		if (manglendeSkjerming.isEmpty()) {
+			return cachetSkjerming
+		}
+
 		val skjerming = skjermetPersonClient.erSkjermet(manglendeSkjerming)
 
 		skjerming.forEach {
-			norkIdentToErSkjermetCache.put(it.key, it.value)
+ 			norkIdentToErSkjermetCache.put(it.key, it.value)
 		}
 
 		cachetSkjerming.putAll(skjerming)

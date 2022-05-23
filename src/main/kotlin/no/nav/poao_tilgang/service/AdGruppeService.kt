@@ -54,6 +54,10 @@ class AdGruppeService(
 			}
 		}
 
+		if (missingGroups.isEmpty()) {
+			return cachedGroups
+		}
+
 		val adGrupper = microsoftGraphClient.hentAdGrupper(missingGroups)
 
 		adGrupper.forEach {
