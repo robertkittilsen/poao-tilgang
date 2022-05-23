@@ -3,13 +3,26 @@ package no.nav.poao_tilgang.test_util
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import org.slf4j.LoggerFactory
 
 open class MockHttpClient {
 
 	private val server = MockWebServer()
 
-	init {
-	    server.start()
+	private val log = LoggerFactory.getLogger(javaClass)
+
+	private var lastRequestCount = 0
+
+	fun start() {
+		try {
+		    server.start()
+		} catch (e: IllegalArgumentException) {
+			log.info("${javaClass.simpleName} is already started")
+		}
+	}
+
+	fun resetRequestCount() {
+		lastRequestCount = server.requestCount
 	}
 
 	fun serverUrl(): String {
@@ -41,7 +54,7 @@ open class MockHttpClient {
 	}
 
 	fun requestCount(): Int {
-		return server.requestCount
+		return server.requestCount - lastRequestCount
 	}
 
 	fun shutdown() {

@@ -2,24 +2,31 @@ package no.nav.poao_tilgang.test_util
 
 import no.nav.poao_tilgang.service.AuthService
 import no.nav.security.mock.oauth2.MockOAuth2Server
+import org.slf4j.LoggerFactory
 
 open class MockOAuthServer {
 
 	private val azureAdIssuer = "azuread"
 
+	private val log = LoggerFactory.getLogger(javaClass)
+
 	companion object {
 		private val server = MockOAuth2Server()
 	}
 
-	init {
-		server.start()
+	fun start() {
+		try {
+			server.start()
+		} catch (e: IllegalArgumentException) {
+			log.info("${javaClass.simpleName} is already started")
+		}
 	}
 
 	fun getDiscoveryUrl(issuer: String = azureAdIssuer): String {
 		return server.wellKnownUrl(issuer).toString()
 	}
 
-	fun shutdownMockServer() {
+	fun shutdown() {
 		server.shutdown()
 	}
 

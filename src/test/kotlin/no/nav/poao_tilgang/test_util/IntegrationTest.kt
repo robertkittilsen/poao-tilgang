@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
-import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
@@ -32,16 +32,13 @@ class IntegrationTest {
 		val mockMicrosoftGraphHttpClient = MockMicrosoftGraphHttpClient()
 		val mockSkjermetPersonHttpClient = MockSkjermetPersonHttpClient()
 
-		@AfterAll
-		fun shutdown() {
-			oAuthServer.shutdownMockServer()
-			mockMicrosoftGraphHttpClient.shutdown()
-			mockSkjermetPersonHttpClient.shutdown()
-		}
-
 		@JvmStatic
 		@DynamicPropertySource
 		fun registerProperties(registry: DynamicPropertyRegistry) {
+			oAuthServer.start()
+			mockMicrosoftGraphHttpClient.start()
+			mockSkjermetPersonHttpClient.start()
+
 			registry.add("no.nav.security.jwt.issuer.azuread.discovery-url", oAuthServer::getDiscoveryUrl)
 			registry.add("no.nav.security.jwt.issuer.azuread.accepted-audience") { "test" }
 
@@ -50,9 +47,10 @@ class IntegrationTest {
 		}
 	}
 
-	init {
-		System.setProperty("MICROSOFT_GRAPH_URL", "http://localhost")
-		System.setProperty("SKJERMET_PERSON_URL", "http://localhost")
+	@AfterEach
+	fun resetRequestCount() {
+		mockMicrosoftGraphHttpClient.resetRequestCount()
+		mockSkjermetPersonHttpClient.resetRequestCount()
 	}
 
 	fun serverUrl() = "http://localhost:$port"
