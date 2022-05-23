@@ -1,15 +1,16 @@
 package no.nav.poao_tilgang.utils
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import no.nav.poao_tilgang.utils.CacheUtils.tryCacheFirstNotNull
 import no.nav.poao_tilgang.utils.CacheUtils.tryCacheFirstNullable
+import org.junit.jupiter.api.Test
 import java.util.concurrent.atomic.AtomicInteger
 
-class CacheUtilsTest : FunSpec({
+class CacheUtilsTest {
 
-    test("skal cache for samme key") {
+	@Test
+	fun `skal cache for samme key`() {
 		val cache = Caffeine.newBuilder()
 			.maximumSize(5)
 			.build<String, String>()
@@ -26,7 +27,8 @@ class CacheUtilsTest : FunSpec({
 		counter.get() shouldBe 1
 	}
 
-    test("skal ikke cache for forskjellig keys") {
+	@Test
+	fun `skal ikke cache for forskjellig keys`() {
 		val cache = Caffeine.newBuilder()
 			.maximumSize(5)
 			.build<String, String>()
@@ -43,7 +45,8 @@ class CacheUtilsTest : FunSpec({
 		counter.get() shouldBe 2
 	}
 
-	test("skal ikke cache null") {
+	@Test
+	fun `skal ikke cache null`() {
 		val cache = Caffeine.newBuilder()
 			.maximumSize(5)
 			.build<String, String>()
@@ -60,4 +63,4 @@ class CacheUtilsTest : FunSpec({
 		counter.get() shouldBe 2
 	}
 
-})
+}

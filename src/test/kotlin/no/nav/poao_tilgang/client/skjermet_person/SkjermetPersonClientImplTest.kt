@@ -1,18 +1,15 @@
 package no.nav.poao_tilgang.client.skjermet_person
 
-import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import no.nav.poao_tilgang.test_util.MockHttpClient
+import org.junit.jupiter.api.Test
 
-class SkjermetPersonClientImplTest : FunSpec({
+class SkjermetPersonClientImplTest {
 
-	val mockClient = MockHttpClient()
+	private val mockClient = MockHttpClient()
 
-	afterSpec {
-		mockClient.shutdown()
-	}
-
-	test("erSkjermet - skal lage riktig request og parse respons") {
+	@Test
+	fun `erSkjermet - skal lage riktig request og parse respons`() {
 		val client = SkjermetPersonClientImpl(
 			baseUrl = mockClient.serverUrl(),
 			tokenProvider = { "TOKEN" },
@@ -48,4 +45,4 @@ class SkjermetPersonClientImplTest : FunSpec({
 		request.body.readUtf8() shouldBe expectedRequestJson
 	}
 
-})
+}

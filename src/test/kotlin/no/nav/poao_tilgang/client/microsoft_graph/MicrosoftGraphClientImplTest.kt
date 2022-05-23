@@ -1,19 +1,16 @@
 package no.nav.poao_tilgang.client.microsoft_graph
 
-import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import no.nav.poao_tilgang.test_util.MockHttpClient
+import org.junit.jupiter.api.Test
 import java.util.*
 
-class MicrosoftGraphClientImplTest : FunSpec({
+class MicrosoftGraphClientImplTest {
 
-	val mockClient = MockHttpClient()
+	private val mockClient = MockHttpClient()
 
-	afterSpec {
-		mockClient.shutdown()
-	}
-
-	test("hentAdGrupper - skal lage riktig request og parse respons") {
+	@Test
+	fun `hentAdGrupper - skal lage riktig request og parse respons`() {
 		val client = MicrosoftGraphClientImpl(
 			baseUrl = mockClient.serverUrl(),
 			tokenProvider = { "TOKEN" },
@@ -54,7 +51,8 @@ class MicrosoftGraphClientImplTest : FunSpec({
 		request.body.readUtf8() shouldBe expectedRequestJson
 	}
 
-	test("hentAdGrupperForNavAnsatt - skal lage riktig request og parse respons") {
+	@Test
+	fun `hentAdGrupperForNavAnsatt - skal lage riktig request og parse respons`() {
 		val client = MicrosoftGraphClientImpl(
 			baseUrl = mockClient.serverUrl(),
 			tokenProvider = { "TOKEN" },
@@ -91,7 +89,8 @@ class MicrosoftGraphClientImplTest : FunSpec({
 		request.body.readUtf8() shouldBe expectedRequestJson
 	}
 
-	test("hentAzureIdForNavAnsatt - skal lage riktig request og parse respons") {
+	@Test
+	fun `hentAzureIdForNavAnsatt - skal lage riktig request og parse respons`() {
 		val client = MicrosoftGraphClientImpl(
 			baseUrl = mockClient.serverUrl(),
 			tokenProvider = { "TOKEN" },
@@ -126,4 +125,4 @@ class MicrosoftGraphClientImplTest : FunSpec({
 		request.body.readUtf8() shouldBe ""
 	}
 
-})
+}
