@@ -23,7 +23,7 @@ class MockMicrosoftGraphHttpClient : MockHttpClient() {
 		enqueue(
 			body = toJsonString(
 				MicrosoftGraphClientImpl.HentAdGrupperForNavAnsatt.Response(
-					values = gruppeIder
+					value = gruppeIder
 				)
 			)
 		)

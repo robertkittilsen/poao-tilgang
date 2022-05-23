@@ -31,7 +31,7 @@ class MicrosoftGraphClientImpl(
 
 			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
 
-			fromJsonString<HentAdGrupperForNavAnsatt.Response>(body).values
+			fromJsonString<HentAdGrupperForNavAnsatt.Response>(body).value
 		}
 	}
 
@@ -53,7 +53,7 @@ class MicrosoftGraphClientImpl(
 
 			val responseData = fromJsonString<HentAdGrupper.Response>(body)
 
-			responseData.values.map { AdGruppe(it.id, it.displayName) }
+			responseData.value.map { AdGruppe(it.id, it.displayName) }
 		}
 	}
 
@@ -85,7 +85,7 @@ class MicrosoftGraphClientImpl(
 		)
 
 		data class Response(
-			val values: List<AdGruppe>
+			val value: List<AdGruppe>
 		) {
 			data class AdGruppe(
 				val id: AzureObjectId,
@@ -102,7 +102,7 @@ class MicrosoftGraphClientImpl(
 		)
 
 		data class Response(
-			val values: List<AzureObjectId>
+			val value: List<AzureObjectId>
 		)
 
 	}
