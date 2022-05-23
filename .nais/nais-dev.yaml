@@ -35,6 +35,11 @@ spec:
       enabled: true
   secureLogs:
     enabled: true
+  accessPolicy:
+    inbound:
+      rules:
+        - application: amt-tiltak
+          namespace: amt
   env:
     - name: MICROSOFT_GRAPH_SCOPE
       value: https://graph.microsoft.com/.default
