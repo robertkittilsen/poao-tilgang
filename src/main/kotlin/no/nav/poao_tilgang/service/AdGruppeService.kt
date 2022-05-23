@@ -17,27 +17,57 @@ class AdGruppeService(
 		.maximumSize(10_000)
 		.build<String, AzureObjectId>()
 
-	private val azureIdToAdGroupsCache = Caffeine.newBuilder()
+	private val navAnsattAzureIdToAdGroupsCache = Caffeine.newBuilder()
 		.expireAfterWrite(Duration.ofMinutes(15))
 		.maximumSize(10_000)
 		.build<AzureObjectId, List<AdGruppe>>()
 
+	private val adGruppeIdToAdGruppeCache = Caffeine.newBuilder()
+		.maximumSize(1000)
+		.build<AzureObjectId, AdGruppe>()
+
 	fun hentAdGrupper(navIdent: String): List<AdGruppe> {
 		val azureId = hentAzureIdWithCache(navIdent)
 
-		return hentAdGrupperWithCache(azureId)
+		return hentAdGrupperForNavAnsattWithCache(azureId)
 	}
 
-	private fun hentAdGrupperWithCache(azureId: AzureObjectId): List<AdGruppe> {
-		return tryCacheFirstNotNull(azureIdToAdGroupsCache, azureId) {
-			microsoftGraphClient.hentAdGrupper(azureId).map {
-				AdGruppe(it.id, it.name)
-			}
+	private fun hentAdGrupperForNavAnsattWithCache(azureId: AzureObjectId): List<AdGruppe> {
+		return tryCacheFirstNotNull(navAnsattAzureIdToAdGroupsCache, azureId) {
+			val gruppeIder = microsoftGraphClient.hentAdGrupperForNavAnsatt(azureId)
+
+			hentAdGrupperWithCache(gruppeIder)
 		}
 	}
 
+	private fun hentAdGrupperWithCache(adGruppeIder: List<AzureObjectId>): List<AdGruppe> {
+		val cachedGroups = mutableListOf<AdGruppe>()
+		val missingGroups = mutableListOf<AzureObjectId>()
+
+		adGruppeIder.forEach {
+			val gruppe = adGruppeIdToAdGruppeCache.getIfPresent(it)
+
+			if (gruppe != null) {
+				cachedGroups.add(gruppe)
+			} else {
+				missingGroups.add(it)
+			}
+		}
+
+		val adGrupper = microsoftGraphClient.hentAdGrupper(missingGroups)
+
+		adGrupper.forEach {
+			val gruppe = AdGruppe(it.id, it.name)
+
+			adGruppeIdToAdGruppeCache.put(it.id, gruppe)
+			cachedGroups.add(gruppe)
+		}
+
+		return cachedGroups
+	}
+
 	private fun hentAzureIdWithCache(navIdent: String): AzureObjectId {
-		return tryCacheFirstNotNull(navIdentToAzureIdCache, navIdent) { microsoftGraphClient.hentAzureId(navIdent) }
+		return tryCacheFirstNotNull(navIdentToAzureIdCache, navIdent) { microsoftGraphClient.hentAzureIdForNavAnsatt(navIdent) }
 	}
 
 }

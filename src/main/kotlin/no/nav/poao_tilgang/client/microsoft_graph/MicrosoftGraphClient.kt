@@ -1,17 +1,18 @@
 package no.nav.poao_tilgang.client.microsoft_graph
 
 import no.nav.poao_tilgang.domain.AzureObjectId
-import java.util.*
 
 interface MicrosoftGraphClient {
 
-	fun hentAdGrupper(azureId: AzureObjectId): List<AdGruppe>
+	fun hentAdGrupper(adGruppeAzureIder: List<AzureObjectId>): List<AdGruppe>
 
-	fun hentAzureId(navIdent: String): AzureObjectId
+	fun hentAdGrupperForNavAnsatt(navAnsattAzureId: AzureObjectId): List<AzureObjectId>
+
+	fun hentAzureIdForNavAnsatt(navIdent: String): AzureObjectId
 
 }
 
 data class AdGruppe(
-	val id: UUID,
+	val id: AzureObjectId,
 	val name: String
 )

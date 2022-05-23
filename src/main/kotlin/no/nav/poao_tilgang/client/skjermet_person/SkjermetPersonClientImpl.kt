@@ -3,6 +3,7 @@ package no.nav.poao_tilgang.client.skjermet_person
 import no.nav.common.rest.client.RestClient
 import no.nav.poao_tilgang.utils.JsonUtils.fromJsonString
 import no.nav.poao_tilgang.utils.JsonUtils.toJsonString
+import no.nav.poao_tilgang.utils.RestUtils.authorization
 import no.nav.poao_tilgang.utils.RestUtils.toJsonRequestBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -14,12 +15,12 @@ class SkjermetPersonClientImpl(
 ) : SkjermetPersonClient {
 
 	override fun erSkjermet(norskeIdenter: List<String>): Map<String, Boolean> {
-		val requestJson = toJsonString(SkjermetPersonBulkRequest(norskeIdenter))
+		val requestJson = toJsonString(ErSkjermet.Request(norskeIdenter))
 
 		val request = Request.Builder()
 			.url( "$baseUrl/skjermetBulk")
 			.post(requestJson.toJsonRequestBody())
-			.header("Authorization", "Bearer ${tokenProvider.invoke()}")
+			.authorization(tokenProvider)
 			.build()
 
 		return client.newCall(request).execute().let { response ->
@@ -33,8 +34,12 @@ class SkjermetPersonClientImpl(
 		}
 	}
 
-	data class SkjermetPersonBulkRequest(
-		val personidenter: List<String>
-	)
+	object ErSkjermet {
+
+		data class Request(
+			val personidenter: List<String>
+		)
+
+	}
 
 }

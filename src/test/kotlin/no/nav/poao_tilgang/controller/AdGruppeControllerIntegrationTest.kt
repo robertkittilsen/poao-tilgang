@@ -34,12 +34,18 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 
 	@Test
 	fun `hentAdGrupperForNavAnsatt - should return 200 with correct response`() {
-		mockMicrosoftGraphHttpClient.enqueueHentAzureAdIdResponse(
+		val adGruppe = AdGruppe(id = UUID.fromString("a0036e11-5658-4d2d-aa6b-7056bdb4e758"), name = "TODO")
+
+		mockMicrosoftGraphHttpClient.enqueueHentAzureIdForNavAnsattResponse(
 			UUID.randomUUID()
 		)
 
+		mockMicrosoftGraphHttpClient.enqueueHentAdGrupperForNavAnsatt(
+			listOf(adGruppe.id)
+		)
+
 		mockMicrosoftGraphHttpClient.enqueueHentAdGrupperResponse(
-			listOf(AdGruppe(id = UUID.fromString("a0036e11-5658-4d2d-aa6b-7056bdb4e758"), name = "TODO"))
+			listOf(adGruppe)
 		)
 
 		val response = sendRequest(
@@ -50,7 +56,7 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 		)
 
 		val expectedJson = """
-			[{"id":"a0036e11-5658-4d2d-aa6b-7056bdb4e758","name":"TODO"}]
+			[{"id":"${adGruppe.id}","name":"${adGruppe.name}"}]
 		""".trimIndent()
 
 		response.body?.string() shouldBe expectedJson
