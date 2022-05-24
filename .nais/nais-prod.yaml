@@ -40,6 +40,10 @@ spec:
       rules:
         - application: amt-tiltak
           namespace: amt
+    outbound:
+      rules:
+        - application: skjermede-personer-pip
+          namespace: nom
   env:
     - name: MICROSOFT_GRAPH_SCOPE
       value: https://graph.microsoft.com/.default
