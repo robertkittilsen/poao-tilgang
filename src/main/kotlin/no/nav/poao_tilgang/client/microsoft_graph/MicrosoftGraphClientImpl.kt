@@ -19,7 +19,7 @@ class MicrosoftGraphClientImpl(
 		val requestData = HentAdGrupperForNavAnsatt.Request(true)
 
 		val request = Request.Builder()
-			.url("$baseUrl/v1.0/user/$navAnsattAzureId/getMemberGroups")
+			.url("$baseUrl/v1.0/users/$navAnsattAzureId/getMemberGroups")
 			.post(toJsonString(requestData).toJsonRequestBody())
 			.authorization(tokenProvider)
 			.build()

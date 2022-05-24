@@ -78,7 +78,7 @@ class MicrosoftGraphClientImplTest {
 
 		val request = mockClient.latestRequest()
 
-		request.path shouldBe "/v1.0/user/$navAnsattAzureId/getMemberGroups"
+		request.path shouldBe "/v1.0/users/$navAnsattAzureId/getMemberGroups"
 		request.method shouldBe "POST"
 		request.getHeader("Authorization") shouldBe "Bearer TOKEN"
 
