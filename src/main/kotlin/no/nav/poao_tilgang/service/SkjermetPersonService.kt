@@ -2,6 +2,7 @@ package no.nav.poao_tilgang.service
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import no.nav.poao_tilgang.client.skjermet_person.SkjermetPersonClient
+import no.nav.poao_tilgang.utils.SecureLog.secureLog
 import org.springframework.stereotype.Service
 import java.time.Duration
 
@@ -16,7 +17,10 @@ class SkjermetPersonService(
 
 	fun erSkjermetPerson(norskIdent: String): Boolean {
 		return erSkjermetWithCache(listOf(norskIdent))
-			.getOrDefault(norskIdent, false)
+			.getOrElse(norskIdent) {
+				secureLog.warn("Mangler data for skjermet person med fnr=$norskIdent, defaulter til true")
+				return@getOrElse true
+			}
 	}
 
 	fun erSkjermetPerson(norskeIdenter: List<String>): Map<String, Boolean> {

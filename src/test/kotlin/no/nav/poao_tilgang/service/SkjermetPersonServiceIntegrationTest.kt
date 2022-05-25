@@ -11,6 +11,15 @@ class SkjermetPersonServiceIntegrationTest : IntegrationTest() {
 	lateinit var skjermetPersonService: SkjermetPersonService
 
 	@Test
+	fun `erSkjermetPerson - skal defaulte til true hvis data mangler`() {
+		val norskIdent = "123879347"
+
+		mockSkjermetPersonHttpClient.enqueueErSkjermet(mapOf())
+
+		skjermetPersonService.erSkjermetPerson(norskIdent) shouldBe true
+	}
+
+	@Test
 	fun `erSkjermetPerson - skal cache enkelt skjermet person`() {
 		val norskIdent = "123879347"
 
