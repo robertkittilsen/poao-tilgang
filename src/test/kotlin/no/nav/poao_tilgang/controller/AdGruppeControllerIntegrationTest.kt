@@ -14,7 +14,7 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/ad-gruppe",
-			body = """{"navIdent": "Z1234"}"""".toJsonRequestBody()
+			body = """{"navIdent": "Z1234"}""".toJsonRequestBody()
 		)
 
 		response.code shouldBe 401
@@ -25,7 +25,7 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/ad-gruppe",
-			body = """{"navIdent": "Z1234"}"""".toJsonRequestBody(),
+			body = """{"navIdent": "Z1234"}""".toJsonRequestBody(),
 			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdToken()}")
 		)
 
@@ -51,7 +51,7 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/ad-gruppe",
-			body = """{"navIdent": "Z1234"}"""".toJsonRequestBody(),
+			body = """{"navIdent": "Z1234"}""".toJsonRequestBody(),
 			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdM2MToken()}")
 		)
 

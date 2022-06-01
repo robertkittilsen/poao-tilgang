@@ -12,7 +12,7 @@ class SkjermetPersonControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/skjermet-person",
-			body = """{"norskIdent": "1234354"}"""".toJsonRequestBody()
+			body = """{"norskIdent": "1234354"}""".toJsonRequestBody()
 		)
 
 		response.code shouldBe 401
@@ -23,7 +23,7 @@ class SkjermetPersonControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/skjermet-person",
-			body = """{"norskIdent": "3423453453"}"""".toJsonRequestBody(),
+			body = """{"norskIdent": "3423453453"}""".toJsonRequestBody(),
 			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdToken()}")
 		)
 
@@ -40,7 +40,7 @@ class SkjermetPersonControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/skjermet-person",
-			body = """{"norskIdent": "$norskIdent"}"""".toJsonRequestBody(),
+			body = """{"norskIdent": "$norskIdent"}""".toJsonRequestBody(),
 			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdM2MToken()}")
 		)
 
@@ -57,7 +57,7 @@ class SkjermetPersonControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/skjermet-person/bulk",
-			body = """{"norskeIdenter": ["1234354"]}"""".toJsonRequestBody()
+			body = """{"norskeIdenter": ["1234354"]}""".toJsonRequestBody()
 		)
 
 		response.code shouldBe 401
@@ -68,7 +68,7 @@ class SkjermetPersonControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/skjermet-person/bulk",
-			body = """{"norskeIdenter": ["1234354"]}"""".toJsonRequestBody(),
+			body = """{"norskeIdenter": ["1234354"]}""".toJsonRequestBody(),
 			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdToken()}")
 		)
 
