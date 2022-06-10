@@ -28,7 +28,7 @@ class TilgangTilModiaPolicyTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.harTilgangTilModia(navIdent) shouldBe Decision.Permit
+		policy.harTilgang(navIdent) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -42,7 +42,7 @@ class TilgangTilModiaPolicyTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.harTilgangTilModia(navIdent) shouldBe Decision.Permit
+		policy.harTilgang(navIdent) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -56,7 +56,7 @@ class TilgangTilModiaPolicyTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.harTilgangTilModia(navIdent) shouldBe Decision.Permit
+		policy.harTilgang(navIdent) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -69,7 +69,7 @@ class TilgangTilModiaPolicyTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group")
 		)
 
-		val decision = policy.harTilgangTilModia(navIdent)
+		val decision = policy.harTilgang(navIdent)
 
 		decision.type shouldBe Decision.Type.DENY
 

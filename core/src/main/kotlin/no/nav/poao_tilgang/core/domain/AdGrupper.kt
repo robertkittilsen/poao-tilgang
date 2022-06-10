@@ -10,4 +10,5 @@ object AdGrupper {
     const val GOSYS_NASJONAL                = "0000-ga-gosys-nasjonal"
     const val GOSYS_UTVIDBAR_TIL_NASJONAL   = "0000-ga-gosys_utvidbar_til_nasjonal"
 	const val SYFO_SENSITIV 				= "0000-ga-syfo-sensitiv"
+	const val SKJERMET_PERSON 				= "0000-TODO"
 }
