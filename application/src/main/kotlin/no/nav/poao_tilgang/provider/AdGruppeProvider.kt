@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import java.time.Duration
 
 @Component
-class AdGruppeProviderImpl(
+class AdGruppeProvider(
 	private val microsoftGraphClient: MicrosoftGraphClient
 ) : AdGruppeProvider {
 

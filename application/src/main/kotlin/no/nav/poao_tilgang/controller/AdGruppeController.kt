@@ -1,6 +1,6 @@
 package no.nav.poao_tilgang.controller
 
-import no.nav.poao_tilgang.provider.AdGruppeProviderImpl
+import no.nav.poao_tilgang.provider.AdGruppeProvider
 import no.nav.poao_tilgang.service.AuthService
 import no.nav.poao_tilgang.utils.Issuer
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -13,7 +13,7 @@ import java.util.*
 @RestController
 @RequestMapping("/api/v1/ad-gruppe")
 class AdGruppeController(
-	private val adGruppeProviderImpl: AdGruppeProviderImpl,
+	private val adGruppeProvider: AdGruppeProvider,
 	private val authService: AuthService
 ) {
 
@@ -22,7 +22,7 @@ class AdGruppeController(
 	fun hentAdGrupperForNavAnsatt(@RequestBody request: HentAdGrupperForNavAnsattRequest): List<AdGruppeDto> {
 		authService.verifyRequestIsMachineToMachine()
 
-		return adGruppeProviderImpl.hentAdGrupper(request.navIdent).map {
+		return adGruppeProvider.hentAdGrupper(request.navIdent).map {
 			AdGruppeDto(
 				id = it.id,
 				name = it.name
