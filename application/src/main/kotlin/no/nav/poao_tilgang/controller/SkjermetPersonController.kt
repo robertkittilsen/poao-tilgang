@@ -1,6 +1,6 @@
 package no.nav.poao_tilgang.controller
 
-import no.nav.poao_tilgang.provider_impl.SkjermetPersonService
+import no.nav.poao_tilgang.core.provider.SkjermetPersonProvider
 import no.nav.poao_tilgang.service.AuthService
 import no.nav.poao_tilgang.utils.Issuer
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/skjermet-person")
 class SkjermetPersonController(
 	private val authService: AuthService,
-	private val skjermetPersonService: SkjermetPersonService
+	private val skjermetPersonProvider: SkjermetPersonProvider
 ) {
 
 	@ProtectedWithClaims(issuer = Issuer.AZURE_AD)
@@ -21,17 +21,9 @@ class SkjermetPersonController(
 	fun erSkjermet(@RequestBody request: ErSkjermetRequest): ErSkjermetResponse {
 		authService.verifyRequestIsMachineToMachine()
 
-		val erSkjermet = skjermetPersonService.erSkjermetPerson(request.norskIdent)
+		val erSkjermet = skjermetPersonProvider.erSkjermetPerson(request.norskIdent)
 
 		return ErSkjermetResponse(erSkjermet)
-	}
-
-	@ProtectedWithClaims(issuer = Issuer.AZURE_AD)
-	@PostMapping("/bulk")
-	fun erSkjermetBulk(@RequestBody request: ErSkjermetBulkRequest): Map<String, Boolean> {
-		authService.verifyRequestIsMachineToMachine()
-
-		return skjermetPersonService.erSkjermetPerson(request.norskeIdenter)
 	}
 
 	data class ErSkjermetRequest(
@@ -40,10 +32,6 @@ class SkjermetPersonController(
 
 	data class ErSkjermetResponse(
 		val erSkjermet: Boolean
-	)
-
-	data class ErSkjermetBulkRequest(
-		val norskeIdenter: List<String>
 	)
 
 }

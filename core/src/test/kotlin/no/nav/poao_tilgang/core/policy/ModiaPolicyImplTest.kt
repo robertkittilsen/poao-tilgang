@@ -12,7 +12,7 @@ import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class TilgangTilModiaPolicyTest {
+class ModiaPolicyImplTest {
 
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
