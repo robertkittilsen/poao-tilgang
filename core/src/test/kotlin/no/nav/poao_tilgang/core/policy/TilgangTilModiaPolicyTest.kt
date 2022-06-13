@@ -7,6 +7,7 @@ import no.nav.poao_tilgang.core.domain.AdGruppe
 import no.nav.poao_tilgang.core.domain.AdGrupper
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
+import no.nav.poao_tilgang.core.policy.impl.ModiaPolicyImpl
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -15,7 +16,7 @@ class TilgangTilModiaPolicyTest {
 
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
-	private val policy = TilgangTilModiaPolicy(adGruppeProvider)
+	private val policy = ModiaPolicyImpl(adGruppeProvider)
 
 	@Test
 	fun `should return "permit" if access to 0000-ga-bd06_modiagenerelltilgang`() {

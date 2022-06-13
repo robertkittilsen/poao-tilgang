@@ -1,11 +1,15 @@
-package no.nav.poao_tilgang.core.policy
+package no.nav.poao_tilgang.core.policy.impl
 
-import no.nav.poao_tilgang.core.domain.*
+import no.nav.poao_tilgang.core.domain.AdGrupper
+import no.nav.poao_tilgang.core.domain.Decision
+import no.nav.poao_tilgang.core.domain.DecisionDenyReason
+import no.nav.poao_tilgang.core.domain.NavIdent
+import no.nav.poao_tilgang.core.policy.FortroligBrukerPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 
-class TilgangTilFortroligBrukerPolicy(
+class FortroligBrukerPolicyImpl(
 	private val adGruppeProvider: AdGruppeProvider
-) : Policy<NavIdent>(PolicyType.TILGANG_TIL_FORTROLIG_BRUKER) {
+) : FortroligBrukerPolicy {
 
 	companion object {
 		private val denyDecision = Decision.Deny(
