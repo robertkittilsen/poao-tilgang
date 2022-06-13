@@ -1,6 +1,7 @@
 package no.nav.poao_tilgang.core.policy.impl
 
 import no.nav.poao_tilgang.core.domain.Decision
+import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.domain.Diskresjonskode
 import no.nav.poao_tilgang.core.policy.EksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.FortroligBrukerPolicy
@@ -27,7 +28,10 @@ class EksternBrukerPolicyImpl(
 			}
 		}
 
-		return Decision.Permit
+		return Decision.Deny(
+			message = "Policy er ikke implementert",
+			reason = DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE
+		)
 	}
 
 }
