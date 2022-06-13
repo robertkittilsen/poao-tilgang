@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class MicrosoftGraphClientConfig {
+open class MicrosoftGraphClientConfig {
 
 	@Value("\${microsoft_graph.url}")
 	lateinit var baseUrl: String
@@ -15,7 +15,7 @@ class MicrosoftGraphClientConfig {
 	lateinit var scope: String
 
 	@Bean
-	fun microsoftGraphClient(machineToMachineTokenClient: MachineToMachineTokenClient): MicrosoftGraphClient {
+	open fun microsoftGraphClient(machineToMachineTokenClient: MachineToMachineTokenClient): MicrosoftGraphClient {
 		return MicrosoftGraphClientImpl(
 			baseUrl = baseUrl,
 			tokenProvider = { machineToMachineTokenClient.createMachineToMachineToken(scope) }

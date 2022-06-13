@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class PolicyConfig {
+open class PolicyConfig {
 
 	@Bean
-	fun modiaPolicy(adGruppeProvider: AdGruppeProvider): ModiaPolicy {
+	open fun modiaPolicy(adGruppeProvider: AdGruppeProvider): ModiaPolicy {
 		return ModiaPolicyImpl(adGruppeProvider)
 	}
 

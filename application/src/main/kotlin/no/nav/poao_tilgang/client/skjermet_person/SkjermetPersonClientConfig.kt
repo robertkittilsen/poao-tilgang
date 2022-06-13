@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class SkjermetPersonClientConfig {
+open class SkjermetPersonClientConfig {
 
 	@Value("\${skjermet_person.url}")
 	lateinit var baseUrl: String
@@ -15,7 +15,7 @@ class SkjermetPersonClientConfig {
 	lateinit var scope: String
 
 	@Bean
-	fun skjermetPersonClient(machineToMachineTokenClient: MachineToMachineTokenClient): SkjermetPersonClient {
+	open fun skjermetPersonClient(machineToMachineTokenClient: MachineToMachineTokenClient): SkjermetPersonClient {
 		return SkjermetPersonClientImpl(
 			baseUrl = baseUrl,
 			tokenProvider = { machineToMachineTokenClient.createMachineToMachineToken(scope) }

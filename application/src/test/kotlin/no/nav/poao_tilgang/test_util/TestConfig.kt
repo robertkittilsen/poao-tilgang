@@ -5,10 +5,10 @@ import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 
 @TestConfiguration
-class TestConfig {
+open class TestConfig {
 
 	@Bean
-	fun machineToMachineTokenClient(): MachineToMachineTokenClient {
+	open fun machineToMachineTokenClient(): MachineToMachineTokenClient {
 		return MachineToMachineTokenClient { "TOKEN" }
 	}
 

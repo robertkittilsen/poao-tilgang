@@ -12,18 +12,18 @@ import org.springframework.context.annotation.Profile
 
 @Configuration
 @EnableJwtTokenValidation
-class ApplicationConfig {
+open class ApplicationConfig {
 
 	@Profile("default")
 	@Bean
-	fun machineToMachineTokenClient(): MachineToMachineTokenClient {
+	open fun machineToMachineTokenClient(): MachineToMachineTokenClient {
 		return AzureAdTokenClientBuilder.builder()
 			.withNaisDefaults()
 			.buildMachineToMachineTokenClient()
 	}
 
 	@Bean
-	fun logFilterRegistrationBean(): FilterRegistrationBean<LogFilter> {
+	open fun logFilterRegistrationBean(): FilterRegistrationBean<LogFilter> {
 		val registration = FilterRegistrationBean<LogFilter>()
 		registration.filter = LogFilter(
 			"poao-tilgang", EnvironmentUtils.isDevelopment().orElse(false)
