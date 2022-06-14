@@ -33,6 +33,10 @@ class AdGruppeProvider(
 		return hentAdGrupperForNavAnsattWithCache(azureId)
 	}
 
+	override fun hentAdGrupper(azureId: AzureObjectId): List<AdGruppe> {
+		return hentAdGrupperForNavAnsattWithCache(azureId)
+	}
+
 	private fun hentAdGrupperForNavAnsattWithCache(azureId: AzureObjectId): List<AdGruppe> {
 		return tryCacheFirstNotNull(navAnsattAzureIdToAdGroupsCache, azureId) {
 			val gruppeIder = microsoftGraphClient.hentAdGrupperForNavAnsatt(azureId)
