@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.controller
 
+import no.nav.poao_tilgang.core.domain.AzureObjectId
 import no.nav.poao_tilgang.provider.AdGruppeProvider
 import no.nav.poao_tilgang.service.AuthService
 import no.nav.poao_tilgang.utils.Issuer
@@ -18,7 +19,7 @@ class AdGruppeController(
 ) {
 
 	@ProtectedWithClaims(issuer = Issuer.AZURE_AD)
-	@PostMapping
+	@PostMapping("/gammel")
 	fun hentAdGrupperForNavAnsatt(@RequestBody request: HentAdGrupperForNavAnsattRequest): List<AdGruppeDto> {
 		authService.verifyRequestIsMachineToMachine()
 
@@ -29,6 +30,23 @@ class AdGruppeController(
 			)
 		}
 	}
+
+	@ProtectedWithClaims(issuer = Issuer.AZURE_AD)
+	@PostMapping
+	fun hentAdGrupperForBruker(@RequestBody request: HentAdGrupperForBrukerRequest): List<AdGruppeDto> {
+		authService.verifyRequestIsMachineToMachine()
+
+		return adGruppeProvider.hentAdGrupper(request.navAnsattAzureId).map {
+			AdGruppeDto(
+				id = it.id,
+				name = it.name
+			)
+		}
+	}
+
+	data class HentAdGrupperForBrukerRequest(
+		val navAnsattAzureId: AzureObjectId
+	)
 
 	data class HentAdGrupperForNavAnsattRequest(
 		val navIdent: String

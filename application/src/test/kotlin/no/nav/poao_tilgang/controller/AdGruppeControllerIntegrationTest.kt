@@ -14,7 +14,7 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/ad-gruppe",
-			body = """{"navIdent": "Z1234"}""".toJsonRequestBody()
+			body = """{"navAnsattAzureId": "${UUID.randomUUID()}"}""".toJsonRequestBody()
 		)
 
 		response.code shouldBe 401
@@ -25,7 +25,7 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/ad-gruppe",
-			body = """{"navIdent": "Z1234"}""".toJsonRequestBody(),
+			body = """{"navAnsattAzureId": "${UUID.randomUUID()}"}""".toJsonRequestBody(),
 			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdToken()}")
 		)
 
@@ -35,10 +35,6 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 	@Test
 	fun `hentAdGrupperForNavAnsatt - should return 200 with correct response`() {
 		val adGruppe = AdGruppe(id = UUID.fromString("a0036e11-5658-4d2d-aa6b-7056bdb4e758"), name = "TODO")
-
-		mockMicrosoftGraphHttpClient.enqueueHentAzureIdForNavAnsattResponse(
-			UUID.randomUUID()
-		)
 
 		mockMicrosoftGraphHttpClient.enqueueHentAdGrupperForNavAnsatt(
 			listOf(adGruppe.id)
@@ -51,7 +47,7 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/ad-gruppe",
-			body = """{"navIdent": "Z1234"}""".toJsonRequestBody(),
+			body = """{"navAnsattAzureId": "${UUID.randomUUID()}"}""".toJsonRequestBody(),
 			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdM2MToken()}")
 		)
 
