@@ -4,4 +4,6 @@ interface SkjermetPersonProvider {
 
 	fun erSkjermetPerson(norskIdent: String): Boolean
 
+	fun erSkjermetPerson(norskeIdenter: List<String>): Map<String, Boolean>
+
 }

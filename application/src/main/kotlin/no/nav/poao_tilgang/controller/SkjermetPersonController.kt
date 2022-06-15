@@ -26,12 +26,24 @@ class SkjermetPersonController(
 		return ErSkjermetResponse(erSkjermet)
 	}
 
+	@ProtectedWithClaims(issuer = Issuer.AZURE_AD)
+	@PostMapping("/bulk")
+	fun erSkjermetBulk(@RequestBody request: ErSkjermetBulkRequest): Map<String, Boolean> {
+		authService.verifyRequestIsMachineToMachine()
+
+		return skjermetPersonProvider.erSkjermetPerson(request.norskeIdenter)
+	}
+
 	data class ErSkjermetRequest(
 		val norskIdent: String
 	)
 
 	data class ErSkjermetResponse(
 		val erSkjermet: Boolean
+	)
+
+	data class ErSkjermetBulkRequest(
+		val norskeIdenter: List<String>
 	)
 
 }

@@ -24,6 +24,10 @@ class SkjermetPersonProvider(
 			}
 	}
 
+	override fun erSkjermetPerson(norskeIdenter: List<String>): Map<String, Boolean> {
+		return erSkjermetWithCache(norskeIdenter)
+	}
+
 	private fun erSkjermetWithCache(norskeIdenter: List<String>): Map<String, Boolean> {
 		val cachetSkjerming = mutableMapOf<String, Boolean>()
 		val manglendeSkjerming: MutableList<String> = mutableListOf()
