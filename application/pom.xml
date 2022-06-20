@@ -118,7 +118,7 @@
                     <execution>
                         <id>repackage</id>
                         <configuration>
-                            <classifier>exec</classifier>
+                            <classifier>app</classifier>
                         </configuration>
                     </execution>
                 </executions>
