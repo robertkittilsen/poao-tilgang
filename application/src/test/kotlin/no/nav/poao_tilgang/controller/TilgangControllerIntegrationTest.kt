@@ -122,7 +122,7 @@ class TilgangControllerIntegrationTest : IntegrationTest() {
 
 	private fun expectPermit(response: Response) {
 		val expectedJson = """
-			{"decision":{"type":"PERMIT"}}
+			{"decision":{"type":"PERMIT","message":null,"reason":null}}
 		""".trimIndent()
 
 		response.code shouldBe 200
@@ -131,7 +131,7 @@ class TilgangControllerIntegrationTest : IntegrationTest() {
 
 	private fun expectDeny(response: Response, message: String, reason: DecisionDenyReason) {
 		val expectedJson = """
-			{"decision":{"message":"$message","reason":"${reason.reason}","type":"DENY"}}
+			{"decision":{"type":"DENY","message":"$message","reason":"$reason"}}
 		""".trimIndent()
 
 		response.code shouldBe 200

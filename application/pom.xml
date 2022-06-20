@@ -50,6 +50,10 @@
             <groupId>no.nav.poao-tilgang</groupId>
             <artifactId>core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.poao-tilgang</groupId>
+            <artifactId>api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>no.nav.common</groupId>
@@ -110,6 +114,25 @@
                 <configuration>
                     <mainClass>no.nav.poao_tilgang.ApplicationKt</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <configuration>
+                            <classifier>exec</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

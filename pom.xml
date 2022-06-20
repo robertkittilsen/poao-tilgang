@@ -11,7 +11,9 @@
 
     <modules>
         <module>core</module>
+        <module>api</module>
         <module>application</module>
+        <module>client</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
@@ -50,7 +52,17 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.poao-tilgang</groupId>
+                <artifactId>api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.poao-tilgang</groupId>
                 <artifactId>application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.poao-tilgang</groupId>
+                <artifactId>client</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
