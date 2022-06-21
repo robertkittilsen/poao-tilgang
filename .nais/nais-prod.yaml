@@ -40,6 +40,12 @@ spec:
       rules:
         - application: amt-tiltak
           namespace: amt
+        - application: veilarbportefolje
+          namespace: pto
+          cluster: prod-fss
+        - application: veilarbveileder
+          namespace: pto
+          cluster: prod-fss
     outbound:
       rules:
         - application: skjermede-personer-pip
