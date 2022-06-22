@@ -26,7 +26,7 @@ class TilgangHttpClient(
 		val request = Request.Builder().url(url).post(requestJson.toRequestBody("application/json".toMediaType()))
 			.header("Authorization", "Bearer ${authTokenProvider()}").build()
 
-		return client.newCall(request).execute().let { response ->
+		return client.newCall(request).execute().use { response ->
 			if (!response.isSuccessful) {
 				throw RuntimeException("Feilende kall med statuskode ${response.code} mot $url")
 			}
