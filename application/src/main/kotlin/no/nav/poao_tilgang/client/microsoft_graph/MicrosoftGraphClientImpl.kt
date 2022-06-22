@@ -64,7 +64,7 @@ class MicrosoftGraphClientImpl(
 			.authorization(tokenProvider)
 			.build()
 
-		return client.newCall(request).execute().let { response ->
+		return client.newCall(request).execute().use { response ->
 			if (!response.isSuccessful) {
 				throw RuntimeException("Klarte ikke å hente Azure Id")
 			}
