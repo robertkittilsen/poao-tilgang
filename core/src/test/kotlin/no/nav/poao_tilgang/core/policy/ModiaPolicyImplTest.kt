@@ -11,6 +11,7 @@ import no.nav.poao_tilgang.core.policy.impl.ModiaPolicyImpl
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.Test
 import java.util.*
+import kotlin.random.Random.Default.nextBoolean
 
 class ModiaPolicyImplTest {
 
@@ -54,6 +55,22 @@ class ModiaPolicyImplTest {
 			adGruppeProvider.hentAdGrupper(navIdent)
 		} returns listOf(
 			AdGruppe(UUID.randomUUID(), AdGrupper.SYFO_SENSITIV),
+			AdGruppe(UUID.randomUUID(), "some-other-group"),
+		)
+
+		policy.harTilgang(navIdent) shouldBe Decision.Permit
+	}
+
+	@Test
+	fun `should return "permit" if access to valid group with different casing`() {
+		val navIdent = "Z1234"
+
+		every {
+			adGruppeProvider.hentAdGrupper(navIdent)
+		} returns listOf(
+			AdGruppe(UUID.randomUUID(), AdGrupper.MODIA_GENERELL
+				.map { if (nextBoolean()) it.uppercase() else it.lowercase() }.joinToString("")
+			),
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 

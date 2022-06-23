@@ -16,7 +16,7 @@ class ModiaPolicyImpl(
 			AdGrupper.MODIA_GENERELL,
 			AdGrupper.MODIA_OPPFOLGING,
 			AdGrupper.SYFO_SENSITIV
-		)
+		).map { it.lowercase() }
 
 		private val denyDecision = Decision.Deny(
 			message = "NAV ansatt mangler tilgang til en av AD gruppene $tilgangTilModiaGrupper",
@@ -27,7 +27,7 @@ class ModiaPolicyImpl(
 	override fun harTilgang(input: NavIdent): Decision {
 		val adGruppper = adGruppeProvider.hentAdGrupper(input)
 
-		val harTilgang = adGruppper.any { tilgangTilModiaGrupper.contains(it.name) }
+		val harTilgang = adGruppper.any { tilgangTilModiaGrupper.contains(it.name.lowercase()) }
 
 		return if (harTilgang) Decision.Permit else denyDecision
 	}
