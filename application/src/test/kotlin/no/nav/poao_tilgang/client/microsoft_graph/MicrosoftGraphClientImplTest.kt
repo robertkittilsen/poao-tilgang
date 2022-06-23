@@ -118,9 +118,10 @@ class MicrosoftGraphClientImplTest {
 
 		val request = mockClient.latestRequest()
 
-		request.path shouldBe "/v1.0/users?\$select=id&\$filter=mailNickname%20eq%20%27$navIdent%27"
+		request.path shouldBe "/v1.0/users?\$select=id&\$count=true&\$filter=onPremisesSamAccountName%20eq%20%27$navIdent%27"
 		request.method shouldBe "GET"
 		request.getHeader("Authorization") shouldBe "Bearer TOKEN"
+		request.getHeader("ConsistencyLevel") shouldBe "eventual"
 
 		request.body.readUtf8() shouldBe ""
 	}

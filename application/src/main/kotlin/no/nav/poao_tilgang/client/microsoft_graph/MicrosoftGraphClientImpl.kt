@@ -59,7 +59,8 @@ class MicrosoftGraphClientImpl(
 
 	override fun hentAzureIdForNavAnsatt(navIdent: String): AzureObjectId {
 		val request = Request.Builder()
-			.url("$baseUrl/v1.0/users?\$select=id&\$filter=mailNickname eq '$navIdent'")
+			.url("$baseUrl/v1.0/users?\$select=id&\$count=true&\$filter=onPremisesSamAccountName eq '$navIdent'")
+			.header("ConsistencyLevel", "eventual")
 			.get()
 			.authorization(tokenProvider)
 			.build()
