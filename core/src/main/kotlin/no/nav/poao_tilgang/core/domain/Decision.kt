@@ -7,7 +7,11 @@ sealed class Decision(val type: Type) {
 		PERMIT
 	}
 
-	object Permit : Decision(Type.PERMIT)
+	object Permit : Decision(Type.PERMIT) {
+		override fun toString(): String {
+			return "Permit"
+		}
+	}
 
 	data class Deny(val message: String, val reason: DecisionDenyReason) : Decision(Type.DENY)
 
