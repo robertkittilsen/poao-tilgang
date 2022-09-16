@@ -48,7 +48,7 @@ open class ApplicationConfig {
 		@Value("\${abac.scope}") abacScope: String
 	): AbacClient {
 		val client = AbacHttpClient(abacUrl)
-			{ machineToMachineTokenClient.createMachineToMachineToken(abacScope) }
+			{ "Bearer " + machineToMachineTokenClient.createMachineToMachineToken(abacScope) }
 
 		return AbacCachedClient(client)
 	}
