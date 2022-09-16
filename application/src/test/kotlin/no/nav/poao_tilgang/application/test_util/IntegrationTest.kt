@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.test_util
 
+import no.nav.poao_tilgang.application.test_util.mock_clients.MockAxsysHttpClient
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockMicrosoftGraphHttpClient
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockSkjermetPersonHttpClient
 import okhttp3.OkHttpClient
@@ -33,6 +34,7 @@ open class IntegrationTest {
 		val oAuthServer = MockOAuthServer()
 		val mockMicrosoftGraphHttpClient = MockMicrosoftGraphHttpClient()
 		val mockSkjermetPersonHttpClient = MockSkjermetPersonHttpClient()
+		val mockAxsysHttpClient = MockAxsysHttpClient()
 
 		@JvmStatic
 		@DynamicPropertySource
@@ -40,12 +42,16 @@ open class IntegrationTest {
 			oAuthServer.start()
 			mockMicrosoftGraphHttpClient.start()
 			mockSkjermetPersonHttpClient.start()
+			mockAxsysHttpClient.start()
 
 			registry.add("no.nav.security.jwt.issuer.azuread.discovery-url", oAuthServer::getDiscoveryUrl)
 			registry.add("no.nav.security.jwt.issuer.azuread.accepted-audience") { "test" }
 
 			registry.add("microsoft_graph.url", mockMicrosoftGraphHttpClient::serverUrl)
 			registry.add("skjermet_person.url", mockSkjermetPersonHttpClient::serverUrl)
+
+			registry.add("axsys.url", mockAxsysHttpClient::serverUrl)
+
 		}
 	}
 

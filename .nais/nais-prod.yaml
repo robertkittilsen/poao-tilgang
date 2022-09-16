@@ -61,3 +61,9 @@ spec:
       value: api://prod-gcp.nom.skjermede-personer-pip/.default
     - name: SKJERMET_PERSON_URL
       value: http://skjermede-personer-pip.nom.svc.cluster.local
+    - name: POAO_GCP_PROXY_SCOPE
+      value: api://prod-fss.pto.poao-gcp-proxy/.default
+    - name: POAO_GCP_PROXY_URL
+      value: https://poao-gcp-proxy.prod-fss-pub.nais.io
+    - name: AXSYS_SCOPE
+      value: api://prod-fss.org.axsys/.default

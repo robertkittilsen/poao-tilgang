@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/tilgang")
 class TilgangController(
-	private val authService: AuthService, private val tilgangService: TilgangService
+	private val authService: AuthService,
+	private val tilgangService: TilgangService
 ) {
 
 	@ProtectedWithClaims(issuer = Issuer.AZURE_AD)
