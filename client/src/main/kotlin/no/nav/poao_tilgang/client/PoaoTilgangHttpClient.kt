@@ -1,20 +1,15 @@
-package no.nav.poao_tilgang.application.client
+package no.nav.poao_tilgang.client
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.UrlUtils.joinPaths
-import no.nav.poao_tilgang.api.dto.request.EvaluatePoliciesRequest
-import no.nav.poao_tilgang.api.dto.request.PolicyEvaluationRequestDto
-import no.nav.poao_tilgang.api.dto.request.PolicyId
+import no.nav.poao_tilgang.api.dto.request.*
 import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerPolicyInputDto
 import no.nav.poao_tilgang.api.dto.request.policy_input.ModiaPolicyInputDto
 import no.nav.poao_tilgang.api.dto.request.policy_input.SkjermetPersonPolicyInputDto
 import no.nav.poao_tilgang.api.dto.request.policy_input.StrengtFortroligBrukerPolicyInputDto
-import no.nav.poao_tilgang.api.dto.response.DecisionDto
-import no.nav.poao_tilgang.api.dto.response.DecisionType
-import no.nav.poao_tilgang.api.dto.response.EvaluatePoliciesResponse
-import no.nav.poao_tilgang.api.dto.response.PolicyEvaluationResultDto
-import no.nav.poao_tilgang.application.client.ClientObjectMapper.objectMapper
+import no.nav.poao_tilgang.api.dto.response.*
+import no.nav.poao_tilgang.client.ClientObjectMapper.objectMapper
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -42,6 +37,55 @@ class PoaoTilgangHttpClient(
 	override fun evaluatePolicies(requests: List<PolicyRequest>): List<PolicyResult> {
 		return sendPolicyRequests(requests)
 			.map { PolicyResult(it.requestId, it.decision.toDecision()) }
+	}
+
+	override fun hentAdGrupper(navAnsattAzureId: UUID): List<AdGruppe> {
+		val requestJson = objectMapper.writeValueAsString(HentAdGrupperForBrukerRequest(navAnsattAzureId))
+
+		val request = Request.Builder()
+			.url(joinPaths(baseUrl, "/api/v1/ad-gruppe"))
+			.post(requestJson.toRequestBody("application/json".toMediaType()))
+			.header("Authorization", "Bearer ${tokenProvider()}")
+			.build()
+
+		return client.newCall(request).execute().use { response ->
+			if (!response.isSuccessful) {
+				throw RuntimeException("Received bad status ${response.code}")
+			}
+
+			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
+
+			val data = objectMapper.readValue<HentAdGrupperForBrukerResponse>(body)
+
+			return@use data.map { AdGruppe(it.id, it.name) }
+		}
+	}
+
+	override fun erSkjermetPerson(norskIdent: NorskIdent): Boolean {
+		val erSkjermetResponse = erSkjermetPerson(listOf(norskIdent))
+
+		return erSkjermetResponse[norskIdent]
+			?: throw IllegalStateException("Mangler data om skjermet person")
+	}
+
+	override fun erSkjermetPerson(norskeIdenter: List<NorskIdent>): Map<NorskIdent, Boolean> {
+		val requestJson = objectMapper.writeValueAsString(ErSkjermetPersonBulkRequest(norskeIdenter))
+
+		val request = Request.Builder()
+			.url(joinPaths(baseUrl, "/api/v1/skjermet-person"))
+			.post(requestJson.toRequestBody("application/json".toMediaType()))
+			.header("Authorization", "Bearer ${tokenProvider()}")
+			.build()
+
+		return client.newCall(request).execute().use { response ->
+			if (!response.isSuccessful) {
+				throw RuntimeException("Received bad status ${response.code}")
+			}
+
+			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
+
+			return@use objectMapper.readValue<ErSkjermetPersonBulkResponse>(body)
+		}
 	}
 
 	private fun sendPolicyRequests(requests: List<PolicyRequest>): List<PolicyEvaluationResultDto> {

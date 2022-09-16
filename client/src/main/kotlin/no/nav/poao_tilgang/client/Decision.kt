@@ -1,4 +1,4 @@
-package no.nav.poao_tilgang.application.client
+package no.nav.poao_tilgang.client
 
 sealed class Decision(val type: Type) {
 

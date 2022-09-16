@@ -1,7 +1,7 @@
 package no.nav.poao_tilgang.application.controller
 
-import no.nav.poao_tilgang.api.dto.request.ErSkjermetBulkRequest
-import no.nav.poao_tilgang.api.dto.response.HentErSkjermetPersonBulkResponse
+import no.nav.poao_tilgang.api.dto.request.ErSkjermetPersonBulkRequest
+import no.nav.poao_tilgang.api.dto.response.ErSkjermetPersonBulkResponse
 import no.nav.poao_tilgang.application.service.AuthService
 import no.nav.poao_tilgang.application.utils.Issuer
 import no.nav.poao_tilgang.core.provider.SkjermetPersonProvider
@@ -20,7 +20,7 @@ class SkjermetPersonController(
 
 	@ProtectedWithClaims(issuer = Issuer.AZURE_AD)
 	@PostMapping
-	fun erSkjermet(@RequestBody request: ErSkjermetBulkRequest): HentErSkjermetPersonBulkResponse {
+	fun erSkjermet(@RequestBody request: ErSkjermetPersonBulkRequest): ErSkjermetPersonBulkResponse {
 		authService.verifyRequestIsMachineToMachine()
 
 		return skjermetPersonProvider.erSkjermetPerson(request.norskeIdenter)
@@ -29,7 +29,7 @@ class SkjermetPersonController(
 	@Deprecated("Bruk heller endepunktet ovenfor")
 	@ProtectedWithClaims(issuer = Issuer.AZURE_AD)
 	@PostMapping("/bulk")
-	fun erSkjermetBulk(@RequestBody request: ErSkjermetBulkRequest): HentErSkjermetPersonBulkResponse {
+	fun erSkjermetBulk(@RequestBody request: ErSkjermetPersonBulkRequest): ErSkjermetPersonBulkResponse {
 		authService.verifyRequestIsMachineToMachine()
 
 		return skjermetPersonProvider.erSkjermetPerson(request.norskeIdenter)

@@ -1,4 +1,4 @@
-package no.nav.poao_tilgang.application.client
+package no.nav.poao_tilgang.client
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
