@@ -93,6 +93,10 @@
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
+            <artifactId>abac</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
             <artifactId>token-client</artifactId>
         </dependency>
         <dependency>

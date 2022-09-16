@@ -70,3 +70,7 @@ spec:
       value: https://poao-gcp-proxy.prod-fss-pub.nais.io
     - name: AXSYS_SCOPE
       value: api://prod-fss.org.axsys/.default
+    - name: ABAC_URL
+      value: https://abac-veilarb-proxy.prod-fss-pub.nais.io/api/proxy/abac
+    - name: ABAC_SCOPE
+      value: api://prod-fss.pto.abac-veilarb-proxy/.default

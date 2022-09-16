@@ -10,6 +10,7 @@ import no.nav.poao_tilgang.core.domain.PolicyInput
 import no.nav.poao_tilgang.core.policy.*
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 @Service
 class PolicyService(
@@ -25,9 +26,8 @@ class PolicyService(
 
 		secureLogPolicyResult(
 			requestId = request.requestId,
-			policyName = policyResult.policyName,
 			policyInput = request.input,
-			decision = policyResult.decision
+			policyResult = policyResult
 		)
 
 		return PolicyEvaluationResult(request.requestId, policyResult.decision)
@@ -35,14 +35,16 @@ class PolicyService(
 
 	private fun secureLogPolicyResult(
 		requestId: UUID,
-		policyName: String,
 		policyInput: PolicyInput,
-		decision: Decision
+		policyResult: PolicyResult
 	) {
+		val (policyName, timeTakenMs, decision) = policyResult
+
 		val logLine = listOfNotNull(
 			logLabel("policy", policyName),
 			logLabel("input", policyInput),
 			logLabel("decision", decision.type),
+			logLabel("timeTakenMs", timeTakenMs),
 			logLabel("requestId", requestId),
 			logLabel("denyMessage", if (decision is Decision.Deny) decision.message else null),
 			logLabel("denyReason", if (decision is Decision.Deny) decision.reason else null),
@@ -67,11 +69,16 @@ class PolicyService(
 	}
 
 	private fun <I : PolicyInput> evaluate(input: I, policy: Policy<I>): PolicyResult {
-		return PolicyResult(policy.name, policy.evaluate(input))
+		var decision: Decision
+
+		val time = measureTimeMillis { decision = policy.evaluate(input) }
+
+		return PolicyResult(policy.name, time, decision)
 	}
 
 	private data class PolicyResult(
 		val policyName: String,
+		val timeTakenMs: Long,
 		val decision: Decision
 	)
 

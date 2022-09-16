@@ -1,10 +1,14 @@
 package no.nav.poao_tilgang.application.config
 
+import no.nav.common.abac.*
+import no.nav.common.abac.audit.AuditConfig
+import no.nav.common.abac.audit.NimbusSubjectProvider
 import no.nav.common.log.LogFilter
 import no.nav.common.token_client.builder.AzureAdTokenClientBuilder
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -35,6 +39,28 @@ open class ApplicationConfig {
 		registration.order = 1
 		registration.addUrlPatterns("/*")
 		return registration
+	}
+
+	@Bean
+	open fun abacClient(
+		machineToMachineTokenClient: MachineToMachineTokenClient,
+		@Value("\${abac.url}") abacUrl: String,
+		@Value("\${abac.scope}") abacScope: String
+	): AbacClient {
+		val client = AbacHttpClient(abacUrl)
+			{ machineToMachineTokenClient.createMachineToMachineToken(abacScope) }
+
+		return AbacCachedClient(client)
+	}
+
+	@Bean
+	open fun pep(abacClient: AbacClient): Pep {
+		return VeilarbPep(
+			APPLICATION_NAME,
+			abacClient,
+			NimbusSubjectProvider(),
+			AuditConfig(null, null, null)
+		)
 	}
 
 }

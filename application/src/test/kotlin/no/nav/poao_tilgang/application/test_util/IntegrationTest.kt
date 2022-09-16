@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.test_util
 
+import no.nav.poao_tilgang.application.test_util.mock_clients.MockAbacHttpServer
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockAxsysHttpServer
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockMicrosoftGraphHttpServer
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockSkjermetPersonHttpServer
@@ -38,6 +39,7 @@ open class IntegrationTest {
 		val mockMicrosoftGraphHttpServer = MockMicrosoftGraphHttpServer()
 		val mockSkjermetPersonHttpServer = MockSkjermetPersonHttpServer()
 		val mockAxsysHttpServer = MockAxsysHttpServer()
+		val mockAbacHttpServer = MockAbacHttpServer()
 
 		@JvmStatic
 		@DynamicPropertySource
@@ -46,23 +48,24 @@ open class IntegrationTest {
 			mockMicrosoftGraphHttpServer.start()
 			mockSkjermetPersonHttpServer.start()
 			mockAxsysHttpServer.start()
+			mockAbacHttpServer.start()
 
 			registry.add("no.nav.security.jwt.issuer.azuread.discovery-url", mockOAuthServer::getDiscoveryUrl)
 			registry.add("no.nav.security.jwt.issuer.azuread.accepted-audience") { "test" }
 
 			registry.add("microsoft_graph.url", mockMicrosoftGraphHttpServer::serverUrl)
 			registry.add("skjermet_person.url", mockSkjermetPersonHttpServer::serverUrl)
-
 			registry.add("axsys.url", mockAxsysHttpServer::serverUrl)
-
+			registry.add("abac.url", mockAbacHttpServer::serverUrl)
 		}
 	}
 
 	@AfterEach
-	fun resetRequestCount() {
+	fun reset() {
 		mockMicrosoftGraphHttpServer.reset()
 		mockSkjermetPersonHttpServer.reset()
 		mockAxsysHttpServer.reset()
+		mockAbacHttpServer.reset()
 	}
 
 	fun serverUrl() = "http://localhost:$port"
