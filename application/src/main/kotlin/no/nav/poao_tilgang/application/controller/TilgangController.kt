@@ -1,9 +1,9 @@
 package no.nav.poao_tilgang.application.controller
 
-import no.nav.poao_tilgang.api.dto.DecisionDto
-import no.nav.poao_tilgang.api.dto.DecisionType
-import no.nav.poao_tilgang.api.dto.HarTilgangTilModiaRequest
-import no.nav.poao_tilgang.api.dto.TilgangResponse
+import no.nav.poao_tilgang.api.dto.request.HarTilgangTilModiaRequest
+import no.nav.poao_tilgang.api.dto.response.DecisionDto
+import no.nav.poao_tilgang.api.dto.response.DecisionType
+import no.nav.poao_tilgang.api.dto.response.TilgangResponse
 import no.nav.poao_tilgang.application.service.AuthService
 import no.nav.poao_tilgang.application.service.TilgangService
 import no.nav.poao_tilgang.application.utils.Issuer
@@ -33,13 +33,18 @@ class TilgangController(
 
 	private fun mapTilResponse(decision: Decision): TilgangResponse {
 		val decisionDto = when (decision) {
-			Decision.Permit -> DecisionDto(
-				type = DecisionType.PERMIT, message = null, reason = null
+			is Decision.Permit -> DecisionDto(
+				type = DecisionType.PERMIT,
+				message = null,
+				reason = null
 			)
 			is Decision.Deny -> DecisionDto(
-				type = DecisionType.DENY, message = decision.message, reason = decision.reason.name
+				type = DecisionType.DENY,
+				message = decision.message,
+				reason = decision.reason.name
 			)
 		}
+
 		return TilgangResponse(decisionDto)
 
 	}

@@ -15,7 +15,7 @@ class SkjermetPersonServiceIntegrationTest : IntegrationTest() {
 	fun `erSkjermetPerson - skal defaulte til true hvis data mangler`() {
 		val norskIdent = "123879347"
 
-		mockSkjermetPersonHttpClient.enqueueErSkjermet(mapOf())
+		mockSkjermetPersonHttpServer.mockErSkjermet(mapOf())
 
 		skjermetPersonProvider.erSkjermetPerson(norskIdent) shouldBe true
 	}
@@ -24,18 +24,18 @@ class SkjermetPersonServiceIntegrationTest : IntegrationTest() {
 	fun `erSkjermetPerson - skal cache enkelt skjermet person`() {
 		val norskIdent = "123879347"
 
-		mockSkjermetPersonHttpClient.enqueueErSkjermet(mapOf(
+		mockSkjermetPersonHttpServer.mockErSkjermet(mapOf(
 			norskIdent to true
 		))
 
-		mockSkjermetPersonHttpClient.enqueueErSkjermet(mapOf(
+		mockSkjermetPersonHttpServer.mockErSkjermet(mapOf(
 			norskIdent to true
 		))
 
 		skjermetPersonProvider.erSkjermetPerson(norskIdent) shouldBe true
 		skjermetPersonProvider.erSkjermetPerson(norskIdent) shouldBe true
 
-		mockSkjermetPersonHttpClient.requestCount() shouldBe 1
+		mockSkjermetPersonHttpServer.requestCount() shouldBe 1
 	}
 
 }

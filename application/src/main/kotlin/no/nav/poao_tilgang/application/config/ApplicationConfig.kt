@@ -14,6 +14,10 @@ import org.springframework.context.annotation.Profile
 @EnableJwtTokenValidation
 open class ApplicationConfig {
 
+	companion object {
+		const val APPLICATION_NAME = "poao-tilgang"
+	}
+
 	@Profile("default")
 	@Bean
 	open fun machineToMachineTokenClient(): MachineToMachineTokenClient {
@@ -26,7 +30,7 @@ open class ApplicationConfig {
 	open fun logFilterRegistrationBean(): FilterRegistrationBean<LogFilter> {
 		val registration = FilterRegistrationBean<LogFilter>()
 		registration.filter = LogFilter(
-			"poao-tilgang", EnvironmentUtils.isDevelopment().orElse(false)
+			APPLICATION_NAME, EnvironmentUtils.isDevelopment().orElse(false)
 		)
 		registration.order = 1
 		registration.addUrlPatterns("/*")

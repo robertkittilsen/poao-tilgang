@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.1</version>
+        <version>2.7.3</version>
     </parent>
 
     <modules>
@@ -40,7 +40,7 @@
         <mockk.version>1.12.4</mockk.version>
         <kotest.version>5.3.0</kotest.version>
         <okhttp.version>4.10.0</okhttp.version>
-        <common.version>2.2022.07.01_07.12-6a0864fa6938</common.version>
+        <common.version>2.2022.09.15_07.46-e4fa96eb6813</common.version>
     </properties>
 
     <dependencyManagement>

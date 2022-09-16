@@ -12,7 +12,7 @@ class SkjermetPersonControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/skjermet-person",
-			body = """{"norskIdent": "1234354"}""".toJsonRequestBody()
+			body = """{"norskeIdenter": ["1234354"]}""".toJsonRequestBody()
 		)
 
 		response.code shouldBe 401
@@ -23,29 +23,32 @@ class SkjermetPersonControllerIntegrationTest : IntegrationTest() {
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/skjermet-person",
-			body = """{"norskIdent": "3423453453"}""".toJsonRequestBody(),
-			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdToken()}")
+			body = """{"norskeIdenter": ["1234354"]}""".toJsonRequestBody(),
+			headers = mapOf("Authorization" to "Bearer ${mockOAuthServer.issueAzureAdToken()}")
 		)
 
 		response.code shouldBe 403
 	}
 
-
 	@Test
 	fun `erSkjermet - should return 200 with correct response`() {
-		val norskIdent = "13487453"
+		val norskIdent1 = "13487453"
+		val norskIdent2 = "54364545"
 
-		mockSkjermetPersonHttpClient.enqueueErSkjermet(mapOf(norskIdent to true))
+		mockSkjermetPersonHttpServer.mockErSkjermet(mapOf(
+			norskIdent1 to true,
+			norskIdent2 to false
+		))
 
 		val response = sendRequest(
 			method = "POST",
 			path = "/api/v1/skjermet-person",
-			body = """{"norskIdent": "$norskIdent"}""".toJsonRequestBody(),
-			headers = mapOf("Authorization" to "Bearer ${oAuthServer.issueAzureAdM2MToken()}")
+			body = """{"norskeIdenter": ["$norskIdent1", "$norskIdent2"]}""".toJsonRequestBody(),
+			headers = mapOf("Authorization" to "Bearer ${mockOAuthServer.issueAzureAdM2MToken()}")
 		)
 
 		val expectedJson = """
-			{"erSkjermet":true}
+			{"$norskIdent1":true,"$norskIdent2":false}
 		""".trimIndent()
 
 		response.code shouldBe 200

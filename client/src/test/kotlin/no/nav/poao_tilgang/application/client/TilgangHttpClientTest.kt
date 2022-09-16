@@ -1,10 +1,9 @@
 package no.nav.poao_tilgang.application.client
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import no.nav.poao_tilgang.application.client.microsoft_graph.AdGruppe
 import no.nav.poao_tilgang.application.test_util.IntegrationTest
-import no.nav.poao_tilgang.core.domain.AdGrupper
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -12,55 +11,61 @@ class TilgangHttpClientTest : IntegrationTest() {
 
 	private val navIdent = "Z1234"
 
-	@Test
-	fun `harTilgangTilModia - should return 401 when not authenticated`() {
-		val exception = shouldThrow<RuntimeException> {
-			TilgangHttpClient(serverUrl(), { "" })
-				.harVeilederTilgangTilModia(navIdent)
-		}
-		exception.message shouldBe ("Feilende kall med statuskode 401 mot ${serverUrl()}/api/v1/tilgang/modia")
-	}
+	lateinit var client: PoaoTilgangHttpClient
 
-	@Test
-	fun `harTilgangTilModia - should return 403 when not machine-to-machine request`() {
-		val tilgangHttpClient = TilgangHttpClient(serverUrl(), { oAuthServer.issueAzureAdToken() })
-		val exception = shouldThrow<RuntimeException> {
-			tilgangHttpClient.harVeilederTilgangTilModia(navIdent)
-		}
-		exception.message shouldBe ("Feilende kall med statuskode 403 mot ${serverUrl()}/api/v1/tilgang/modia")
-	}
-
-	@Test
-	fun `harTilgangTilModia - should return 'deny' if not member of correct ad group`() {
-
-		mockAdGrupperResponse(listOf("Gruppe1", "Gruppe2"))
-
-		val decision = TilgangHttpClient(serverUrl(), { oAuthServer.issueAzureAdM2MToken() })
-			.harVeilederTilgangTilModia(navIdent)
-
-		decision shouldBe Decision.Deny(
-			"NAV ansatt mangler tilgang til en av AD gruppene [0000-ga-bd06_modiagenerelltilgang, 0000-ga-modia-oppfolging, 0000-ga-syfo-sensitiv]",
-			"MANGLER_TILGANG_TIL_AD_GRUPPE"
+	@BeforeEach
+	fun setup() {
+		client = PoaoTilgangHttpClient(
+			serverUrl(),
+			{ mockOAuthServer.issueAzureAdM2MToken() }
 		)
 	}
 
 	@Test
-	fun `harTilgangTilModia - should return 'permit' if member of correct ad group`() {
-		mockAdGrupperResponse(listOf(AdGrupper.MODIA_OPPFOLGING	, "Gruppe2"))
+	fun `evaluatePolicy - should evaluate ModiaPolicy`() {
+		mockAdGrupperResponse(navIdent, listOf("0000-ga-bd06_modiagenerelltilgang"))
 
-		val decision = TilgangHttpClient(serverUrl(), { oAuthServer.issueAzureAdM2MToken() })
-			.harVeilederTilgangTilModia(navIdent)
+		val decision = client.evaluatePolicy(ModiaPolicyInput(navIdent))
 
 		decision shouldBe Decision.Permit
 	}
 
-	private fun mockAdGrupperResponse(adGrupperNavn: List<String>) {
+	@Test
+	fun `evaluatePolicy - should evaluate FortroligBrukerPolicy`() {
+		mockAdGrupperResponse(navIdent, listOf("0000-GA-GOSYS_KODE7"))
+
+		val decision = client.evaluatePolicy(FortroligBrukerPolicyInput(navIdent))
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
+	fun `evaluatePolicy - should evaluate StrengtFortroligBrukerPolicy`() {
+		mockAdGrupperResponse(navIdent, listOf("0000-GA-GOSYS_KODE6"))
+
+		val decision = client.evaluatePolicy(StrengtFortroligBrukerPolicyInput(navIdent))
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
+	fun `evaluatePolicy - should evaluate SkjermetPersonPolicy`() {
+		mockAdGrupperResponse(navIdent, listOf("0000-ga-TODO"))
+
+		val decision = client.evaluatePolicy(SkjermetPersonPolicyInput(navIdent))
+
+		decision shouldBe Decision.Permit
+	}
+
+	private fun mockAdGrupperResponse(navIdent: String, adGrupperNavn: List<String>) {
 		val adGrupper = adGrupperNavn.map { AdGruppe(UUID.randomUUID(), it) }
 
-		mockMicrosoftGraphHttpClient.enqueueHentAzureIdForNavAnsattResponse(UUID.randomUUID())
+		val navAnsattId = UUID.randomUUID()
 
-		mockMicrosoftGraphHttpClient.enqueueHentAdGrupperForNavAnsatt(adGrupper.map { it.id })
+		mockMicrosoftGraphHttpServer.mockHentAzureIdForNavAnsattResponse(navIdent, navAnsattId)
 
-		mockMicrosoftGraphHttpClient.enqueueHentAdGrupperResponse(adGrupper)
+		mockMicrosoftGraphHttpServer.mockHentAdGrupperForNavAnsatt(navAnsattId, adGrupper.map { it.id })
+
+		mockMicrosoftGraphHttpServer.mockHentAdGrupperResponse(adGrupper)
 	}
 }

@@ -1,12 +1,28 @@
 package no.nav.poao_tilgang.application.client.skjermet_person
 
 import io.kotest.matchers.shouldBe
-import no.nav.poao_tilgang.application.test_util.MockHttpClient
+import no.nav.poao_tilgang.application.test_util.MockHttpServer
+import okhttp3.mockwebserver.MockResponse
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 class SkjermetPersonClientImplTest {
 
-	private val mockClient = MockHttpClient()
+	companion object {
+		private val mockClient = MockHttpServer()
+
+		@BeforeAll
+		@JvmStatic
+		fun start() {
+			mockClient.start()
+		}
+	}
+
+	@AfterEach
+	fun reset() {
+		mockClient.reset()
+	}
 
 	@Test
 	fun `erSkjermet - skal lage riktig request og parse respons`() {
@@ -18,13 +34,16 @@ class SkjermetPersonClientImplTest {
 		val fnr1 = "123456789"
 		val fnr2 = "573408953"
 
-		mockClient.enqueue(
-			body = """
-					{
-					  "$fnr1": true,
-					  "$fnr2": false
-					}
-				""".trimIndent()
+		mockClient.handleRequest(
+			response = MockResponse()
+				.setBody(
+					"""
+						{
+						  "$fnr1": true,
+						  "$fnr2": false
+						}
+					""".trimIndent()
+				)
 		)
 
 		val skjerming = client.erSkjermet(listOf(fnr1, fnr2))

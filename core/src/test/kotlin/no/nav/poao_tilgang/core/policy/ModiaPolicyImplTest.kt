@@ -30,7 +30,7 @@ class ModiaPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.harTilgang(navIdent) shouldBe Decision.Permit
+		policy.evaluate(ModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -44,7 +44,7 @@ class ModiaPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.harTilgang(navIdent) shouldBe Decision.Permit
+		policy.evaluate(ModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -58,7 +58,7 @@ class ModiaPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.harTilgang(navIdent) shouldBe Decision.Permit
+		policy.evaluate(ModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -74,7 +74,7 @@ class ModiaPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.harTilgang(navIdent) shouldBe Decision.Permit
+		policy.evaluate(ModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -87,7 +87,7 @@ class ModiaPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group")
 		)
 
-		val decision = policy.harTilgang(navIdent)
+		val decision = policy.evaluate(ModiaPolicy.Input(navIdent))
 
 		decision.type shouldBe Decision.Type.DENY
 

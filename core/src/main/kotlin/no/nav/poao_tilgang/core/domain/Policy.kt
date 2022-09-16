@@ -1,8 +1,9 @@
 package no.nav.poao_tilgang.core.domain
 
-interface Policy<I> {
+interface Policy<I : PolicyInput> {
 
-	// Kanskje rename til noe annet enn harTilgang?
-	fun harTilgang(input: I): Decision
+	val name: String
+
+	fun evaluate(input: I): Decision
 
 }

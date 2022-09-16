@@ -1,13 +1,29 @@
 package no.nav.poao_tilgang.application.client.microsoft_graph
 
 import io.kotest.matchers.shouldBe
-import no.nav.poao_tilgang.application.test_util.MockHttpClient
+import no.nav.poao_tilgang.application.test_util.MockHttpServer
+import okhttp3.mockwebserver.MockResponse
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.util.*
 
 class MicrosoftGraphClientImplTest {
 
-	private val mockClient = MockHttpClient()
+	companion object {
+		private val mockClient = MockHttpServer()
+
+		@BeforeAll
+		@JvmStatic
+		fun start() {
+			mockClient.start()
+		}
+	}
+
+	@AfterEach
+	fun reset() {
+		mockClient.reset()
+	}
 
 	@Test
 	fun `hentAdGrupper - skal lage riktig request og parse respons`() {
@@ -18,8 +34,10 @@ class MicrosoftGraphClientImplTest {
 
 		val adGruppeId = UUID.randomUUID()
 
-		mockClient.enqueue(
-			body = """
+		mockClient.handleRequest(
+			response = MockResponse()
+				.setBody(
+					"""
 					{
 						"@odata.context": "https://graph.microsoft.com/v1.0/${"$"}metadata#directoryObjects(id,displayName)",
 						"value": [
@@ -31,6 +49,7 @@ class MicrosoftGraphClientImplTest {
 						]
 					}
 				""".trimIndent()
+				)
 		)
 
 		val adGrupper = client.hentAdGrupper(listOf(adGruppeId))
@@ -61,15 +80,18 @@ class MicrosoftGraphClientImplTest {
 		val navAnsattAzureId = UUID.randomUUID()
 		val adGroupAzureId = UUID.randomUUID()
 
-		mockClient.enqueue(
-			body = """
-					{
-						"@odata.context": "https://graph.microsoft.com/v1.0/${"$"}metadata#Collection(Edm.String)",
-						"value": [
-							"$adGroupAzureId"
-						]
-					}
-				""".trimIndent()
+		mockClient.handleRequest(
+			response = MockResponse()
+				.setBody(
+					"""
+						{
+							"@odata.context": "https://graph.microsoft.com/v1.0/${"$"}metadata#Collection(Edm.String)",
+							"value": [
+								"$adGroupAzureId"
+							]
+						}
+					""".trimIndent()
+				)
 		)
 
 		val adGrupper = client.hentAdGrupperForNavAnsatt(navAnsattAzureId)
@@ -99,17 +121,20 @@ class MicrosoftGraphClientImplTest {
 		val navIdent = "Z1234"
 		val navAnsattAzureId = UUID.randomUUID()
 
-		mockClient.enqueue(
-			body = """
-				{
-					"@odata.context": "https://graph.microsoft.com/v1.0/${"$"}metadata#users(id)",
-					"value": [
+		mockClient.handleRequest(
+			response = MockResponse()
+				.setBody(
+					"""
 						{
-							"id": "$navAnsattAzureId"
+							"@odata.context": "https://graph.microsoft.com/v1.0/${"$"}metadata#users(id)",
+							"value": [
+								{
+									"id": "$navAnsattAzureId"
+								}
+							]
 						}
-					]
-				}
-				""".trimIndent()
+					""".trimIndent()
+				)
 		)
 
 		val azureId = client.hentAzureIdForNavAnsatt(navIdent)

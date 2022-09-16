@@ -14,7 +14,7 @@ class TilgangService(
 ) {
 
 	fun harTilgangTilModia(navIdent: NavIdent): Decision {
-		return executePolicy("HarTilgangTilModia", navIdent, modiaPolicy::harTilgang)
+		return executePolicy(modiaPolicy.name, ModiaPolicy.Input(navIdent), modiaPolicy::evaluate)
 	}
 
 	private fun <I> executePolicy(policyName: String, policyInput: I, policy: (input: I) -> Decision): Decision {

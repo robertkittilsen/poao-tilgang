@@ -14,23 +14,29 @@ class EksternBrukerPolicyImpl(
 	private val strengtFortroligBrukerPolicy: StrengtFortroligBrukerPolicy
 ) : EksternBrukerPolicy {
 
-	override fun harTilgang(input: EksternBrukerPolicy.Input): Decision {
+	override val name = "HarNavAnsattTilgangTilEksternBruker"
+
+	override fun evaluate(input: EksternBrukerPolicy.Input): Decision {
 		val (navIdent, norskIdent) = input
 		val diskresjonskode = diskresjonskodeProvider.hentDiskresjonskode(norskIdent)
 
 		if (diskresjonskode == Diskresjonskode.STRENGT_FORTROLIG) {
-			strengtFortroligBrukerPolicy.harTilgang(navIdent).let {
+			strengtFortroligBrukerPolicy.evaluate(
+				StrengtFortroligBrukerPolicy.Input(navIdent)
+			).let {
 				if (it is Decision.Deny) return it
 			}
 		} else if (diskresjonskode == Diskresjonskode.FORTROLIG) {
-			fortroligBrukerPolicy.harTilgang(navIdent).let {
+			fortroligBrukerPolicy.evaluate(
+				FortroligBrukerPolicy.Input(navIdent)
+			).let {
 				if (it is Decision.Deny) return it
 			}
 		}
 
 		return Decision.Deny(
 			message = "Policy er ikke implementert",
-			reason = DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE
+			reason = DecisionDenyReason.POLICY_NOT_IMPLEMENTED
 		)
 	}
 

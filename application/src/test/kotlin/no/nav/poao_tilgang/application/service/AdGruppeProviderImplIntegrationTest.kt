@@ -20,11 +20,11 @@ class AdGruppeProviderImplIntegrationTest : IntegrationTest() {
 		val adGroupId1 = UUID.randomUUID()
 		val adGroupId2 = UUID.randomUUID()
 
-		mockMicrosoftGraphHttpClient.enqueueHentAdGrupperForNavAnsatt(
-			listOf(adGroupId1, adGroupId2)
+		mockMicrosoftGraphHttpServer.mockHentAdGrupperForNavAnsatt(
+			navAnsattAzureId, listOf(adGroupId1, adGroupId2)
 		)
 
-		mockMicrosoftGraphHttpClient.enqueueHentAdGrupperResponse(
+		mockMicrosoftGraphHttpServer.mockHentAdGrupperResponse(
 			listOf(AdGruppe(adGroupId1, "Gruppe1"), AdGruppe(adGroupId2, "Gruppe2"))
 		)
 
@@ -36,7 +36,7 @@ class AdGruppeProviderImplIntegrationTest : IntegrationTest() {
 
 		adGruppeProvider.hentAdGrupper(navAnsattAzureId).size shouldBe 2
 
-		mockMicrosoftGraphHttpClient.requestCount() shouldBe 2
+		mockMicrosoftGraphHttpServer.requestCount() shouldBe 2
 	}
 
 }

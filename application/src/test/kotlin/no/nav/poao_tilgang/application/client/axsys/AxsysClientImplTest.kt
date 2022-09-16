@@ -2,13 +2,28 @@ package no.nav.poao_tilgang.application.client.axsys
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldMatch
-import no.nav.poao_tilgang.application.test_util.MockHttpClient
+import no.nav.poao_tilgang.application.test_util.MockHttpServer
 import okhttp3.mockwebserver.MockResponse
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 class AxsysClientImplTest {
 
-	private val mockClient = MockHttpClient()
+	companion object {
+		private val mockClient = MockHttpServer()
+
+		@BeforeAll
+		@JvmStatic
+		fun start() {
+			mockClient.start()
+		}
+	}
+
+	@AfterEach
+	fun reset() {
+		mockClient.reset()
+	}
 
 	@Test
 	fun `hentTilganger - med fodselsnummer - skal returnere korrekt parset respons`() {
@@ -22,9 +37,8 @@ class AxsysClientImplTest {
 
 		System.setProperty("NAIS_APP_NAME", "poao-tilgang")
 
-		mockClient.enqueue(
-			MockResponse()
-				.setResponseCode(200)
+		mockClient.handleRequest(
+			response = MockResponse()
 				.setBody(
 					"""
 						{
@@ -58,7 +72,7 @@ class AxsysClientImplTest {
 		request.getHeader("Downstream-Authorization") shouldBe "Bearer AXSYS_TOKEN"
 
 		request.getHeader("Nav-Consumer-Id") shouldBe "poao-tilgang"
-		request.getHeader("Nav-Call-Id") shouldMatch "[0-9a-fA-F]{32}"
+		request.getHeader("Nav-Call-Id") shouldMatch "[0-9a-fA-F]{30,32}"
 	}
 
 }

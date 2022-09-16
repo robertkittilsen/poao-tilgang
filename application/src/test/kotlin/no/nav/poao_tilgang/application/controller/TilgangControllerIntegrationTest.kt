@@ -21,7 +21,7 @@ class TilgangControllerIntegrationTest : IntegrationTest() {
 
 	@Test
 	fun `harTilgangTilModia - should return 403 when not machine-to-machine request`() {
-		val response = sendTilgangTilModiaRequest("Z1234") { oAuthServer.issueAzureAdToken() }
+		val response = sendTilgangTilModiaRequest("Z1234") { mockOAuthServer.issueAzureAdToken() }
 
 		response.code shouldBe 403
 	}
@@ -30,9 +30,9 @@ class TilgangControllerIntegrationTest : IntegrationTest() {
 	fun `harTilgangTilModia - should return 'deny' if not member of any ad group`() {
 		val navIdent = "Z12371"
 
-		mockAdGrupperResponse(listOf())
+		mockAdGrupperResponse(navIdent, emptyList())
 
-		val response = sendTilgangTilModiaRequest(navIdent) { oAuthServer.issueAzureAdM2MToken() }
+		val response = sendTilgangTilModiaRequest(navIdent) { mockOAuthServer.issueAzureAdM2MToken() }
 
 		expectDeny(
 			response= response,
@@ -44,9 +44,9 @@ class TilgangControllerIntegrationTest : IntegrationTest() {
 	fun `harTilgangTilModia - should return 'deny' if not member of correct ad group`() {
 		val navIdent = "Z12371"
 
-		mockAdGrupperResponse(listOf("Gruppe1", "Gruppe2"))
+		mockAdGrupperResponse(navIdent, listOf("Gruppe1", "Gruppe2"))
 
-		val response = sendTilgangTilModiaRequest(navIdent) { oAuthServer.issueAzureAdM2MToken() }
+		val response = sendTilgangTilModiaRequest(navIdent) { mockOAuthServer.issueAzureAdM2MToken() }
 
 		expectDeny(
 			response= response,
@@ -58,9 +58,9 @@ class TilgangControllerIntegrationTest : IntegrationTest() {
 	fun `harTilgangTilModia - should return 'permit' if member of modiagenerelltilgang`() {
 		val navIdent = "Z12371"
 
-		mockAdGrupperResponse(listOf(AdGrupper.MODIA_GENERELL))
+		mockAdGrupperResponse(navIdent, listOf(AdGrupper.MODIA_GENERELL))
 
-		val response = sendTilgangTilModiaRequest(navIdent) { oAuthServer.issueAzureAdM2MToken() }
+		val response = sendTilgangTilModiaRequest(navIdent) { mockOAuthServer.issueAzureAdM2MToken() }
 
 		expectPermit(response)
 	}
@@ -69,9 +69,9 @@ class TilgangControllerIntegrationTest : IntegrationTest() {
 	fun `harTilgangTilModia - should return 'permit' if member of modia-oppfolging`() {
 		val navIdent = "Z12371"
 
-		mockAdGrupperResponse(listOf(AdGrupper.MODIA_OPPFOLGING))
+		mockAdGrupperResponse(navIdent, listOf(AdGrupper.MODIA_OPPFOLGING))
 
-		val response = sendTilgangTilModiaRequest(navIdent) { oAuthServer.issueAzureAdM2MToken() }
+		val response = sendTilgangTilModiaRequest(navIdent) { mockOAuthServer.issueAzureAdM2MToken() }
 
 		expectPermit(response)
 	}
@@ -80,9 +80,9 @@ class TilgangControllerIntegrationTest : IntegrationTest() {
 	fun `harTilgangTilModia - should return 'permit' if member of syfo-sensitiv`() {
 		val navIdent = "Z12371"
 
-		mockAdGrupperResponse(listOf(AdGrupper.SYFO_SENSITIV))
+		mockAdGrupperResponse(navIdent, listOf(AdGrupper.SYFO_SENSITIV))
 
-		val response = sendTilgangTilModiaRequest(navIdent) { oAuthServer.issueAzureAdM2MToken() }
+		val response = sendTilgangTilModiaRequest(navIdent) { mockOAuthServer.issueAzureAdM2MToken() }
 
 		expectPermit(response)
 	}
@@ -91,22 +91,24 @@ class TilgangControllerIntegrationTest : IntegrationTest() {
 	fun `harTilgangTilModia - should return 'permit' if member of correct role and other`() {
 		val navIdent = "Z12371"
 
-		mockAdGrupperResponse(listOf(AdGrupper.MODIA_OPPFOLGING, "Gruppe2"))
+		mockAdGrupperResponse(navIdent, listOf(AdGrupper.MODIA_OPPFOLGING, "Gruppe2"))
 
-		val response = sendTilgangTilModiaRequest(navIdent) { oAuthServer.issueAzureAdM2MToken() }
+		val response = sendTilgangTilModiaRequest(navIdent) { mockOAuthServer.issueAzureAdM2MToken() }
 
 		expectPermit(response)
 	}
 
-	private fun mockAdGrupperResponse(adGrupperNavn: List<String>) {
+	private fun mockAdGrupperResponse(navIdent: String, adGrupperNavn: List<String>) {
 		val adGrupper = adGrupperNavn.map { AdGruppe(UUID.randomUUID(), it) }
 
-		mockMicrosoftGraphHttpClient.enqueueHentAzureIdForNavAnsattResponse(UUID.randomUUID())
+		val navAnsattId = UUID.randomUUID()
 
-		mockMicrosoftGraphHttpClient.enqueueHentAdGrupperForNavAnsatt(adGrupper.map { it.id })
+		mockMicrosoftGraphHttpServer.mockHentAzureIdForNavAnsattResponse(navIdent, navAnsattId)
+
+		mockMicrosoftGraphHttpServer.mockHentAdGrupperForNavAnsatt(navAnsattId, adGrupper.map { it.id })
 
 		if (adGrupper.isNotEmpty()) {
-			mockMicrosoftGraphHttpClient.enqueueHentAdGrupperResponse(adGrupper)
+			mockMicrosoftGraphHttpServer.mockHentAdGrupperResponse(adGrupper)
 		}
 	}
 
