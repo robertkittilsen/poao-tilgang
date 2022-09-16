@@ -19,7 +19,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>no.nav.poao_tilgang.ApplicationKt</mainClass>
+                    <mainClass>no.nav.poao_tilgang.application.ApplicationKt</mainClass>
                 </configuration>
                 <executions>
                     <execution>
