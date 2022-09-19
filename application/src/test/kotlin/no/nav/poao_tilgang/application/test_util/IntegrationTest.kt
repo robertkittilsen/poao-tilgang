@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.test_util
 
+import no.nav.poao_tilgang.application.Application
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockAbacHttpServer
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockAxsysHttpServer
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockMicrosoftGraphHttpServer
@@ -24,7 +25,7 @@ import java.time.Duration
 @Import(TestConfig::class)
 @ExtendWith(SpringExtension::class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [Application::class])
 open class IntegrationTest {
 
 	@LocalServerPort
