@@ -12,6 +12,13 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	private val adGruppeProvider: AdGruppeProvider
 ) : NavAnsattTilgangTilNavEnhetPolicy {
 
+	companion object {
+		private val denyDecision = Decision.Deny(
+			message = "Har ikke tilgang til NAV enhet",
+			reason = DecisionDenyReason.IKKE_TILGANG_TIL_NAV_ENHET
+		)
+	}
+
 	override val name = "NavAnsattTilgangTilNavEnhet"
 
 	override fun evaluate(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
@@ -24,11 +31,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(input.navIdent)
 			.any { input.navEnhetId == it.enhetId }
 
-		return if (harTilgangTilEnhet) Decision.Permit
-		else Decision.Deny(
-			"NAV ansatt har ikke tilgang til enheten ${input.navEnhetId}",
-			DecisionDenyReason.IKKE_TILGANG_TIL_NAV_ENHET
-		)
+		return if (harTilgangTilEnhet) Decision.Permit else denyDecision
 	}
 
 }

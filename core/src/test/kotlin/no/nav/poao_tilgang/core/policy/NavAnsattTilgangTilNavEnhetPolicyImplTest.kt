@@ -74,7 +74,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 		val decision = policy.evaluate(NavAnsattTilgangTilNavEnhetPolicy.Input(navIdent, enhetId))
 
 		decision shouldBe Decision.Deny(
-			"NAV ansatt har ikke tilgang til enheten $enhetId",
+			"Har ikke tilgang til NAV enhet",
 			DecisionDenyReason.IKKE_TILGANG_TIL_NAV_ENHET
 		)
 	}
