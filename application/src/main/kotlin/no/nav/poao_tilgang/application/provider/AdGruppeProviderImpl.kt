@@ -18,6 +18,7 @@ class AdGruppeProviderImpl(
 		.maximumSize(10_000)
 		.build<String, AzureObjectId>()
 
+	// TODO: Bruk heller List<UUID> for å redusere minnebruk
 	private val navAnsattAzureIdToAdGroupsCache = Caffeine.newBuilder()
 		.expireAfterWrite(Duration.ofMinutes(15))
 		.maximumSize(10_000)

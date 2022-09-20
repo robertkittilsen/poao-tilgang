@@ -1,12 +1,21 @@
 package no.nav.poao_tilgang.client
 
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNot
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldMatch
+import io.kotest.matchers.types.beInstanceOf
 import no.nav.common.rest.client.RestClient
 import no.nav.poao_tilgang.application.client.microsoft_graph.AdGruppe
 import no.nav.poao_tilgang.application.test_util.IntegrationTest
+import no.nav.poao_tilgang.application.test_util.TestConfig
+import no.nav.poao_tilgang.client.api.BadHttpStatusApiException
+import no.nav.poao_tilgang.client.api.NetworkApiException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.net.UnknownHostException
 import java.time.Duration
 import java.util.*
 
@@ -35,7 +44,7 @@ class TilgangHttpClientTest : IntegrationTest() {
 	fun `evaluatePolicy - should evaluate ModiaPolicy`() {
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-bd06_modiagenerelltilgang"))
 
-		val decision = client.evaluatePolicy(ModiaPolicyInput(navIdent))
+		val decision = client.evaluatePolicy(ModiaPolicyInput(navIdent)).getOrThrow()
 
 		decision shouldBe Decision.Permit
 	}
@@ -44,7 +53,7 @@ class TilgangHttpClientTest : IntegrationTest() {
 	fun `evaluatePolicy - should evaluate FortroligBrukerPolicy`() {
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_KODE7"))
 
-		val decision = client.evaluatePolicy(FortroligBrukerPolicyInput(navIdent))
+		val decision = client.evaluatePolicy(FortroligBrukerPolicyInput(navIdent)).getOrThrow()
 
 		decision shouldBe Decision.Permit
 	}
@@ -53,7 +62,7 @@ class TilgangHttpClientTest : IntegrationTest() {
 	fun `evaluatePolicy - should evaluate StrengtFortroligBrukerPolicy`() {
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_KODE6"))
 
-		val decision = client.evaluatePolicy(StrengtFortroligBrukerPolicyInput(navIdent))
+		val decision = client.evaluatePolicy(StrengtFortroligBrukerPolicyInput(navIdent)).getOrThrow()
 
 		decision shouldBe Decision.Permit
 	}
@@ -62,7 +71,7 @@ class TilgangHttpClientTest : IntegrationTest() {
 	fun `evaluatePolicy - should evaluate SkjermetPersonPolicy`() {
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-TODO"))
 
-		val decision = client.evaluatePolicy(SkjermetPersonPolicyInput(navIdent))
+		val decision = client.evaluatePolicy(SkjermetPersonPolicyInput(navIdent)).getOrThrow()
 
 		decision shouldBe Decision.Permit
 	}
@@ -71,7 +80,7 @@ class TilgangHttpClientTest : IntegrationTest() {
 	fun `hentAdGrupper - skal hente ad grupper`() {
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-123", "0000-ga-456"))
 
-		val adGrupper = client.hentAdGrupper(navAnsattId)
+		val adGrupper = client.hentAdGrupper(navAnsattId).getOrThrow()
 
 		adGrupper shouldHaveSize 2
 		adGrupper.any { it.navn == "0000-ga-123" } shouldBe true
@@ -87,8 +96,8 @@ class TilgangHttpClientTest : IntegrationTest() {
 			fnr2 to false
 		))
 
-		client.erSkjermetPerson(fnr1) shouldBe true
-		client.erSkjermetPerson(fnr2) shouldBe false
+		client.erSkjermetPerson(fnr1).getOrThrow() shouldBe true
+		client.erSkjermetPerson(fnr2).getOrThrow() shouldBe false
 	}
 
 	@Test
@@ -100,10 +109,30 @@ class TilgangHttpClientTest : IntegrationTest() {
 			fnr2 to false
 		))
 
-		val erSkjermet = client.erSkjermetPerson(listOf(fnr1, fnr2))
+		val erSkjermet = client.erSkjermetPerson(listOf(fnr1, fnr2)).getOrThrow()
 
 		erSkjermet[fnr1] shouldBe true
 		erSkjermet[fnr2] shouldBe false
+	}
+
+	@Test
+	fun `skal returnere BadHttpStatusApiException for feilende status`() {
+		val badClient = PoaoTilgangHttpClient(serverUrl(), {""})
+
+		val exception = badClient.erSkjermetPerson("34242").exception
+		exception should beInstanceOf<BadHttpStatusApiException>()
+		(exception as BadHttpStatusApiException).httpStatus shouldBe 401
+		exception.responseBody shouldNotBe null
+	}
+
+	@Test
+	fun `skal returnere NetworkApiException for netverk feil`() {
+		val badClient = PoaoTilgangHttpClient("http://not-a-real-host", {""})
+
+		val exception = badClient.erSkjermetPerson("34242").exception
+
+		exception should beInstanceOf<NetworkApiException>()
+		exception?.cause should beInstanceOf<UnknownHostException>()
 	}
 
 	private fun mockAdGrupperResponse(navIdent: String, navAnsattId: UUID, adGrupperNavn: List<String>) {
