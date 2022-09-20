@@ -14,9 +14,9 @@ import kotlin.system.measureTimeMillis
 
 @Service
 class PolicyService(
-	private val eksternBrukerPolicy: EksternBrukerPolicy,
+	private val navAnsattTilgangTilEksternBrukerPolicy: NavAnsattTilgangTilEksternBrukerPolicy,
 	private val navAnsattBehandleFortroligBrukerePolicy: NavAnsattBehandleFortroligBrukerePolicy,
-	private val modiaPolicy: ModiaPolicy,
+	private val navAnsattTilgangTilModiaPolicy: NavAnsattTilgangTilModiaPolicy,
 	private val navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy,
 	private val navAnsattBehandleStrengtFortroligBrukerePolicy: NavAnsattBehandleStrengtFortroligBrukerePolicy
 ) {
@@ -59,9 +59,9 @@ class PolicyService(
 
 	private fun evaluate(input: PolicyInput): PolicyResult {
 		return when(input) {
-			is EksternBrukerPolicy.Input -> evaluate(input, eksternBrukerPolicy)
+			is NavAnsattTilgangTilEksternBrukerPolicy.Input -> evaluate(input, navAnsattTilgangTilEksternBrukerPolicy)
 			is NavAnsattBehandleFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleFortroligBrukerePolicy)
-			is ModiaPolicy.Input -> evaluate(input, modiaPolicy)
+			is NavAnsattTilgangTilModiaPolicy.Input -> evaluate(input, navAnsattTilgangTilModiaPolicy)
 			is NavAnsattBehandleSkjermedePersonerPolicy.Input -> evaluate(input, navAnsattBehandleSkjermedePersonerPolicy)
 			is NavAnsattBehandleStrengtFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleStrengtFortroligBrukerePolicy)
 			else -> throw InvalidPolicyRequestException("Ukjent policy ${input.javaClass.canonicalName}")

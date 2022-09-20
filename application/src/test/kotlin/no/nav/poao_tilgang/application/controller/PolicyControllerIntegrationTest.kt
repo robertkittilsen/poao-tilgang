@@ -11,7 +11,7 @@ import java.util.*
 class PolicyControllerIntegrationTest : IntegrationTest() {
 
 	@Test
-	fun `should evaluate EKSTERN_BRUKER_V1 policy - permit`() {
+	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1 policy - permit`() {
 		val navIdent = "Z1235"
 		val norskIdent = "6456532"
 		val requestId = UUID.randomUUID()
@@ -21,14 +21,14 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navIdent": "$navIdent", "norskIdent": "$norskIdent"}""",
-			"EKSTERN_BRUKER_V1"
+			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1"
 		)
 
 		response.body?.string() shouldBe permitResponse(requestId)
 	}
 
 	@Test
-	fun `should evaluate EKSTERN_BRUKER_V1 policy - deny`() {
+	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1 policy - deny`() {
 		val navIdent = "Z1235"
 		val norskIdent = "6456532"
 		val requestId = UUID.randomUUID()
@@ -38,14 +38,14 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navIdent": "$navIdent", "norskIdent": "$norskIdent"}""",
-			"EKSTERN_BRUKER_V1"
+			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1"
 		)
 
 		response.body?.string() shouldBe denyResponse(requestId,"Deny fra ABAC", "IKKE_TILGANG_FRA_ABAC")
 	}
 
 	@Test
-	fun `should evaluate MODIA_V1 policy - permit`() {
+	fun `should evaluate NAV_ANSATT_TILGANG_TIL_MODIA_V1 policy - permit`() {
 		val navIdent = "Z1235"
 		val navAnsattId = UUID.randomUUID()
 		val requestId = UUID.randomUUID()
@@ -55,14 +55,14 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navIdent":"$navIdent"}""",
-			"MODIA_V1"
+			"NAV_ANSATT_TILGANG_TIL_MODIA_V1"
 		)
 
 		response.body?.string() shouldBe permitResponse(requestId)
 	}
 
 	@Test
-	fun `should evaluate MODIA_V1 policy - deny`() {
+	fun `should evaluate NAV_ANSATT_TILGANG_TIL_MODIA_V1 policy - deny`() {
 		val navIdent = "Z1235"
 		val navAnsattId = UUID.randomUUID()
 		val requestId = UUID.randomUUID()
@@ -72,7 +72,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navIdent":"$navIdent"}""",
-			"MODIA_V1"
+			"NAV_ANSATT_TILGANG_TIL_MODIA_V1"
 		)
 
 		response.body?.string() shouldBe denyResponse(

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import no.nav.poao_tilgang.api.dto.request.EvaluatePoliciesRequest
 import no.nav.poao_tilgang.api.dto.request.PolicyEvaluationRequestDto
 import no.nav.poao_tilgang.api.dto.request.PolicyId
-import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerPolicyInputDto
-import no.nav.poao_tilgang.api.dto.request.policy_input.ModiaPolicyInputDto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputDto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputDto
 import no.nav.poao_tilgang.api.dto.response.DecisionDto
 import no.nav.poao_tilgang.api.dto.response.DecisionType
 import no.nav.poao_tilgang.api.dto.response.EvaluatePoliciesResponse
@@ -17,8 +17,8 @@ import no.nav.poao_tilgang.application.utils.Issuer
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonNode
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.PolicyInput
-import no.nav.poao_tilgang.core.policy.EksternBrukerPolicy
-import no.nav.poao_tilgang.core.policy.ModiaPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -55,17 +55,17 @@ class PolicyController(
 
 	private fun mapToPolicyInput(policyId: PolicyId, policyInput: JsonNode): PolicyInput {
 		return when (policyId) {
-			PolicyId.EKSTERN_BRUKER_V1 -> {
-				val dto = fromJsonNode<EksternBrukerPolicyInputDto>(policyInput)
+			PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1 -> {
+				val dto = fromJsonNode<NavAnsattTilgangTilEksternBrukerPolicyInputDto>(policyInput)
 
-				EksternBrukerPolicy.Input(
+				NavAnsattTilgangTilEksternBrukerPolicy.Input(
 					navIdent = dto.navIdent,
 					norskIdent = dto.norskIdent
 				)
 			}
-			PolicyId.MODIA_V1 -> {
-				val dto =  fromJsonNode<ModiaPolicyInputDto>(policyInput)
-				ModiaPolicy.Input(dto.navIdent)
+			PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1 -> {
+				val dto =  fromJsonNode<NavAnsattTilgangTilModiaPolicyInputDto>(policyInput)
+				NavAnsattTilgangTilModiaPolicy.Input(dto.navIdent)
 			}
 		}
 	}

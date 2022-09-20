@@ -5,15 +5,15 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
-import no.nav.poao_tilgang.core.policy.impl.EksternBrukerPolicyImpl
+import no.nav.poao_tilgang.core.policy.impl.NavAnsattTilgangTilEksternBrukerPolicyImpl
 import no.nav.poao_tilgang.core.provider.AbacProvider
 import org.junit.jupiter.api.Test
 
-class EksternBrukerPolicyImplTest {
+class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 
 	private val abacProvider = mockk<AbacProvider>()
 
-	private val policy = EksternBrukerPolicyImpl(abacProvider)
+	private val policy = NavAnsattTilgangTilEksternBrukerPolicyImpl(abacProvider)
 
 	@Test
 	fun `should return "permit" if ABAC returns "permit"`() {
@@ -24,7 +24,7 @@ class EksternBrukerPolicyImplTest {
 			abacProvider.harVeilederTilgangTilPerson(navIdent, norskIdent)
 		} returns true
 
-		val decision = policy.evaluate(EksternBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navIdent, norskIdent))
 
 		decision shouldBe Decision.Permit
 	}
@@ -38,7 +38,7 @@ class EksternBrukerPolicyImplTest {
 			abacProvider.harVeilederTilgangTilPerson(navIdent, norskIdent)
 		} returns false
 
-		val decision = policy.evaluate(EksternBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navIdent, norskIdent))
 
 		decision shouldBe Decision.Deny("Deny fra ABAC", DecisionDenyReason.IKKE_TILGANG_FRA_ABAC)
 	}

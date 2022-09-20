@@ -4,8 +4,8 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.UrlUtils.joinPaths
 import no.nav.poao_tilgang.api.dto.request.*
-import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerPolicyInputDto
-import no.nav.poao_tilgang.api.dto.request.policy_input.ModiaPolicyInputDto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputDto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputDto
 import no.nav.poao_tilgang.api.dto.response.*
 import no.nav.poao_tilgang.client.ClientObjectMapper.objectMapper
 import okhttp3.MediaType.Companion.toMediaType
@@ -125,20 +125,20 @@ class PoaoTilgangHttpClient(
 
 	private fun toRequestDto(policyRequest: PolicyRequest): PolicyEvaluationRequestDto<Any> {
 		return when (policyRequest.policyInput) {
-			is EksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
+			is NavAnsattTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
-				policyInput = EksternBrukerPolicyInputDto(
+				policyInput = NavAnsattTilgangTilEksternBrukerPolicyInputDto(
 					policyRequest.policyInput.navIdent,
 					policyRequest.policyInput.norskIdent
 				),
-				policyId = PolicyId.EKSTERN_BRUKER_V1
+				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1
 			)
-			is ModiaPolicyInput -> PolicyEvaluationRequestDto(
+			is NavAnsattTilgangTilModiaPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
-				policyInput = ModiaPolicyInputDto(
+				policyInput = NavAnsattTilgangTilModiaPolicyInputDto(
 					policyRequest.policyInput.navIdent,
 				),
-				policyId = PolicyId.MODIA_V1
+				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1
 			)
 		}
 	}

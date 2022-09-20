@@ -8,7 +8,7 @@ import no.nav.poao_tilgang.core.domain.PolicyInput
 /**
  * Sjekker om en NAV ansatt har tilgang til å behandle informasjon om en ekstern bruker.
  */
-interface EksternBrukerPolicy : Policy<EksternBrukerPolicy.Input> {
+interface NavAnsattTilgangTilEksternBrukerPolicy : Policy<NavAnsattTilgangTilEksternBrukerPolicy.Input> {
 
 	data class Input(
 		val navIdent: NavIdent,

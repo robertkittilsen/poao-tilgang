@@ -2,16 +2,16 @@ package no.nav.poao_tilgang.core.policy.impl
 
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
-import no.nav.poao_tilgang.core.policy.EksternBrukerPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.provider.AbacProvider
 
-class EksternBrukerPolicyImpl(
+class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	private val abacProvider: AbacProvider,
-) : EksternBrukerPolicy {
+) : NavAnsattTilgangTilEksternBrukerPolicy {
 
-	override val name = "AbacHarNavAnsattTilgangTilEksternBruker"
+	override val name = "NavAnsattTilgangTilEksternBruker"
 
-	override fun evaluate(input: EksternBrukerPolicy.Input): Decision {
+	override fun evaluate(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
 		val (navIdent, norskIdent) = input
 
 		val harTilgang = abacProvider.harVeilederTilgangTilPerson(navIdent, norskIdent)

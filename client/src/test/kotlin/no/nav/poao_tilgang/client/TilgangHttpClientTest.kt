@@ -35,7 +35,7 @@ class TilgangHttpClientTest : IntegrationTest() {
 	fun `evaluatePolicy - should evaluate EksternBrukerPolicy`() {
 		mockAbacHttpServer.mockPermit()
 
-		val decision = client.evaluatePolicy(EksternBrukerPolicyInput(navIdent, "34543543"))
+		val decision = client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInput(navIdent, "34543543"))
 
 		decision shouldBe Decision.Permit
 	}
@@ -44,7 +44,7 @@ class TilgangHttpClientTest : IntegrationTest() {
 	fun `evaluatePolicy - should evaluate ModiaPolicy`() {
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-bd06_modiagenerelltilgang"))
 
-		val decision = client.evaluatePolicy(ModiaPolicyInput(navIdent))
+		val decision = client.evaluatePolicy(NavAnsattTilgangTilModiaPolicyInput(navIdent))
 
 		decision shouldBe Decision.Permit
 	}

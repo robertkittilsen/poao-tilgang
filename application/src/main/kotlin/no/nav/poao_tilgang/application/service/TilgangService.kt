@@ -4,17 +4,17 @@ import no.nav.common.log.MDCConstants
 import no.nav.poao_tilgang.application.utils.SecureLog.secureLog
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.NavIdent
-import no.nav.poao_tilgang.core.policy.ModiaPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
 import org.slf4j.MDC
 import org.springframework.stereotype.Service
 
 @Service
 class TilgangService(
-	private val modiaPolicy: ModiaPolicy
+	private val navAnsattTilgangTilModiaPolicy: NavAnsattTilgangTilModiaPolicy
 ) {
 
 	fun harTilgangTilModia(navIdent: NavIdent): Decision {
-		return executePolicy(modiaPolicy.name, ModiaPolicy.Input(navIdent), modiaPolicy::evaluate)
+		return executePolicy(navAnsattTilgangTilModiaPolicy.name, NavAnsattTilgangTilModiaPolicy.Input(navIdent), navAnsattTilgangTilModiaPolicy::evaluate)
 	}
 
 	private fun <I> executePolicy(policyName: String, policyInput: I, policy: (input: I) -> Decision): Decision {

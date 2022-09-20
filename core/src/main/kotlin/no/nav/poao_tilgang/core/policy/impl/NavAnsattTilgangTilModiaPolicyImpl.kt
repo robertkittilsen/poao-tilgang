@@ -3,14 +3,14 @@ package no.nav.poao_tilgang.core.policy.impl
 import no.nav.poao_tilgang.core.domain.AdGrupper
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
-import no.nav.poao_tilgang.core.policy.ModiaPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 
-class ModiaPolicyImpl(
+class NavAnsattTilgangTilModiaPolicyImpl(
 	private val adGruppeProvider: AdGruppeProvider
-) : ModiaPolicy {
+) : NavAnsattTilgangTilModiaPolicy {
 
-	override val name = "HarNavAnsattTilgangTilModia"
+	override val name = "NavAnsattTilgangTilModiaPolicy"
 
 	companion object {
 		private val tilgangTilModiaGrupper = listOf(
@@ -25,7 +25,7 @@ class ModiaPolicyImpl(
 		)
 	}
 
-	override fun evaluate(input: ModiaPolicy.Input): Decision {
+	override fun evaluate(input: NavAnsattTilgangTilModiaPolicy.Input): Decision {
 		val adGruppper = adGruppeProvider.hentAdGrupper(input.navIdent)
 
 		val harTilgang = adGruppper.any { tilgangTilModiaGrupper.contains(it.name.lowercase()) }

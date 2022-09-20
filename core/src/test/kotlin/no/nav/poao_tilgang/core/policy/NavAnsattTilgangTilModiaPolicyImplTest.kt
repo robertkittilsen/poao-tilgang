@@ -7,17 +7,17 @@ import no.nav.poao_tilgang.core.domain.AdGruppe
 import no.nav.poao_tilgang.core.domain.AdGrupper
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
-import no.nav.poao_tilgang.core.policy.impl.ModiaPolicyImpl
+import no.nav.poao_tilgang.core.policy.impl.NavAnsattTilgangTilModiaPolicyImpl
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.Test
 import java.util.*
 import kotlin.random.Random.Default.nextBoolean
 
-class ModiaPolicyImplTest {
+class NavAnsattTilgangTilModiaPolicyImplTest {
 
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
-	private val policy = ModiaPolicyImpl(adGruppeProvider)
+	private val policy = NavAnsattTilgangTilModiaPolicyImpl(adGruppeProvider)
 
 	@Test
 	fun `should return "permit" if access to 0000-ga-bd06_modiagenerelltilgang`() {
@@ -30,7 +30,7 @@ class ModiaPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.evaluate(ModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
+		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -44,7 +44,7 @@ class ModiaPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.evaluate(ModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
+		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -58,7 +58,7 @@ class ModiaPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.evaluate(ModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
+		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -74,7 +74,7 @@ class ModiaPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		policy.evaluate(ModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
+		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
 
 	@Test
@@ -87,7 +87,7 @@ class ModiaPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group")
 		)
 
-		val decision = policy.evaluate(ModiaPolicy.Input(navIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent))
 
 		decision.type shouldBe Decision.Type.DENY
 

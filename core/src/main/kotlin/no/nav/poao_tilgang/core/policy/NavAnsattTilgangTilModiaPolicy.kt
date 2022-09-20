@@ -7,7 +7,7 @@ import no.nav.poao_tilgang.core.domain.PolicyInput
 /**
  * Sjekker om en NAV ansatt har tilgang til å bruke Modia flaten
  */
-interface ModiaPolicy : Policy<ModiaPolicy.Input> {
+interface NavAnsattTilgangTilModiaPolicy : Policy<NavAnsattTilgangTilModiaPolicy.Input> {
 
 	data class Input (
 		val navIdent: NavIdent
