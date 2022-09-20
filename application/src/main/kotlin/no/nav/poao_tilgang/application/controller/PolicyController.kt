@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import no.nav.poao_tilgang.api.dto.request.EvaluatePoliciesRequest
 import no.nav.poao_tilgang.api.dto.request.PolicyEvaluationRequestDto
 import no.nav.poao_tilgang.api.dto.request.PolicyId
-import no.nav.poao_tilgang.api.dto.request.policy_input.*
+import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerPolicyInputDto
+import no.nav.poao_tilgang.api.dto.request.policy_input.ModiaPolicyInputDto
 import no.nav.poao_tilgang.api.dto.response.DecisionDto
 import no.nav.poao_tilgang.api.dto.response.DecisionType
 import no.nav.poao_tilgang.api.dto.response.EvaluatePoliciesResponse
@@ -16,14 +17,13 @@ import no.nav.poao_tilgang.application.utils.Issuer
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonNode
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.PolicyInput
-import no.nav.poao_tilgang.core.policy.*
+import no.nav.poao_tilgang.core.policy.EksternBrukerPolicy
+import no.nav.poao_tilgang.core.policy.ModiaPolicy
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/policy")
@@ -63,23 +63,10 @@ class PolicyController(
 					norskIdent = dto.norskIdent
 				)
 			}
-			PolicyId.FORTROLIG_BRUKER_V1 -> {
-				val dto =  fromJsonNode<FortroligBrukerPolicyInputDto>(policyInput)
-				FortroligBrukerPolicy.Input(dto.navIdent)
-			}
 			PolicyId.MODIA_V1 -> {
 				val dto =  fromJsonNode<ModiaPolicyInputDto>(policyInput)
 				ModiaPolicy.Input(dto.navIdent)
 			}
-			PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1 -> {
-				val dto =  fromJsonNode<SkjermetPersonPolicyInputDto>(policyInput)
-				NavAnsattBehandleSkjermedePersonerPolicy.Input(dto.navIdent)
-			}
-			PolicyId.STRENGT_FORTROLIG_BRUKER_V1 -> {
-				val dto =  fromJsonNode<StrengtFortroligBrukerPolicyInputDto>(policyInput)
-				StrengtFortroligBrukerPolicy.Input(dto.navIdent)
-			}
-			else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Ukjent policy $policyId")
 		}
 	}
 

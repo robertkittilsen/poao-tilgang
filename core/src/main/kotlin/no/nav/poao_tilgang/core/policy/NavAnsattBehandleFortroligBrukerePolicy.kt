@@ -5,9 +5,9 @@ import no.nav.poao_tilgang.core.domain.Policy
 import no.nav.poao_tilgang.core.domain.PolicyInput
 
 /**
- * Sjekker om en NAV ansatt har tilgang til å behandle strengt fortrolig brukere (kode 6)
+ * Sjekker om en NAV ansatt har tilgang til å behandle fortrolig brukere (kode 7)
  */
-interface StrengtFortroligBrukerPolicy : Policy<StrengtFortroligBrukerPolicy.Input> {
+interface NavAnsattBehandleFortroligBrukerePolicy : Policy<NavAnsattBehandleFortroligBrukerePolicy.Input> {
 
 	data class Input (
 		val navIdent: NavIdent

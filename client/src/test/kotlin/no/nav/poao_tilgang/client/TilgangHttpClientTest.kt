@@ -32,37 +32,19 @@ class TilgangHttpClientTest : IntegrationTest() {
 	}
 
 	@Test
+	fun `evaluatePolicy - should evaluate EksternBrukerPolicy`() {
+		mockAbacHttpServer.mockPermit()
+
+		val decision = client.evaluatePolicy(EksternBrukerPolicyInput(navIdent, "34543543"))
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
 	fun `evaluatePolicy - should evaluate ModiaPolicy`() {
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-bd06_modiagenerelltilgang"))
 
 		val decision = client.evaluatePolicy(ModiaPolicyInput(navIdent))
-
-		decision shouldBe Decision.Permit
-	}
-
-	@Test
-	fun `evaluatePolicy - should evaluate FortroligBrukerPolicy`() {
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_KODE7"))
-
-		val decision = client.evaluatePolicy(FortroligBrukerPolicyInput(navIdent))
-
-		decision shouldBe Decision.Permit
-	}
-
-	@Test
-	fun `evaluatePolicy - should evaluate StrengtFortroligBrukerPolicy`() {
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_KODE6"))
-
-		val decision = client.evaluatePolicy(StrengtFortroligBrukerPolicyInput(navIdent))
-
-		decision shouldBe Decision.Permit
-	}
-
-	@Test
-	fun `evaluatePolicy - should evaluate NavAnsattBehandleSkjermedePersonerPolicy`() {
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_UTVIDET"))
-
-		val decision = client.evaluatePolicy(NavAnsattBehandleSkjermedePersonerPolicyInput(navIdent))
 
 		decision shouldBe Decision.Permit
 	}

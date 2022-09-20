@@ -7,16 +7,16 @@ import no.nav.poao_tilgang.core.domain.AdGruppe
 import no.nav.poao_tilgang.core.domain.AdGrupper
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
-import no.nav.poao_tilgang.core.policy.impl.FortroligBrukerPolicyImpl
+import no.nav.poao_tilgang.core.policy.impl.NavAnsattBehandleFortroligBrukerePolicyImpl
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class FortroligBrukerPolicyImplTest {
+class NavAnsattBehandleFortroligBrukerePolicyImplTest {
 
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
-	private val policy = FortroligBrukerPolicyImpl(adGruppeProvider)
+	private val policy = NavAnsattBehandleFortroligBrukerePolicyImpl(adGruppeProvider)
 
 	@Test
 	fun `should return "permit" if access to 0000-GA-GOSYS_KODE7`() {
@@ -29,7 +29,7 @@ class FortroligBrukerPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		val decision = policy.evaluate(FortroligBrukerPolicy.Input(navIdent))
+		val decision = policy.evaluate(NavAnsattBehandleFortroligBrukerePolicy.Input(navIdent))
 
 		decision shouldBe Decision.Permit
 	}
@@ -44,7 +44,7 @@ class FortroligBrukerPolicyImplTest {
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
-		val decision = policy.evaluate(FortroligBrukerPolicy.Input(navIdent))
+		val decision = policy.evaluate(NavAnsattBehandleFortroligBrukerePolicy.Input(navIdent))
 
 		decision.type shouldBe Decision.Type.DENY
 

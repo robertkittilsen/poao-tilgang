@@ -45,44 +45,6 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `should evaluate FORTROLIG_BRUKER_V1 policy - permit`() {
-		val navIdent = "Z1235"
-		val navAnsattId = UUID.randomUUID()
-		val requestId = UUID.randomUUID()
-
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_KODE7"))
-
-		val response = sendPolicyRequest(
-			requestId,
-			"""{"navIdent":"$navIdent"}""",
-			"FORTROLIG_BRUKER_V1"
-		)
-
-		response.body?.string() shouldBe permitResponse(requestId)
-	}
-
-	@Test
-	fun `should evaluate FORTROLIG_BRUKER_V1 policy - deny`() {
-		val navIdent = "Z1235"
-		val navAnsattId = UUID.randomUUID()
-		val requestId = UUID.randomUUID()
-
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-some-group"))
-
-		val response = sendPolicyRequest(
-			requestId,
-			"""{"navIdent":"$navIdent"}""",
-			"FORTROLIG_BRUKER_V1"
-		)
-
-		response.body?.string() shouldBe denyResponse(
-			requestId,
-			"NAV ansatt mangler tilgang til AD gruppen 0000-GA-GOSYS_KODE7",
-			"MANGLER_TILGANG_TIL_AD_GRUPPE"
-		)
-	}
-
-	@Test
 	fun `should evaluate MODIA_V1 policy - permit`() {
 		val navIdent = "Z1235"
 		val navAnsattId = UUID.randomUUID()
@@ -116,82 +78,6 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		response.body?.string() shouldBe denyResponse(
 			requestId,
 			"NAV ansatt mangler tilgang til en av AD gruppene [0000-ga-bd06_modiagenerelltilgang, 0000-ga-modia-oppfolging, 0000-ga-syfo-sensitiv]",
-			"MANGLER_TILGANG_TIL_AD_GRUPPE"
-		)
-	}
-
-	@Test
-	fun `should evaluate NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1 policy - permit`() {
-		val navIdent = "Z1235"
-		val navAnsattId = UUID.randomUUID()
-		val requestId = UUID.randomUUID()
-
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_UTVIDET"))
-
-		val response = sendPolicyRequest(
-			requestId,
-			"""{"navIdent":"$navIdent"}""",
-			"NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1"
-		)
-
-		response.body?.string() shouldBe permitResponse(requestId)
-	}
-
-	@Test
-	fun `should evaluate NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1 policy - deny`() {
-		val navIdent = "Z1235"
-		val navAnsattId = UUID.randomUUID()
-		val requestId = UUID.randomUUID()
-
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-some-group"))
-
-		val response = sendPolicyRequest(
-			requestId,
-			"""{"navIdent":"$navIdent"}""",
-			"NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1"
-		)
-
-		response.body?.string() shouldBe denyResponse(
-			requestId,
-			"NAV ansatt mangler tilgang til en av AD gruppene [0000-ga-gosys_utvidet, 0000-ga-pensjon_utvidet]",
-			"MANGLER_TILGANG_TIL_AD_GRUPPE"
-		)
-	}
-
-	@Test
-	fun `should evaluate STRENGT_FORTROLIG_BRUKER_V1 policy - permit`() {
-		val navIdent = "Z1235"
-		val navAnsattId = UUID.randomUUID()
-		val requestId = UUID.randomUUID()
-
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_KODE6"))
-
-		val response = sendPolicyRequest(
-			requestId,
-			"""{"navIdent":"$navIdent"}""",
-			"STRENGT_FORTROLIG_BRUKER_V1"
-		)
-
-		response.body?.string() shouldBe permitResponse(requestId)
-	}
-
-	@Test
-	fun `should evaluate STRENGT_FORTROLIG_BRUKER_V1 policy - deny`() {
-		val navIdent = "Z1235"
-		val navAnsattId = UUID.randomUUID()
-		val requestId = UUID.randomUUID()
-
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-some-group"))
-
-		val response = sendPolicyRequest(
-			requestId,
-			"""{"navIdent":"$navIdent"}""",
-			"STRENGT_FORTROLIG_BRUKER_V1"
-		)
-
-		response.body?.string() shouldBe denyResponse(
-			requestId,
-			"NAV ansatt mangler tilgang til AD gruppen 0000-GA-GOSYS_KODE6",
 			"MANGLER_TILGANG_TIL_AD_GRUPPE"
 		)
 	}

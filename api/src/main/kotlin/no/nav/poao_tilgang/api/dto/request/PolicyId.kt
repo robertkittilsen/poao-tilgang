@@ -2,8 +2,5 @@ package no.nav.poao_tilgang.api.dto.request
 
 enum class PolicyId {
 	EKSTERN_BRUKER_V1,
-	FORTROLIG_BRUKER_V1,
 	MODIA_V1,
-	NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1,
-	STRENGT_FORTROLIG_BRUKER_V1
 }

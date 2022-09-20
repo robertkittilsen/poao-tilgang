@@ -6,8 +6,6 @@ import no.nav.common.utils.UrlUtils.joinPaths
 import no.nav.poao_tilgang.api.dto.request.*
 import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerPolicyInputDto
 import no.nav.poao_tilgang.api.dto.request.policy_input.ModiaPolicyInputDto
-import no.nav.poao_tilgang.api.dto.request.policy_input.SkjermetPersonPolicyInputDto
-import no.nav.poao_tilgang.api.dto.request.policy_input.StrengtFortroligBrukerPolicyInputDto
 import no.nav.poao_tilgang.api.dto.response.*
 import no.nav.poao_tilgang.client.ClientObjectMapper.objectMapper
 import okhttp3.MediaType.Companion.toMediaType
@@ -135,33 +133,12 @@ class PoaoTilgangHttpClient(
 				),
 				policyId = PolicyId.EKSTERN_BRUKER_V1
 			)
-			is FortroligBrukerPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = FortroligBrukerPolicyInput(
-					policyRequest.policyInput.navIdent,
-				),
-				policyId = PolicyId.FORTROLIG_BRUKER_V1
-			)
 			is ModiaPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
 				policyInput = ModiaPolicyInputDto(
 					policyRequest.policyInput.navIdent,
 				),
 				policyId = PolicyId.MODIA_V1
-			)
-			is NavAnsattBehandleSkjermedePersonerPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = SkjermetPersonPolicyInputDto(
-					policyRequest.policyInput.navIdent,
-				),
-				policyId = PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1
-			)
-			is StrengtFortroligBrukerPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = StrengtFortroligBrukerPolicyInputDto(
-					policyRequest.policyInput.navIdent,
-				),
-				policyId = PolicyId.STRENGT_FORTROLIG_BRUKER_V1
 			)
 		}
 	}

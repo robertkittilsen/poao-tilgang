@@ -16,8 +16,8 @@ open class PolicyConfig {
 	}
 
 	@Bean
-	open fun fortroligBrukerPolicy(adGruppeProvider: AdGruppeProvider): FortroligBrukerPolicy {
-		return FortroligBrukerPolicyImpl(adGruppeProvider)
+	open fun fortroligBrukerPolicy(adGruppeProvider: AdGruppeProvider): NavAnsattBehandleFortroligBrukerePolicy {
+		return NavAnsattBehandleFortroligBrukerePolicyImpl(adGruppeProvider)
 	}
 
 	@Bean
@@ -31,8 +31,8 @@ open class PolicyConfig {
 	}
 
 	@Bean
-	open fun strengtFortroligBrukerPolicy(adGruppeProvider: AdGruppeProvider): StrengtFortroligBrukerPolicy {
-		return StrengtFortroligBrukerPolicyImpl(adGruppeProvider)
+	open fun strengtFortroligBrukerPolicy(adGruppeProvider: AdGruppeProvider): NavAnsattBehandleStrengtFortroligBrukerePolicy {
+		return NavAnsattBehandleStrengtFortroligBrukerePolicyImpl(adGruppeProvider)
 	}
 
 	@Bean
