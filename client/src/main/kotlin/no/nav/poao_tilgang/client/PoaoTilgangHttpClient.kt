@@ -149,12 +149,12 @@ class PoaoTilgangHttpClient(
 				),
 				policyId = PolicyId.MODIA_V1
 			)
-			is SkjermetPersonPolicyInput -> PolicyEvaluationRequestDto(
+			is NavAnsattBehandleSkjermedePersonerPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
 				policyInput = SkjermetPersonPolicyInputDto(
 					policyRequest.policyInput.navIdent,
 				),
-				policyId = PolicyId.SKJERMET_PERSON_V1
+				policyId = PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1
 			)
 			is StrengtFortroligBrukerPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,

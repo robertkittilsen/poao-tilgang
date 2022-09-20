@@ -59,10 +59,10 @@ class TilgangHttpClientTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `evaluatePolicy - should evaluate SkjermetPersonPolicy`() {
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-TODO"))
+	fun `evaluatePolicy - should evaluate NavAnsattBehandleSkjermedePersonerPolicy`() {
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_UTVIDET"))
 
-		val decision = client.evaluatePolicy(SkjermetPersonPolicyInput(navIdent))
+		val decision = client.evaluatePolicy(NavAnsattBehandleSkjermedePersonerPolicyInput(navIdent))
 
 		decision shouldBe Decision.Permit
 	}

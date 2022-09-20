@@ -7,7 +7,7 @@ import no.nav.poao_tilgang.core.domain.PolicyInput
 /**
  * Sjekker om en NAV ansatt har tilgang til å behandle skjermede personer (også kalt 'egen ansatt').
  */
-interface SkjermetPersonPolicy : Policy<SkjermetPersonPolicy.Input> {
+interface NavAnsattBehandleSkjermedePersonerPolicy : Policy<NavAnsattBehandleSkjermedePersonerPolicy.Input> {
 
 	data class Input (
 		val navIdent: NavIdent

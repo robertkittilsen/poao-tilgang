@@ -26,8 +26,8 @@ open class PolicyConfig {
 	}
 
 	@Bean
-	open fun skjermetPersonPolicy(adGruppeProvider: AdGruppeProvider): SkjermetPersonPolicy {
-		return SkjermetPersonPolicyImpl(adGruppeProvider)
+	open fun skjermetPersonPolicy(adGruppeProvider: AdGruppeProvider): NavAnsattBehandleSkjermedePersonerPolicy {
+		return NavAnsattBehandleSkjermedePersonerPolicyImpl(adGruppeProvider)
 	}
 
 	@Bean

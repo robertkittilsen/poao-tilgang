@@ -17,7 +17,7 @@ class PolicyService(
 	private val eksternBrukerPolicy: EksternBrukerPolicy,
 	private val fortroligBrukerPolicy: FortroligBrukerPolicy,
 	private val modiaPolicy: ModiaPolicy,
-	private val skjermetPersonPolicy: SkjermetPersonPolicy,
+	private val navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy,
 	private val strengtFortroligBrukerPolicy: StrengtFortroligBrukerPolicy
 ) {
 
@@ -62,7 +62,7 @@ class PolicyService(
 			is EksternBrukerPolicy.Input -> evaluate(input, eksternBrukerPolicy)
 			is FortroligBrukerPolicy.Input -> evaluate(input, fortroligBrukerPolicy)
 			is ModiaPolicy.Input -> evaluate(input, modiaPolicy)
-			is SkjermetPersonPolicy.Input -> evaluate(input, skjermetPersonPolicy)
+			is NavAnsattBehandleSkjermedePersonerPolicy.Input -> evaluate(input, navAnsattBehandleSkjermedePersonerPolicy)
 			is StrengtFortroligBrukerPolicy.Input -> evaluate(input, strengtFortroligBrukerPolicy)
 			else -> throw InvalidPolicyRequestException("Ukjent policy ${input.javaClass.canonicalName}")
 		}

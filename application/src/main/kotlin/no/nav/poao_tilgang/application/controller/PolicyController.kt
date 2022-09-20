@@ -71,9 +71,9 @@ class PolicyController(
 				val dto =  fromJsonNode<ModiaPolicyInputDto>(policyInput)
 				ModiaPolicy.Input(dto.navIdent)
 			}
-			PolicyId.SKJERMET_PERSON_V1 -> {
+			PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1 -> {
 				val dto =  fromJsonNode<SkjermetPersonPolicyInputDto>(policyInput)
-				SkjermetPersonPolicy.Input(dto.navIdent)
+				NavAnsattBehandleSkjermedePersonerPolicy.Input(dto.navIdent)
 			}
 			PolicyId.STRENGT_FORTROLIG_BRUKER_V1 -> {
 				val dto =  fromJsonNode<StrengtFortroligBrukerPolicyInputDto>(policyInput)

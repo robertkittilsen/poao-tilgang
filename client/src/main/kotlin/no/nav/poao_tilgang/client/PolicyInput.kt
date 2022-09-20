@@ -15,7 +15,7 @@ data class ModiaPolicyInput(
 	val navIdent: String
 ) : PolicyInput()
 
-data class SkjermetPersonPolicyInput(
+data class NavAnsattBehandleSkjermedePersonerPolicyInput(
 	val navIdent: String
 ) : PolicyInput()
 

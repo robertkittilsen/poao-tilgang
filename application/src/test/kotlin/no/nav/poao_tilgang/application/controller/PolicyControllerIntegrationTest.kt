@@ -121,24 +121,24 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `should evaluate SKJERMET_PERSON_V1 policy - permit`() {
+	fun `should evaluate NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1 policy - permit`() {
 		val navIdent = "Z1235"
 		val navAnsattId = UUID.randomUUID()
 		val requestId = UUID.randomUUID()
 
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-TODO"))
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_UTVIDET"))
 
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navIdent":"$navIdent"}""",
-			"SKJERMET_PERSON_V1"
+			"NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1"
 		)
 
 		response.body?.string() shouldBe permitResponse(requestId)
 	}
 
 	@Test
-	fun `should evaluate SKJERMET_PERSON_V1 policy - deny`() {
+	fun `should evaluate NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1 policy - deny`() {
 		val navIdent = "Z1235"
 		val navAnsattId = UUID.randomUUID()
 		val requestId = UUID.randomUUID()
@@ -148,12 +148,12 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navIdent":"$navIdent"}""",
-			"SKJERMET_PERSON_V1"
+			"NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1"
 		)
 
 		response.body?.string() shouldBe denyResponse(
 			requestId,
-			"NAV ansatt mangler tilgang til AD gruppen 0000-ga-TODO",
+			"NAV ansatt mangler tilgang til en av AD gruppene [0000-ga-gosys_utvidet, 0000-ga-pensjon_utvidet]",
 			"MANGLER_TILGANG_TIL_AD_GRUPPE"
 		)
 	}
