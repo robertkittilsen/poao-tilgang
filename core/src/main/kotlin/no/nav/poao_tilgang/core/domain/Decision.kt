@@ -7,6 +7,10 @@ sealed class Decision(val type: Type) {
 		PERMIT
 	}
 
+	val isPermit: Boolean get() = type == Type.PERMIT
+
+	val isDeny: Boolean get() = type == Type.DENY
+
 	object Permit : Decision(Type.PERMIT)
 
 	data class Deny(val message: String, val reason: DecisionDenyReason) : Decision(Type.DENY)
