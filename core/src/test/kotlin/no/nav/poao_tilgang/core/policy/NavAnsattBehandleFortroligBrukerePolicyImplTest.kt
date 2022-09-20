@@ -19,13 +19,13 @@ class NavAnsattBehandleFortroligBrukerePolicyImplTest {
 	private val policy = NavAnsattBehandleFortroligBrukerePolicyImpl(adGruppeProvider)
 
 	@Test
-	fun `should return "permit" if access to 0000-GA-GOSYS_KODE7`() {
+	fun `should return "permit" if access to 0000-GA-Fortrolig_Adresse`() {
 		val navIdent = "Z1234"
 
 		every {
 			adGruppeProvider.hentAdGrupper(navIdent)
 		} returns listOf(
-			AdGruppe(UUID.randomUUID(), AdGrupper.GOSYS_KODE_7),
+			AdGruppe(UUID.randomUUID(), AdGrupper.FORTROLIG_ADRESSE),
 			AdGruppe(UUID.randomUUID(), "some-other-group"),
 		)
 
@@ -35,7 +35,7 @@ class NavAnsattBehandleFortroligBrukerePolicyImplTest {
 	}
 
 	@Test
-	fun `should return "deny" if not access to 0000-GA-GOSYS_KODE7`() {
+	fun `should return "deny" if not access to 0000-GA-Fortrolig_Adresse`() {
 		val navIdent = "Z1234"
 
 		every {
@@ -49,7 +49,7 @@ class NavAnsattBehandleFortroligBrukerePolicyImplTest {
 		decision.type shouldBe Decision.Type.DENY
 
 		if (decision is Decision.Deny) {
-			decision.message shouldBe "NAV ansatt mangler tilgang til AD gruppen 0000-GA-GOSYS_KODE7"
+			decision.message shouldBe "NAV ansatt mangler tilgang til AD gruppen 0000-GA-Fortrolig_Adresse"
 			decision.reason shouldBe DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE
 		}
 	}

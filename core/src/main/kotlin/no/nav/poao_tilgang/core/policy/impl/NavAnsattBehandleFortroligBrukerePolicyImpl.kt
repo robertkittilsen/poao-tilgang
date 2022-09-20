@@ -14,7 +14,7 @@ class NavAnsattBehandleFortroligBrukerePolicyImpl(
 
 	companion object {
 		private val denyDecision = Decision.Deny(
-			message = "NAV ansatt mangler tilgang til AD gruppen ${AdGrupper.GOSYS_KODE_7}",
+			message = "NAV ansatt mangler tilgang til AD gruppen ${AdGrupper.FORTROLIG_ADRESSE}",
 			reason = DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE
 		)
 	}
@@ -22,7 +22,7 @@ class NavAnsattBehandleFortroligBrukerePolicyImpl(
 	override fun evaluate(input: NavAnsattBehandleFortroligBrukerePolicy.Input): Decision {
 		val adGruppper = adGruppeProvider.hentAdGrupper(input.navIdent)
 
-		val harTilgang = adGruppper.any { it.name == AdGrupper.GOSYS_KODE_7 }
+		val harTilgang = adGruppper.any { it.name == AdGrupper.FORTROLIG_ADRESSE }
 
 		return if (harTilgang) Decision.Permit else denyDecision
 	}
