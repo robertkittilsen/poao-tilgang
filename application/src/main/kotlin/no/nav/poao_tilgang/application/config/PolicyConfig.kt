@@ -35,4 +35,9 @@ open class PolicyConfig {
 		return StrengtFortroligBrukerPolicyImpl(adGruppeProvider)
 	}
 
+	@Bean
+	open fun navAnsattTilgangTilOppfolgingPolicy(adGruppeProvider: AdGruppeProvider): NavAnsattTilgangTilOppfolgingPolicy {
+		return NavAnsattTilgangTilOppfolgingPolicyImpl(adGruppeProvider)
+	}
+
 }
