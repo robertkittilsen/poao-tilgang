@@ -17,7 +17,7 @@ class NavAnsattBehandleStrengtFortroligUtlandBrukerePolicyImpl(
 		)
 	}
 
-	override val name = "NavAnsattBehandleStrengtFortroligUtland"
+	override val name = "NavAnsattBehandleStrengtFortroligUtlandBrukere"
 
 	override fun evaluate(input: NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy.Input): Decision {
 		val adGruppper = adGruppeProvider.hentAdGrupper(input.navIdent)
