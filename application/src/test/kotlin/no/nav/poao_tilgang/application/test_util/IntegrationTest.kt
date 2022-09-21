@@ -39,6 +39,7 @@ open class IntegrationTest {
 		val mockAxsysHttpServer = MockAxsysHttpServer()
 		val mockAbacHttpServer = MockAbacHttpServer()
 		val mockVeilarbarenaHttpServer = MockVeilarbarenaHttpServer()
+		val mockPdlHttpServer = MockPdlHttpServer()
 
 		@JvmStatic
 		@DynamicPropertySource
@@ -49,6 +50,7 @@ open class IntegrationTest {
 			mockAxsysHttpServer.start()
 			mockAbacHttpServer.start()
 			mockVeilarbarenaHttpServer.start()
+			mockPdlHttpServer.start()
 
 			registry.add("no.nav.security.jwt.issuer.azuread.discovery-url", mockOAuthServer::getDiscoveryUrl)
 			registry.add("no.nav.security.jwt.issuer.azuread.accepted-audience") { "test" }
@@ -58,6 +60,7 @@ open class IntegrationTest {
 			registry.add("axsys.url", mockAxsysHttpServer::serverUrl)
 			registry.add("abac.url", mockAbacHttpServer::serverUrl)
 			registry.add("veilarbarena.url", mockVeilarbarenaHttpServer::serverUrl)
+			registry.add("pdl.url", mockPdlHttpServer::serverUrl)
 		}
 	}
 
@@ -68,6 +71,7 @@ open class IntegrationTest {
 		mockAxsysHttpServer.reset()
 		mockAbacHttpServer.reset()
 		mockVeilarbarenaHttpServer.reset()
+		mockPdlHttpServer.reset()
 	}
 
 	fun serverUrl() = "http://localhost:$port"
