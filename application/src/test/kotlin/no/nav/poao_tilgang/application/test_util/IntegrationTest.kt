@@ -40,6 +40,7 @@ open class IntegrationTest {
 		val mockAbacHttpServer = MockAbacHttpServer()
 		val mockVeilarbarenaHttpServer = MockVeilarbarenaHttpServer()
 		val mockPdlHttpServer = MockPdlHttpServer()
+		val mockNorgHttpServer = MockNorgHttpServer()
 
 		@JvmStatic
 		@DynamicPropertySource
@@ -61,6 +62,7 @@ open class IntegrationTest {
 			registry.add("abac.url", mockAbacHttpServer::serverUrl)
 			registry.add("veilarbarena.url", mockVeilarbarenaHttpServer::serverUrl)
 			registry.add("pdl.url", mockPdlHttpServer::serverUrl)
+			registry.add("norg.url", mockNorgHttpServer::serverUrl)
 		}
 	}
 

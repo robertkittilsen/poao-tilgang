@@ -5,6 +5,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.slf4j.LoggerFactory
+import java.util.concurrent.TimeUnit
 
 open class MockHttpServer {
 
@@ -28,6 +29,7 @@ open class MockHttpServer {
 	fun reset() {
 		lastRequestCount = server.requestCount
 		responseHandlers.clear()
+		flushRequests()
 	}
 
 	fun serverUrl(): String {
@@ -100,4 +102,7 @@ open class MockHttpServer {
 		return hasHeaders
 	}
 
+	private fun flushRequests() {
+		while (server.takeRequest(1, TimeUnit.NANOSECONDS) != null) {}
+	}
 }

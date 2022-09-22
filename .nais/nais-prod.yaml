@@ -82,3 +82,5 @@ spec:
       value: api://prod-fss.pdl.pdl-api/.default
     - name: PDL_URL
       value: https://pdl-api.prod-fss-pub.nais.io
+    - name: RUNTIME_LOCATION
+      value: GCP
