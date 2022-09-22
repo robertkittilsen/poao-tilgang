@@ -29,8 +29,8 @@ class MockAxsysHttpServer : MockHttpServer() {
 			)
 
 		handleRequest(
-			path = "/api/v2/tilgang/\$brukerident?inkluderAlleEnheter=false",
-			method = "GET",
+			matchPath = "/api/v2/tilgang/\$brukerident?inkluderAlleEnheter=false",
+			matchMethod = "GET",
 			response = response
 		)
 	}

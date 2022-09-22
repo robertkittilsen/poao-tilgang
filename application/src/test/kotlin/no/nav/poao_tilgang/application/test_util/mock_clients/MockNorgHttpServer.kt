@@ -17,8 +17,8 @@ class MockNorgHttpServer : MockHttpServer() {
 			)
 
 		handleRequest(
-			path = "/api/v1/enhet/navkontor/$geografiskTilknytning",
-			method = "GET",
+			matchPath = "/api/v1/enhet/navkontor/$geografiskTilknytning",
+			matchMethod = "GET",
 			response = response
 		)
 	}
@@ -28,8 +28,8 @@ class MockNorgHttpServer : MockHttpServer() {
 			.setResponseCode(404)
 
 		handleRequest(
-			path = "/api/v1/enhet/navkontor/$geografiskTilknytning",
-			method = "GET",
+			matchPath = "/api/v1/enhet/navkontor/$geografiskTilknytning",
+			matchMethod = "GET",
 			response = response
 		)
 	}

@@ -22,8 +22,8 @@ class MockVeilarbarenaHttpServer : MockHttpServer() {
 			)
 
 		handleRequest(
-			path = "/api/arena/status?fnr=$norskIdent",
-			method = "GET",
+			matchPath = "/api/arena/status?fnr=$norskIdent",
+			matchMethod = "GET",
 			response = response
 		)
 	}
@@ -33,8 +33,8 @@ class MockVeilarbarenaHttpServer : MockHttpServer() {
 			.setResponseCode(404)
 
 		handleRequest(
-			path = "/api/arena/status?fnr=$norskIdent",
-			method = "GET",
+			matchPath = "/api/arena/status?fnr=$norskIdent",
+			matchMethod = "GET",
 			response = response
 		)
 	}

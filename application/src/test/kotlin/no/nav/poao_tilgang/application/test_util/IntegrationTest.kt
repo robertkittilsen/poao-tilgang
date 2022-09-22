@@ -52,6 +52,7 @@ open class IntegrationTest {
 			mockAbacHttpServer.start()
 			mockVeilarbarenaHttpServer.start()
 			mockPdlHttpServer.start()
+			mockNorgHttpServer.start()
 
 			registry.add("no.nav.security.jwt.issuer.azuread.discovery-url", mockOAuthServer::getDiscoveryUrl)
 			registry.add("no.nav.security.jwt.issuer.azuread.accepted-audience") { "test" }
@@ -74,6 +75,7 @@ open class IntegrationTest {
 		mockAbacHttpServer.reset()
 		mockVeilarbarenaHttpServer.reset()
 		mockPdlHttpServer.reset()
+		mockNorgHttpServer.reset()
 	}
 
 	fun serverUrl() = "http://localhost:$port"

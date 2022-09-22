@@ -6,7 +6,13 @@ import okhttp3.mockwebserver.MockResponse
 
 class MockPdlHttpServer : MockHttpServer() {
 
-	fun mockBrukerInfo(norskIdent: NorskIdent) {
+	fun mockBrukerInfo(
+		norskIdent: NorskIdent,
+		gradering: String? = null,
+		gtType: String = "KOMMUNE",
+		gtKommune: String? = null,
+		gtBydel: String? = null
+	) {
 		val response = MockResponse()
 			.setBody(
 				"""
@@ -14,15 +20,14 @@ class MockPdlHttpServer : MockHttpServer() {
 						"errors": null,
 						"data": {
 							"hentGeografiskTilknytning": {
-								"gtType": "KOMMUNE",
-								"gtKommune": "0570",
-								"gtBydel": "OSLO",
-								"gtLand": "NORGE"
+								"gtType": "$gtType",
+								"gtKommune": ${gtKommune?.let { """"$it"""" }},
+								"gtBydel": ${gtBydel?.let { """"$it"""" }}
 							},
 							"hentPerson": {
 								"adressebeskyttelse": [
 									{
-										"gradering": "FORTROLIG"
+										"gradering": ${gradering?.let { """"$it"""" }}
 									}
 								]
 							}
@@ -32,8 +37,9 @@ class MockPdlHttpServer : MockHttpServer() {
 			)
 
 		handleRequest(
-			path = "/graphql",
-			method = "POST",
+			matchPath = "/graphql",
+			matchMethod = "POST",
+			matchBodyContains = norskIdent,
 			response = response
 		)
 	}

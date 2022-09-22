@@ -56,7 +56,7 @@ object PdlQueries {
 		)
 
 		data class Adressebeskyttelse(
-			val gradering: String
+			val gradering: String?
 		)
 
 		data class HentGeografiskTilknytning(

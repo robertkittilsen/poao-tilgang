@@ -11,8 +11,8 @@ class MockSkjermetPersonHttpServer : MockHttpServer() {
 			.setBody(toJsonString(skjerming))
 
 		handleRequest(
-			path = "/skjermetBulk",
-			method = "POST",
+			matchPath = "/skjermetBulk",
+			matchMethod = "POST",
 			response = response
 		)
 	}

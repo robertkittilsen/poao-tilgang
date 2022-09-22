@@ -74,7 +74,6 @@ class PdlClientImpl(
 			"STRENGT_FORTROLIG_UTLAND" -> Adressebeskyttelse.STRENGT_FORTROLIG_UTLAND
 			"STRENGT_FORTROLIG" -> Adressebeskyttelse.STRENGT_FORTROLIG
 			"FORTROLIG" -> Adressebeskyttelse.FORTROLIG
-			"UGRADERT" -> null
 			else -> null
 		}
 	}

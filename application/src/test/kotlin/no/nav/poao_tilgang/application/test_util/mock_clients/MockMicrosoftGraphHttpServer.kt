@@ -21,8 +21,8 @@ class MockMicrosoftGraphHttpServer : MockHttpServer() {
 			)
 
 		handleRequest(
-			path = "/v1.0/directoryObjects/getByIds?\$select=id,displayName",
-			method = "POST",
+			matchPath = "/v1.0/directoryObjects/getByIds?\$select=id,displayName",
+			matchMethod = "POST",
 			response = response
 		)
 	}
@@ -38,8 +38,8 @@ class MockMicrosoftGraphHttpServer : MockHttpServer() {
 			)
 
 		handleRequest(
-			path = "/v1.0/users/${navAnsattAzureId}/getMemberGroups",
-			method = "POST",
+			matchPath = "/v1.0/users/${navAnsattAzureId}/getMemberGroups",
+			matchMethod = "POST",
 			response = response
 		)
 	}
@@ -55,8 +55,8 @@ class MockMicrosoftGraphHttpServer : MockHttpServer() {
 			)
 
 		handleRequest(
-			path = "/v1.0/users?\$select=id&\$count=true&\$filter=onPremisesSamAccountName%20eq%20%27$navIdent%27",
-			method = "GET",
+			matchPath = "/v1.0/users?\$select=id&\$count=true&\$filter=onPremisesSamAccountName%20eq%20%27$navIdent%27",
+			matchMethod = "GET",
 			response = response
 		)
 	}

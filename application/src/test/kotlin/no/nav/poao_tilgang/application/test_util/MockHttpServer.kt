@@ -41,23 +41,23 @@ open class MockHttpServer {
 	}
 
 	fun handleRequest(
-		path: String? = null,
-		method: String? = null,
-		headers: Map<String, String>? = null,
-		body: String? = null,
+		matchPath: String? = null,
+		matchMethod: String? = null,
+		matchHeaders: Map<String, String>? = null,
+		matchBodyContains: String? = null,
 		response: MockResponse
 	) {
 		val requestMatcher = matcher@{ req: RecordedRequest ->
-			if (path != null && req.path != path)
+			if (matchPath != null && req.path != matchPath)
 				return@matcher false
 
-			if (method != null && req.method != method)
+			if (matchMethod != null && req.method != matchMethod)
 				return@matcher false
 
-			if (headers != null && !hasExpectedHeaders(req.headers, headers))
+			if (matchHeaders != null && !hasExpectedHeaders(req.headers, matchHeaders))
 				return@matcher false
 
-			if (body != null && req.body.readUtf8() != body)
+			if (matchBodyContains != null && !req.body.readUtf8().contains(matchBodyContains))
 				return@matcher false
 
 			true

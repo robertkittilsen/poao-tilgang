@@ -1,11 +1,11 @@
 package no.nav.poao_tilgang.application.client.norg
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockNorgHttpServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class NorgHttpClientTest {
 
@@ -53,6 +53,6 @@ class NorgHttpClientTest {
 
 		mockServer.mockIngenTilhorendeEnhet("23456")
 
-		assertThrows<RuntimeException> { client.hentTilhorendeEnhet("23456") }
+		shouldThrow<RuntimeException> { client.hentTilhorendeEnhet("23456") }
 	}
 }
