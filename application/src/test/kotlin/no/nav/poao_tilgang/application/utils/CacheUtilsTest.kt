@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class CacheUtilsTest {
 
 	@Test
-	fun `skal cache for samme key`() {
+	fun `tryCacheFirstNotNull skal cache for samme key`() {
 		val cache = Caffeine.newBuilder()
 			.maximumSize(5)
 			.build<String, String>()
@@ -28,7 +28,7 @@ class CacheUtilsTest {
 	}
 
 	@Test
-	fun `skal ikke cache for forskjellig keys`() {
+	fun `tryCacheFirstNotNull skal ikke cache for forskjellig keys`() {
 		val cache = Caffeine.newBuilder()
 			.maximumSize(5)
 			.build<String, String>()
@@ -46,7 +46,7 @@ class CacheUtilsTest {
 	}
 
 	@Test
-	fun `skal cache null verdier`() {
+	fun `tryCacheFirstCacheNull skal cache null verdier`() {
 		val cache = Caffeine.newBuilder()
 			.maximumSize(5)
 			.build<String, NullWrapper<String>>()
@@ -61,6 +61,24 @@ class CacheUtilsTest {
 		tryCacheFirstCacheNull(cache, "key1", supplier)
 
 		counter.get() shouldBe 1
+	}
+
+	@Test
+	fun `tryCacheFirstNullable skal ikke cache null`() {
+		val cache = Caffeine.newBuilder()
+			.maximumSize(5)
+			.build<String, String>()
+
+		val counter = AtomicInteger()
+		val supplier = {
+			counter.incrementAndGet()
+			null
+		}
+
+		CacheUtils.tryCacheFirstNullable(cache, "key1", supplier)
+		CacheUtils.tryCacheFirstNullable(cache, "key1", supplier)
+
+		counter.get() shouldBe 2
 	}
 
 }
