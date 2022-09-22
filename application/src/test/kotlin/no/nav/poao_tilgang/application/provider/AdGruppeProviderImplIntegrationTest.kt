@@ -1,4 +1,4 @@
-package no.nav.poao_tilgang.application.service
+package no.nav.poao_tilgang.application.provider
 
 import io.kotest.matchers.shouldBe
 import no.nav.poao_tilgang.application.client.microsoft_graph.AdGruppe
