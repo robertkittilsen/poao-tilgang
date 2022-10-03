@@ -4,10 +4,8 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.UrlUtils.joinPaths
 import no.nav.poao_tilgang.api.dto.request.*
-import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerPolicyInputDto
-import no.nav.poao_tilgang.api.dto.request.policy_input.ModiaPolicyInputDto
-import no.nav.poao_tilgang.api.dto.request.policy_input.SkjermetPersonPolicyInputDto
-import no.nav.poao_tilgang.api.dto.request.policy_input.StrengtFortroligBrukerPolicyInputDto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputDto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputDto
 import no.nav.poao_tilgang.api.dto.response.*
 import no.nav.poao_tilgang.client.ClientObjectMapper.objectMapper
 import no.nav.poao_tilgang.client.api.*
@@ -126,41 +124,20 @@ class PoaoTilgangHttpClient(
 
 	private fun toRequestDto(policyRequest: PolicyRequest): PolicyEvaluationRequestDto<Any> {
 		return when (policyRequest.policyInput) {
-			is EksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
+			is NavAnsattTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
-				policyInput = EksternBrukerPolicyInputDto(
+				policyInput = NavAnsattTilgangTilEksternBrukerPolicyInputDto(
 					policyRequest.policyInput.navIdent,
 					policyRequest.policyInput.norskIdent
 				),
-				policyId = PolicyId.EKSTERN_BRUKER_V1
+				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1
 			)
-			is FortroligBrukerPolicyInput -> PolicyEvaluationRequestDto(
+			is NavAnsattTilgangTilModiaPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
-				policyInput = FortroligBrukerPolicyInput(
+				policyInput = NavAnsattTilgangTilModiaPolicyInputDto(
 					policyRequest.policyInput.navIdent,
 				),
-				policyId = PolicyId.FORTROLIG_BRUKER_V1
-			)
-			is ModiaPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = ModiaPolicyInputDto(
-					policyRequest.policyInput.navIdent,
-				),
-				policyId = PolicyId.MODIA_V1
-			)
-			is SkjermetPersonPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = SkjermetPersonPolicyInputDto(
-					policyRequest.policyInput.navIdent,
-				),
-				policyId = PolicyId.SKJERMET_PERSON_V1
-			)
-			is StrengtFortroligBrukerPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = StrengtFortroligBrukerPolicyInputDto(
-					policyRequest.policyInput.navIdent,
-				),
-				policyId = PolicyId.STRENGT_FORTROLIG_BRUKER_V1
+				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1
 			)
 		}
 	}

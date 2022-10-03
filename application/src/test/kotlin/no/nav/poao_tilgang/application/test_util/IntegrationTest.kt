@@ -1,10 +1,7 @@
 package no.nav.poao_tilgang.application.test_util
 
 import no.nav.poao_tilgang.application.Application
-import no.nav.poao_tilgang.application.test_util.mock_clients.MockAbacHttpServer
-import no.nav.poao_tilgang.application.test_util.mock_clients.MockAxsysHttpServer
-import no.nav.poao_tilgang.application.test_util.mock_clients.MockMicrosoftGraphHttpServer
-import no.nav.poao_tilgang.application.test_util.mock_clients.MockSkjermetPersonHttpServer
+import no.nav.poao_tilgang.application.test_util.mock_clients.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -41,6 +38,9 @@ open class IntegrationTest {
 		val mockSkjermetPersonHttpServer = MockSkjermetPersonHttpServer()
 		val mockAxsysHttpServer = MockAxsysHttpServer()
 		val mockAbacHttpServer = MockAbacHttpServer()
+		val mockVeilarbarenaHttpServer = MockVeilarbarenaHttpServer()
+		val mockPdlHttpServer = MockPdlHttpServer()
+		val mockNorgHttpServer = MockNorgHttpServer()
 
 		@JvmStatic
 		@DynamicPropertySource
@@ -50,6 +50,9 @@ open class IntegrationTest {
 			mockSkjermetPersonHttpServer.start()
 			mockAxsysHttpServer.start()
 			mockAbacHttpServer.start()
+			mockVeilarbarenaHttpServer.start()
+			mockPdlHttpServer.start()
+			mockNorgHttpServer.start()
 
 			registry.add("no.nav.security.jwt.issuer.azuread.discovery-url", mockOAuthServer::getDiscoveryUrl)
 			registry.add("no.nav.security.jwt.issuer.azuread.accepted-audience") { "test" }
@@ -58,6 +61,9 @@ open class IntegrationTest {
 			registry.add("skjermet_person.url", mockSkjermetPersonHttpServer::serverUrl)
 			registry.add("axsys.url", mockAxsysHttpServer::serverUrl)
 			registry.add("abac.url", mockAbacHttpServer::serverUrl)
+			registry.add("veilarbarena.url", mockVeilarbarenaHttpServer::serverUrl)
+			registry.add("pdl.url", mockPdlHttpServer::serverUrl)
+			registry.add("norg.url", mockNorgHttpServer::serverUrl)
 		}
 	}
 
@@ -67,6 +73,9 @@ open class IntegrationTest {
 		mockSkjermetPersonHttpServer.reset()
 		mockAxsysHttpServer.reset()
 		mockAbacHttpServer.reset()
+		mockVeilarbarenaHttpServer.reset()
+		mockPdlHttpServer.reset()
+		mockNorgHttpServer.reset()
 	}
 
 	fun serverUrl() = "http://localhost:$port"

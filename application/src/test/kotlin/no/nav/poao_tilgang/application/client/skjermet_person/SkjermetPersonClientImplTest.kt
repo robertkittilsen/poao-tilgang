@@ -10,31 +10,31 @@ import org.junit.jupiter.api.Test
 class SkjermetPersonClientImplTest {
 
 	companion object {
-		private val mockClient = MockHttpServer()
+		private val mockServer = MockHttpServer()
 
 		@BeforeAll
 		@JvmStatic
 		fun start() {
-			mockClient.start()
+			mockServer.start()
 		}
 	}
 
 	@AfterEach
 	fun reset() {
-		mockClient.reset()
+		mockServer.reset()
 	}
 
 	@Test
 	fun `erSkjermet - skal lage riktig request og parse respons`() {
 		val client = SkjermetPersonClientImpl(
-			baseUrl = mockClient.serverUrl(),
+			baseUrl = mockServer.serverUrl(),
 			tokenProvider = { "TOKEN" },
 		)
 
 		val fnr1 = "123456789"
 		val fnr2 = "573408953"
 
-		mockClient.handleRequest(
+		mockServer.handleRequest(
 			response = MockResponse()
 				.setBody(
 					"""
@@ -51,7 +51,7 @@ class SkjermetPersonClientImplTest {
 		skjerming[fnr1] shouldBe true
 		skjerming[fnr2] shouldBe false
 
-		val request = mockClient.latestRequest()
+		val request = mockServer.latestRequest()
 
 		request.path shouldBe "/skjermetBulk"
 		request.method shouldBe "POST"

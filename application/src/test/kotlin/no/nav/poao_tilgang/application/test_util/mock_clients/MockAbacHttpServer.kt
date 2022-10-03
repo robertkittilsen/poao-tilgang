@@ -7,8 +7,8 @@ class MockAbacHttpServer : MockHttpServer() {
 
 	fun mockPermit() {
 		handleRequest(
-			path = "/",
-			method = "POST",
+			matchPath = "/",
+			matchMethod = "POST",
 			response = MockResponse()
 				.setBody(
 					"""
@@ -32,8 +32,8 @@ class MockAbacHttpServer : MockHttpServer() {
 
 	fun mockDeny() {
 		handleRequest(
-			path = "/",
-			method = "POST",
+			matchPath = "/",
+			matchMethod = "POST",
 			response = MockResponse()
 				.setBody(
 					"""

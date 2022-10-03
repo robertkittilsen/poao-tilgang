@@ -14,11 +14,11 @@ import kotlin.system.measureTimeMillis
 
 @Service
 class PolicyService(
-	private val eksternBrukerPolicy: EksternBrukerPolicy,
-	private val fortroligBrukerPolicy: FortroligBrukerPolicy,
-	private val modiaPolicy: ModiaPolicy,
-	private val skjermetPersonPolicy: SkjermetPersonPolicy,
-	private val strengtFortroligBrukerPolicy: StrengtFortroligBrukerPolicy
+	private val navAnsattTilgangTilEksternBrukerPolicy: NavAnsattTilgangTilEksternBrukerPolicy,
+	private val navAnsattBehandleFortroligBrukerePolicy: NavAnsattBehandleFortroligBrukerePolicy,
+	private val navAnsattTilgangTilModiaPolicy: NavAnsattTilgangTilModiaPolicy,
+	private val navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy,
+	private val navAnsattBehandleStrengtFortroligBrukerePolicy: NavAnsattBehandleStrengtFortroligBrukerePolicy
 ) {
 
 	fun evaluatePolicyRequest(request: PolicyEvaluationRequest): PolicyEvaluationResult {
@@ -59,11 +59,11 @@ class PolicyService(
 
 	private fun evaluate(input: PolicyInput): PolicyResult {
 		return when(input) {
-			is EksternBrukerPolicy.Input -> evaluate(input, eksternBrukerPolicy)
-			is FortroligBrukerPolicy.Input -> evaluate(input, fortroligBrukerPolicy)
-			is ModiaPolicy.Input -> evaluate(input, modiaPolicy)
-			is SkjermetPersonPolicy.Input -> evaluate(input, skjermetPersonPolicy)
-			is StrengtFortroligBrukerPolicy.Input -> evaluate(input, strengtFortroligBrukerPolicy)
+			is NavAnsattTilgangTilEksternBrukerPolicy.Input -> evaluate(input, navAnsattTilgangTilEksternBrukerPolicy)
+			is NavAnsattBehandleFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleFortroligBrukerePolicy)
+			is NavAnsattTilgangTilModiaPolicy.Input -> evaluate(input, navAnsattTilgangTilModiaPolicy)
+			is NavAnsattBehandleSkjermedePersonerPolicy.Input -> evaluate(input, navAnsattBehandleSkjermedePersonerPolicy)
+			is NavAnsattBehandleStrengtFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleStrengtFortroligBrukerePolicy)
 			else -> throw InvalidPolicyRequestException("Ukjent policy ${input.javaClass.canonicalName}")
 		}
 	}

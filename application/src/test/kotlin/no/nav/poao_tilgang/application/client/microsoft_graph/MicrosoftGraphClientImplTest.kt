@@ -11,30 +11,30 @@ import java.util.*
 class MicrosoftGraphClientImplTest {
 
 	companion object {
-		private val mockClient = MockHttpServer()
+		private val mockServer = MockHttpServer()
 
 		@BeforeAll
 		@JvmStatic
 		fun start() {
-			mockClient.start()
+			mockServer.start()
 		}
 	}
 
 	@AfterEach
 	fun reset() {
-		mockClient.reset()
+		mockServer.reset()
 	}
 
 	@Test
 	fun `hentAdGrupper - skal lage riktig request og parse respons`() {
 		val client = MicrosoftGraphClientImpl(
-			baseUrl = mockClient.serverUrl(),
+			baseUrl = mockServer.serverUrl(),
 			tokenProvider = { "TOKEN" },
 		)
 
 		val adGruppeId = UUID.randomUUID()
 
-		mockClient.handleRequest(
+		mockServer.handleRequest(
 			response = MockResponse()
 				.setBody(
 					"""
@@ -57,7 +57,7 @@ class MicrosoftGraphClientImplTest {
 		adGrupper.first().id shouldBe adGruppeId
 		adGrupper.first().name shouldBe "Test"
 
-		val request = mockClient.latestRequest()
+		val request = mockServer.latestRequest()
 
 		request.path shouldBe "/v1.0/directoryObjects/getByIds?\$select=id,displayName"
 		request.method shouldBe "POST"
@@ -73,14 +73,14 @@ class MicrosoftGraphClientImplTest {
 	@Test
 	fun `hentAdGrupperForNavAnsatt - skal lage riktig request og parse respons`() {
 		val client = MicrosoftGraphClientImpl(
-			baseUrl = mockClient.serverUrl(),
+			baseUrl = mockServer.serverUrl(),
 			tokenProvider = { "TOKEN" },
 		)
 
 		val navAnsattAzureId = UUID.randomUUID()
 		val adGroupAzureId = UUID.randomUUID()
 
-		mockClient.handleRequest(
+		mockServer.handleRequest(
 			response = MockResponse()
 				.setBody(
 					"""
@@ -98,7 +98,7 @@ class MicrosoftGraphClientImplTest {
 
 		adGrupper.first() shouldBe adGroupAzureId
 
-		val request = mockClient.latestRequest()
+		val request = mockServer.latestRequest()
 
 		request.path shouldBe "/v1.0/users/$navAnsattAzureId/getMemberGroups"
 		request.method shouldBe "POST"
@@ -114,14 +114,14 @@ class MicrosoftGraphClientImplTest {
 	@Test
 	fun `hentAzureIdForNavAnsatt - skal lage riktig request og parse respons`() {
 		val client = MicrosoftGraphClientImpl(
-			baseUrl = mockClient.serverUrl(),
+			baseUrl = mockServer.serverUrl(),
 			tokenProvider = { "TOKEN" },
 		)
 
 		val navIdent = "Z1234"
 		val navAnsattAzureId = UUID.randomUUID()
 
-		mockClient.handleRequest(
+		mockServer.handleRequest(
 			response = MockResponse()
 				.setBody(
 					"""
@@ -141,7 +141,7 @@ class MicrosoftGraphClientImplTest {
 
 		azureId shouldBe navAnsattAzureId
 
-		val request = mockClient.latestRequest()
+		val request = mockServer.latestRequest()
 
 		request.path shouldBe "/v1.0/users?\$select=id&\$count=true&\$filter=onPremisesSamAccountName%20eq%20%27$navIdent%27"
 		request.method shouldBe "GET"

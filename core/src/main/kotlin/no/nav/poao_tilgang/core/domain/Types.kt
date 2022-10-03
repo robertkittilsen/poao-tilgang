@@ -7,3 +7,7 @@ typealias AzureObjectId = UUID
 typealias AdGruppeNavn = String
 
 typealias NavIdent = String
+
+typealias NorskIdent = String
+
+typealias NavEnhetId = String

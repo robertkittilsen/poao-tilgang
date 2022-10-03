@@ -74,3 +74,13 @@ spec:
       value: https://abac-veilarb-proxy.dev-fss-pub.nais.io/api/proxy/abac
     - name: ABAC_SCOPE
       value: api://dev-fss.pto.abac-veilarb-proxy/.default
+    - name: VEILARBARENA_URL
+      value: https://veilarbarena.dev-fss-pub.nais.io/veilarbarena
+    - name: VEILARBARENA_SCOPE
+      value: api://dev-fss.pto.veilarbarena/.default
+    - name: PDL_SCOPE
+      value: api://dev-fss.pdl.pdl-api/.default
+    - name: PDL_URL
+      value: https://pdl-api.dev-fss-pub.nais.io
+    - name: RUNTIME_LOCATION
+      value: GCP

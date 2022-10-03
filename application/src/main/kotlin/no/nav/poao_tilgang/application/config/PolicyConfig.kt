@@ -11,28 +11,33 @@ import org.springframework.context.annotation.Configuration
 open class PolicyConfig {
 
 	@Bean
-	open fun eksternBrukerPolicy(abacProvider: AbacProvider): EksternBrukerPolicy {
-		return EksternBrukerPolicyImpl(abacProvider)
+	open fun navAnsattTilgangTilEksternBrukerPolicy(abacProvider: AbacProvider): NavAnsattTilgangTilEksternBrukerPolicy {
+		return NavAnsattTilgangTilEksternBrukerPolicyImpl(abacProvider)
 	}
 
 	@Bean
-	open fun fortroligBrukerPolicy(adGruppeProvider: AdGruppeProvider): FortroligBrukerPolicy {
-		return FortroligBrukerPolicyImpl(adGruppeProvider)
+	open fun navAnsattBehandleFortroligBrukerePolicy(adGruppeProvider: AdGruppeProvider): NavAnsattBehandleFortroligBrukerePolicy {
+		return NavAnsattBehandleFortroligBrukerePolicyImpl(adGruppeProvider)
 	}
 
 	@Bean
-	open fun modiaPolicy(adGruppeProvider: AdGruppeProvider): ModiaPolicy {
-		return ModiaPolicyImpl(adGruppeProvider)
+	open fun navAnsattTilgangTilModiaPolicy(adGruppeProvider: AdGruppeProvider): NavAnsattTilgangTilModiaPolicy {
+		return NavAnsattTilgangTilModiaPolicyImpl(adGruppeProvider)
 	}
 
 	@Bean
-	open fun skjermetPersonPolicy(adGruppeProvider: AdGruppeProvider): SkjermetPersonPolicy {
-		return SkjermetPersonPolicyImpl(adGruppeProvider)
+	open fun navAnsattBehandleSkjermedePersonerPolicy(adGruppeProvider: AdGruppeProvider): NavAnsattBehandleSkjermedePersonerPolicy {
+		return NavAnsattBehandleSkjermedePersonerPolicyImpl(adGruppeProvider)
 	}
 
 	@Bean
-	open fun strengtFortroligBrukerPolicy(adGruppeProvider: AdGruppeProvider): StrengtFortroligBrukerPolicy {
-		return StrengtFortroligBrukerPolicyImpl(adGruppeProvider)
+	open fun navAnsattBehandleStrengtFortroligBrukerePolicy(adGruppeProvider: AdGruppeProvider): NavAnsattBehandleStrengtFortroligBrukerePolicy {
+		return NavAnsattBehandleStrengtFortroligBrukerePolicyImpl(adGruppeProvider)
+	}
+
+	@Bean
+	open fun navAnsattTilgangTilOppfolgingPolicy(adGruppeProvider: AdGruppeProvider): NavAnsattTilgangTilOppfolgingPolicy {
+		return NavAnsattTilgangTilOppfolgingPolicyImpl(adGruppeProvider)
 	}
 
 }

@@ -11,18 +11,18 @@ import org.junit.jupiter.api.Test
 class AxsysClientImplTest {
 
 	companion object {
-		private val mockClient = MockHttpServer()
+		private val mockServer = MockHttpServer()
 
 		@BeforeAll
 		@JvmStatic
 		fun start() {
-			mockClient.start()
+			mockServer.start()
 		}
 	}
 
 	@AfterEach
 	fun reset() {
-		mockClient.reset()
+		mockServer.reset()
 	}
 
 	@Test
@@ -30,14 +30,14 @@ class AxsysClientImplTest {
 		val brukerident = "AB12345"
 
 		val client = AxsysClientImpl(
-			baseUrl = mockClient.serverUrl(),
+			baseUrl = mockServer.serverUrl(),
 			proxyTokenProvider = { "PROXY_TOKEN" },
 			axsysTokenProvider = { "AXSYS_TOKEN" },
 		)
 
 		System.setProperty("NAIS_APP_NAME", "poao-tilgang")
 
-		mockClient.handleRequest(
+		mockServer.handleRequest(
 			response = MockResponse()
 				.setBody(
 					"""
@@ -65,7 +65,7 @@ class AxsysClientImplTest {
 		enhetTilgang.enhetId shouldBe "0104"
 		enhetTilgang.temaer.containsAll(listOf("MOB", "OPA", "HJE")) shouldBe true
 
-		val request = mockClient.latestRequest()
+		val request = mockServer.latestRequest()
 
 		request.path shouldBe "/api/v2/tilgang/$brukerident?inkluderAlleEnheter=false"
 		request.getHeader("Authorization") shouldBe "Bearer PROXY_TOKEN"

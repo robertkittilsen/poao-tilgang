@@ -41,37 +41,19 @@ class TilgangHttpClientTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `evaluatePolicy - should evaluate ModiaPolicy`() {
+	fun `evaluatePolicy - should evaluate EksternBrukerPolicy`() {
+		mockAbacHttpServer.mockPermit()
+
+		val decision = client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInput(navIdent, "34543543")).getOrThrow()
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
+	fun `evaluatePolicy - should evaluate NavAnsattTilgangTilModiaPolicy`() {
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-bd06_modiagenerelltilgang"))
 
-		val decision = client.evaluatePolicy(ModiaPolicyInput(navIdent)).getOrThrow()
-
-		decision shouldBe Decision.Permit
-	}
-
-	@Test
-	fun `evaluatePolicy - should evaluate FortroligBrukerPolicy`() {
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_KODE7"))
-
-		val decision = client.evaluatePolicy(FortroligBrukerPolicyInput(navIdent)).getOrThrow()
-
-		decision shouldBe Decision.Permit
-	}
-
-	@Test
-	fun `evaluatePolicy - should evaluate StrengtFortroligBrukerPolicy`() {
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-GA-GOSYS_KODE6"))
-
-		val decision = client.evaluatePolicy(StrengtFortroligBrukerPolicyInput(navIdent)).getOrThrow()
-
-		decision shouldBe Decision.Permit
-	}
-
-	@Test
-	fun `evaluatePolicy - should evaluate SkjermetPersonPolicy`() {
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-TODO"))
-
-		val decision = client.evaluatePolicy(SkjermetPersonPolicyInput(navIdent)).getOrThrow()
+		val decision = client.evaluatePolicy(NavAnsattTilgangTilModiaPolicyInput(navIdent)).getOrThrow()
 
 		decision shouldBe Decision.Permit
 	}
