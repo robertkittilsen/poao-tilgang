@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class NorgConfig(
 	@Value("\$runtimeLocation") val runtimeLocation: String,
-	@Value("\${norg.url}") val norgUrl: String?,
-	@Value("\${poao-gcp-proxy.url}") val proxyUrl: String?,
-	@Value("\${poao-gcp-proxy.scope}") val proxyScope: String?
+	@Value("\${norg.url:#{null}}") val norgUrl: String?,
+	@Value("\${poao-gcp-proxy.url:#{null}}") val proxyUrl: String?,
+	@Value("\${poao-gcp-proxy.scope:#{null}}") val proxyScope: String?
 ) {
 
 	@Bean
