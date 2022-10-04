@@ -7,6 +7,7 @@ import no.nav.common.log.LogFilter
 import no.nav.common.token_client.builder.AzureAdTokenClientBuilder
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
@@ -36,10 +37,23 @@ open class ApplicationConfig {
 		registration.filter = LogFilter(
 			APPLICATION_NAME, EnvironmentUtils.isDevelopment().orElse(false)
 		)
-		registration.order = 1
+		registration.order = -1
 		registration.addUrlPatterns("/*")
 		return registration
 	}
+
+	@Bean
+	open fun requesterNameLogFilterRegistrationBean(
+		tokenValidationContextHolder: TokenValidationContextHolder
+	): FilterRegistrationBean<RequesterNameLogFilter> {
+		val registration = FilterRegistrationBean<RequesterNameLogFilter>()
+		registration.filter = RequesterNameLogFilter(tokenValidationContextHolder)
+
+		registration.order = 1
+		registration.addUrlPatterns("/api/*")
+		return registration
+	}
+
 
 	@Bean
 	open fun abacClient(
@@ -48,7 +62,7 @@ open class ApplicationConfig {
 		@Value("\${abac.scope}") abacScope: String
 	): AbacClient {
 		val client = AbacHttpClient(abacUrl)
-			{ "Bearer " + machineToMachineTokenClient.createMachineToMachineToken(abacScope) }
+		{ "Bearer " + machineToMachineTokenClient.createMachineToMachineToken(abacScope) }
 
 		return AbacCachedClient(client)
 	}

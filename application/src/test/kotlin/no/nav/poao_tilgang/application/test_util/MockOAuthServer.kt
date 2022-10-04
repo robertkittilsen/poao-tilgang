@@ -41,9 +41,11 @@ open class MockOAuthServer {
 	fun issueAzureAdM2MToken(
 		subject: String = "test",
 		audience: String = "test",
+		azpName: String = "cluster:namespace:integrasjonstest",
 		claims: Map<String, Any> = emptyMap()
 	): String {
 		val claimsWithRoles = claims.toMutableMap()
+		claimsWithRoles["azp_name"] = azpName
 		claimsWithRoles["roles"] = arrayOf(AuthService.ACCESS_AS_APPLICATION_ROLE)
 
 		return server.issueToken(azureAdIssuer, subject, audience, claimsWithRoles).serialize()
