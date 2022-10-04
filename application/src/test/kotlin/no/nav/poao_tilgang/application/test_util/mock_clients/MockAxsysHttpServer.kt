@@ -6,7 +6,7 @@ import okhttp3.mockwebserver.MockResponse
 
 class MockAxsysHttpServer : MockHttpServer() {
 
-	fun mockHentTilgangerResponse(tilganger: List<EnhetTilgang>) {
+	fun mockHentTilgangerResponse(navIdent: String, tilganger: List<EnhetTilgang>) {
 		val response = MockResponse()
 			.setBody(
 				"""
@@ -29,7 +29,7 @@ class MockAxsysHttpServer : MockHttpServer() {
 			)
 
 		handleRequest(
-			matchPath = "/api/v2/tilgang/\$brukerident?inkluderAlleEnheter=false",
+			matchPath = "/api/v2/tilgang/$navIdent?inkluderAlleEnheter=false",
 			matchMethod = "GET",
 			response = response
 		)

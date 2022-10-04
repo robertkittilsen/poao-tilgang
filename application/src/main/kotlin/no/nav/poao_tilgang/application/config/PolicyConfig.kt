@@ -2,8 +2,7 @@ package no.nav.poao_tilgang.application.config
 
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.policy.impl.*
-import no.nav.poao_tilgang.core.provider.AbacProvider
-import no.nav.poao_tilgang.core.provider.AdGruppeProvider
+import no.nav.poao_tilgang.core.provider.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -11,8 +10,73 @@ import org.springframework.context.annotation.Configuration
 open class PolicyConfig {
 
 	@Bean
-	open fun navAnsattTilgangTilEksternBrukerPolicy(abacProvider: AbacProvider): NavAnsattTilgangTilEksternBrukerPolicy {
-		return NavAnsattTilgangTilEksternBrukerPolicyImpl(abacProvider)
+	open fun navAnsattTilgangTilEksternBrukerPolicy(
+		abacProvider: AbacProvider,
+		navAnsattTilgangTilAdressebeskyttetBrukerPolicy: NavAnsattTilgangTilAdressebeskyttetBrukerPolicy,
+		navAnsattTilgangTilSkjermetPersonPolicy: NavAnsattTilgangTilSkjermetPersonPolicy,
+		navAnsattTilgangTilEksternBrukerNavEnhetPolicy: NavAnsattTilgangTilEksternBrukerNavEnhetPolicy,
+		navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy
+	): NavAnsattTilgangTilEksternBrukerPolicy {
+		return NavAnsattTilgangTilEksternBrukerPolicyImpl(
+			abacProvider,
+			navAnsattTilgangTilAdressebeskyttetBrukerPolicy,
+			navAnsattTilgangTilSkjermetPersonPolicy,
+			navAnsattTilgangTilEksternBrukerNavEnhetPolicy,
+			navAnsattTilgangTilOppfolgingPolicy
+		)
+	}
+
+	@Bean
+	open fun navAnsattTilgangTilAdressebeskyttetBrukerPolicy(
+		diskresjonskodeProvider: DiskresjonskodeProvider,
+		navAnsattBehandleFortroligBrukerePolicy: NavAnsattBehandleFortroligBrukerePolicy,
+		navAnsattBehandleStrengtFortroligBrukerePolicy: NavAnsattBehandleStrengtFortroligBrukerePolicy,
+		navAnsattBehandleStrengtFortroligUtlandBrukerePolicy: NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy
+	): NavAnsattTilgangTilAdressebeskyttetBrukerPolicy {
+		return NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImpl(
+			diskresjonskodeProvider,
+			navAnsattBehandleFortroligBrukerePolicy,
+			navAnsattBehandleStrengtFortroligBrukerePolicy,
+			navAnsattBehandleStrengtFortroligUtlandBrukerePolicy
+		)
+	}
+
+	@Bean
+	open fun navAnsattTilgangTilSkjermetPersonPolicy(
+		skjermetPersonProvider: SkjermetPersonProvider,
+		navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy
+	): NavAnsattTilgangTilSkjermetPersonPolicy {
+		return NavAnsattTilgangTilSkjermetPersonPolicyImpl(
+			skjermetPersonProvider, navAnsattBehandleSkjermedePersonerPolicy
+		)
+	}
+
+	@Bean
+	open fun navAnsattTilgangTilEksternBrukerNavEnhetPolicy(
+		oppfolgingsenhetProvider: OppfolgingsenhetProvider,
+		geografiskTilknyttetEnhetProvider: GeografiskTilknyttetEnhetProvider,
+		tilgangTilNavEnhetPolicy: NavAnsattTilgangTilNavEnhetPolicy
+	): NavAnsattTilgangTilEksternBrukerNavEnhetPolicy {
+		return NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
+			oppfolgingsenhetProvider, geografiskTilknyttetEnhetProvider, tilgangTilNavEnhetPolicy
+		)
+	}
+
+	@Bean
+	open fun tilgangTilNavEnhetPolicy(
+		navEnhetTilgangProvider: NavEnhetTilgangProvider,
+		adGruppeProvider: AdGruppeProvider
+	): NavAnsattTilgangTilNavEnhetPolicy {
+		return NavAnsattTilgangTilNavEnhetPolicyImpl(
+			navEnhetTilgangProvider, adGruppeProvider
+		)
+	}
+
+	@Bean
+	open fun navAnsattBehandleStrengtFortroligUtlandBrukerePolicy(
+		adGruppeProvider: AdGruppeProvider
+	): NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy {
+		return NavAnsattBehandleStrengtFortroligUtlandBrukerePolicyImpl(adGruppeProvider)
 	}
 
 	@Bean

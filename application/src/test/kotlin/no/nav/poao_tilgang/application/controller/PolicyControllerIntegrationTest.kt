@@ -10,10 +10,14 @@ import java.util.*
 
 class PolicyControllerIntegrationTest : IntegrationTest() {
 
+	val navIdent = "Z1235"
+	val norskIdent = "6456532"
+	val navAnsattId = UUID.randomUUID()
+
 	@Test
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1 policy - permit`() {
-		val navIdent = "Z1235"
-		val norskIdent = "6456532"
+		setupMocks()
+
 		val requestId = UUID.randomUUID()
 
 		mockAbacHttpServer.mockPermit()
@@ -29,11 +33,10 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 	@Test
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1 policy - deny`() {
-		val navIdent = "Z1235"
-		val norskIdent = "6456532"
-		val requestId = UUID.randomUUID()
-
+		setupMocks()
 		mockAbacHttpServer.mockDeny()
+
+		val requestId = UUID.randomUUID()
 
 		val response = sendPolicyRequest(
 			requestId,
@@ -41,13 +44,11 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1"
 		)
 
-		response.body?.string() shouldBe denyResponse(requestId,"Deny fra ABAC", "IKKE_TILGANG_FRA_ABAC")
+		response.body?.string() shouldBe denyResponse(requestId, "Deny fra ABAC", "IKKE_TILGANG_FRA_ABAC")
 	}
 
 	@Test
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_MODIA_V1 policy - permit`() {
-		val navIdent = "Z1235"
-		val navAnsattId = UUID.randomUUID()
 		val requestId = UUID.randomUUID()
 
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-bd06_modiagenerelltilgang"))
@@ -63,8 +64,6 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 	@Test
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_MODIA_V1 policy - deny`() {
-		val navIdent = "Z1235"
-		val navAnsattId = UUID.randomUUID()
 		val requestId = UUID.randomUUID()
 
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-some-group"))
@@ -128,5 +127,24 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		mockMicrosoftGraphHttpServer.mockHentAdGrupperResponse(adGrupper)
 	}
+
+	private fun setupMocks() {
+		mockPdlHttpServer.mockBrukerInfo(
+			norskIdent = norskIdent,
+			gtKommune = "1234"
+		)
+
+		mockSkjermetPersonHttpServer.mockErSkjermet(
+			mapOf(
+				norskIdent to false
+			)
+		)
+
+		mockVeilarbarenaHttpServer.mockOppfolgingsenhet(norskIdent, "1234")
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-some-group"))
+
+		mockAxsysHttpServer.mockHentTilgangerResponse(navIdent, listOf())
+	}
+
 
 }

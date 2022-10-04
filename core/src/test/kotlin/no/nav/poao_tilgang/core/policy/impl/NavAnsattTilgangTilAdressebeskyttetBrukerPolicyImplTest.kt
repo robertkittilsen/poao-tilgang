@@ -1,4 +1,4 @@
-package no.nav.poao_tilgang.core.policy
+package no.nav.poao_tilgang.core.policy.impl
 
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -6,7 +6,10 @@ import io.mockk.mockk
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.domain.Diskresjonskode
-import no.nav.poao_tilgang.core.policy.impl.NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImpl
+import no.nav.poao_tilgang.core.policy.NavAnsattBehandleFortroligBrukerePolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattBehandleStrengtFortroligBrukerePolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilAdressebeskyttetBrukerPolicy
 import no.nav.poao_tilgang.core.provider.DiskresjonskodeProvider
 import org.junit.jupiter.api.Test
 

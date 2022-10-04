@@ -7,7 +7,8 @@ import no.nav.poao_tilgang.application.utils.SecureLog
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.Policy
 import no.nav.poao_tilgang.core.domain.PolicyInput
-import no.nav.poao_tilgang.core.policy.*
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.system.measureTimeMillis
@@ -15,10 +16,7 @@ import kotlin.system.measureTimeMillis
 @Service
 class PolicyService(
 	private val navAnsattTilgangTilEksternBrukerPolicy: NavAnsattTilgangTilEksternBrukerPolicy,
-	private val navAnsattBehandleFortroligBrukerePolicy: NavAnsattBehandleFortroligBrukerePolicy,
 	private val navAnsattTilgangTilModiaPolicy: NavAnsattTilgangTilModiaPolicy,
-	private val navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy,
-	private val navAnsattBehandleStrengtFortroligBrukerePolicy: NavAnsattBehandleStrengtFortroligBrukerePolicy
 ) {
 
 	fun evaluatePolicyRequest(request: PolicyEvaluationRequest): PolicyEvaluationResult {
@@ -58,12 +56,9 @@ class PolicyService(
 	}
 
 	private fun evaluate(input: PolicyInput): PolicyResult {
-		return when(input) {
+		return when (input) {
 			is NavAnsattTilgangTilEksternBrukerPolicy.Input -> evaluate(input, navAnsattTilgangTilEksternBrukerPolicy)
-			is NavAnsattBehandleFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleFortroligBrukerePolicy)
 			is NavAnsattTilgangTilModiaPolicy.Input -> evaluate(input, navAnsattTilgangTilModiaPolicy)
-			is NavAnsattBehandleSkjermedePersonerPolicy.Input -> evaluate(input, navAnsattBehandleSkjermedePersonerPolicy)
-			is NavAnsattBehandleStrengtFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleStrengtFortroligBrukerePolicy)
 			else -> throw InvalidPolicyRequestException("Ukjent policy ${input.javaClass.canonicalName}")
 		}
 	}

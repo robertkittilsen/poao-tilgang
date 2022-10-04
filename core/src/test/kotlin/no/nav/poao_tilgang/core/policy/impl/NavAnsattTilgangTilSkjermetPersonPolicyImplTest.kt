@@ -1,11 +1,12 @@
-package no.nav.poao_tilgang.core.policy
+package no.nav.poao_tilgang.core.policy.impl
 
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
-import no.nav.poao_tilgang.core.policy.impl.NavAnsattTilgangTilSkjermetPersonPolicyImpl
+import no.nav.poao_tilgang.core.policy.NavAnsattBehandleSkjermedePersonerPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilSkjermetPersonPolicy
 import no.nav.poao_tilgang.core.provider.SkjermetPersonProvider
 import org.junit.jupiter.api.Test
 

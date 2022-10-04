@@ -7,20 +7,17 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 open class AxsysClientConfig(
+	@Value("\${axsys.url}") val axsysUrl: String,
 	@Value("\${axsys.scope}") val axsysScope: String,
-	@Value("\${poao-gcp-proxy.url}") val proxyUrl: String,
-	@Value("\${poao-gcp-proxy.scope}") val proxyScope: String,
 ) {
 
 	@Bean
 	open fun axsysClient(machineToMachineTokenClient: MachineToMachineTokenClient): AxsysClient {
-		val delegate = AxsysClientImpl(
-			baseUrl = proxyUrl,
-			proxyTokenProvider = { machineToMachineTokenClient.createMachineToMachineToken(proxyScope) },
-			axsysTokenProvider = { machineToMachineTokenClient.createMachineToMachineToken(axsysScope) },
+		val client = AxsysClientImpl(
+			baseUrl = axsysUrl,
+			tokenProvider = { machineToMachineTokenClient.createMachineToMachineToken(axsysScope) }
 		)
 
-		return CachedAxsysClient(delegate)
+		return CachedAxsysClient(client)
 	}
-
 }

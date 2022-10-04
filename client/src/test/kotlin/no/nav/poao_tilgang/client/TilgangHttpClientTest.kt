@@ -41,8 +41,9 @@ class TilgangHttpClientTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `evaluatePolicy - should evaluate EksternBrukerPolicy`() {
+	fun `evaluatePolicy - should evaluate NavAnsattTilgangTilEksternBrukerPolicy`() {
 		mockAbacHttpServer.mockPermit()
+		setupMocks()
 
 		val decision = client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInput(navIdent, "34543543")).getOrThrow()
 
@@ -126,4 +127,29 @@ class TilgangHttpClientTest : IntegrationTest() {
 
 		mockMicrosoftGraphHttpServer.mockHentAdGrupperResponse(adGrupper)
 	}
+
+	private fun setupMocks() {
+		val navIdent = "Z1235"
+		val norskIdent = "6456532"
+		val navAnsattId = UUID.randomUUID()
+
+		mockAbacHttpServer.mockDeny()
+
+		mockPdlHttpServer.mockBrukerInfo(
+			norskIdent = norskIdent,
+			gtKommune = "1234"
+		)
+
+		mockSkjermetPersonHttpServer.mockErSkjermet(
+			mapOf(
+				norskIdent to false
+			)
+		)
+
+		mockVeilarbarenaHttpServer.mockOppfolgingsenhet(norskIdent, "1234")
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-some-group"))
+
+		mockAxsysHttpServer.mockHentTilgangerResponse(navIdent, listOf())
+	}
+
 }

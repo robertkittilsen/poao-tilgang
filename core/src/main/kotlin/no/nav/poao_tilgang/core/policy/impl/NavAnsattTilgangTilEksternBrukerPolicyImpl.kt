@@ -2,16 +2,41 @@ package no.nav.poao_tilgang.core.policy.impl
 
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
-import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
+import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.provider.AbacProvider
+import org.slf4j.LoggerFactory
 
 class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	private val abacProvider: AbacProvider,
+	private val navAnsattTilgangTilAdressebeskyttetBrukerPolicy: NavAnsattTilgangTilAdressebeskyttetBrukerPolicy,
+	private val navAnsattTilgangTilSkjermetPersonPolicy: NavAnsattTilgangTilSkjermetPersonPolicy,
+	private val navAnsattTilgangTilEksternBrukerNavEnhetPolicy: NavAnsattTilgangTilEksternBrukerNavEnhetPolicy,
+	private val navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy
 ) : NavAnsattTilgangTilEksternBrukerPolicy {
+
+	private val log = LoggerFactory.getLogger(javaClass)
+	private val secureLog = LoggerFactory.getLogger("SecureLog")
 
 	override val name = "NavAnsattTilgangTilEksternBruker"
 
 	override fun evaluate(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
+		val harTilgangAbac = harTilgangAbac(input)
+
+		try {
+			val harTilgang = harTilgang(input)
+
+			if (harTilgangAbac != harTilgang) {
+				secureLog.info("ABAC=($harTilgangAbac) og POAO-tilgang=($harTilgang) har ulikt svar om tilgang. Input=$input")
+			}
+		} catch (e: Throwable) {
+			log.error("Feil i POAO-tilgang implementasjon", e)
+		}
+
+
+		return harTilgangAbac
+	}
+
+	internal fun harTilgangAbac(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
 		val (navIdent, norskIdent) = input
 
 		val harTilgang = abacProvider.harVeilederTilgangTilPerson(navIdent, norskIdent)
@@ -20,27 +45,37 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 			"Deny fra ABAC",
 			DecisionDenyReason.IKKE_TILGANG_FRA_ABAC
 		)
+	}
 
-//		val diskresjonskode = diskresjonskodeProvider.hentDiskresjonskode(norskIdent)
-//
-//		if (diskresjonskode == Diskresjonskode.STRENGT_FORTROLIG) {
-//			strengtFortroligBrukerPolicy.evaluate(
-//				StrengtFortroligBrukerPolicy.Input(navIdent)
-//			).let {
-//				if (it is Decision.Deny) return it
-//			}
-//		} else if (diskresjonskode == Diskresjonskode.FORTROLIG) {
-//			fortroligBrukerPolicy.evaluate(
-//				FortroligBrukerPolicy.Input(navIdent)
-//			).let {
-//				if (it is Decision.Deny) return it
-//			}
-//		}
-//
-//		return Decision.Deny(
-//			message = "Policy er ikke implementert",
-//			reason = DecisionDenyReason.POLICY_NOT_IMPLEMENTED
-//		)
+	internal fun harTilgang(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
+		val (navIdent, norskIdent) = input
+
+		navAnsattTilgangTilAdressebeskyttetBrukerPolicy.evaluate(
+			NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(
+				navIdent = navIdent,
+				norskIdent = norskIdent
+			)
+		).whenDeny { return it }
+
+		navAnsattTilgangTilSkjermetPersonPolicy.evaluate(
+			NavAnsattTilgangTilSkjermetPersonPolicy.Input(
+				navIdent = navIdent,
+				norskIdent = norskIdent
+			)
+		).whenDeny { return it }
+
+		navAnsattTilgangTilEksternBrukerNavEnhetPolicy.evaluate(
+			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
+				navIdent = navIdent,
+				norskIdent = norskIdent
+			)
+		).whenDeny { return it }
+
+		navAnsattTilgangTilOppfolgingPolicy.evaluate(
+			NavAnsattTilgangTilOppfolgingPolicy.Input(navIdent)
+		).whenDeny { return it }
+
+		return Decision.Permit
 	}
 
 }

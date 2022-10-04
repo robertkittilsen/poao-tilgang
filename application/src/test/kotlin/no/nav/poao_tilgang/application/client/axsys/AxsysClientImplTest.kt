@@ -31,8 +31,7 @@ class AxsysClientImplTest {
 
 		val client = AxsysClientImpl(
 			baseUrl = mockServer.serverUrl(),
-			proxyTokenProvider = { "PROXY_TOKEN" },
-			axsysTokenProvider = { "AXSYS_TOKEN" },
+			tokenProvider = { "AXSYS_TOKEN" },
 		)
 
 		System.setProperty("NAIS_APP_NAME", "poao-tilgang")
@@ -68,8 +67,7 @@ class AxsysClientImplTest {
 		val request = mockServer.latestRequest()
 
 		request.path shouldBe "/api/v2/tilgang/$brukerident?inkluderAlleEnheter=false"
-		request.getHeader("Authorization") shouldBe "Bearer PROXY_TOKEN"
-		request.getHeader("Downstream-Authorization") shouldBe "Bearer AXSYS_TOKEN"
+		request.getHeader("Authorization") shouldBe "Bearer AXSYS_TOKEN"
 
 		request.getHeader("Nav-Consumer-Id") shouldBe "poao-tilgang"
 		request.getHeader("Nav-Call-Id") shouldMatch "[0-9a-fA-F]{30,32}"

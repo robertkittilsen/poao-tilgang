@@ -9,8 +9,7 @@ import org.springframework.http.MediaType
 
 internal class AxsysClientImpl(
 	private val baseUrl: String,
-	private val proxyTokenProvider: () -> String,
-	private val axsysTokenProvider: () -> String,
+	private val tokenProvider: () -> String,
 	private val httpClient: OkHttpClient = baseClient(),
 ) : AxsysClient {
 
@@ -18,8 +17,7 @@ internal class AxsysClientImpl(
 		val request = Request.Builder()
 			.url("$baseUrl/api/v2/tilgang/$navIdent?inkluderAlleEnheter=false")
 			.header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-			.header(HttpHeaders.AUTHORIZATION, "Bearer " + proxyTokenProvider.invoke())
-			.header("Downstream-Authorization", "Bearer " + axsysTokenProvider.invoke())
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenProvider.invoke())
 			.build()
 
 		httpClient.newCall(request).execute().use { response ->

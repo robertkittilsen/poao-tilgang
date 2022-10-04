@@ -82,6 +82,7 @@ class PoaoTilgangHttpClient(
 		).map { objectMapper.readValue<EvaluatePoliciesResponse>(it).results }
 	}
 
+	//TODO Legg til håndtering av malformedBody (JSON feil)
 	private fun sendRequest(
 		path: String,
 		method: String = "POST",

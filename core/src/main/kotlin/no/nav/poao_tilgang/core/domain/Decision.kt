@@ -15,4 +15,15 @@ sealed class Decision(val type: Type) {
 
 	data class Deny(val message: String, val reason: DecisionDenyReason) : Decision(Type.DENY)
 
+	inline fun whenPermit(action: (permit: Permit) -> Unit) {
+		if (this is Permit) {
+			action.invoke(this)
+		}
+	}
+
+	inline fun whenDeny(action: (deny: Deny) -> Unit) {
+		if (this is Deny) {
+			action.invoke(this)
+		}
+	}
 }

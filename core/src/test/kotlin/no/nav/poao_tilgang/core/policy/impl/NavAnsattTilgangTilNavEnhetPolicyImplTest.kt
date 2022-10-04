@@ -1,4 +1,4 @@
-package no.nav.poao_tilgang.core.policy
+package no.nav.poao_tilgang.core.policy.impl
 
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -7,7 +7,7 @@ import no.nav.poao_tilgang.core.domain.AdGruppe
 import no.nav.poao_tilgang.core.domain.AdGrupper
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
-import no.nav.poao_tilgang.core.policy.impl.NavAnsattTilgangTilNavEnhetPolicyImpl
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgang
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider

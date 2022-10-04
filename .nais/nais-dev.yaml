@@ -68,6 +68,8 @@ spec:
       value: api://dev-fss.pto.poao-gcp-proxy/.default
     - name: POAO_GCP_PROXY_URL
       value: https://poao-gcp-proxy.dev-fss-pub.nais.io
+    - name: AXSYS_URL
+      value: https://axsys.dev-fss-pub.nais.io
     - name: AXSYS_SCOPE
       value: api://dev-fss.org.axsys/.default
     - name: ABAC_URL
