@@ -55,10 +55,14 @@ open class PolicyConfig {
 	open fun navAnsattTilgangTilEksternBrukerNavEnhetPolicy(
 		oppfolgingsenhetProvider: OppfolgingsenhetProvider,
 		geografiskTilknyttetEnhetProvider: GeografiskTilknyttetEnhetProvider,
-		tilgangTilNavEnhetPolicy: NavAnsattTilgangTilNavEnhetPolicy
+		tilgangTilNavEnhetPolicy: NavAnsattTilgangTilNavEnhetPolicy,
+		adGruppeProvider: AdGruppeProvider
 	): NavAnsattTilgangTilEksternBrukerNavEnhetPolicy {
 		return NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
-			oppfolgingsenhetProvider, geografiskTilknyttetEnhetProvider, tilgangTilNavEnhetPolicy
+			oppfolgingsenhetProvider,
+			geografiskTilknyttetEnhetProvider,
+			tilgangTilNavEnhetPolicy,
+			adGruppeProvider
 		)
 	}
 

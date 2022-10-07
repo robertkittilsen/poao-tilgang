@@ -18,6 +18,7 @@ class NavAnsattTilgangTilModiaPolicyImpl(
 	}
 
 	override val name = "NavAnsattTilgangTilModiaPolicy"
+
 	override fun evaluate(input: NavAnsattTilgangTilModiaPolicy.Input): Decision {
 		return adGruppeProvider.hentAdGrupper(input.navIdent)
 			.hasAtLeastOne(tilgangTilModiaGrupper)
