@@ -4,8 +4,6 @@ import java.util.*
 
 typealias AzureObjectId = UUID
 
-typealias AdGruppeNavn = String
-
 typealias NavIdent = String
 
 typealias NorskIdent = String

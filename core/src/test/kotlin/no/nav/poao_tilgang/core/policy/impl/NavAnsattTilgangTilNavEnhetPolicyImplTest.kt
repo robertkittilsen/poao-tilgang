@@ -4,13 +4,16 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.poao_tilgang.core.domain.AdGruppe
-import no.nav.poao_tilgang.core.domain.AdGrupper
+import no.nav.poao_tilgang.core.domain.AdGruppeNavn
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
+import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper
+import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgang
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -20,7 +23,16 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 
 	private val navEnhetTilgangProvider = mockk<NavEnhetTilgangProvider>()
 
-	private val policy = NavAnsattTilgangTilNavEnhetPolicyImpl(navEnhetTilgangProvider, adGruppeProvider)
+	private lateinit var policy: NavAnsattTilgangTilNavEnhetPolicy
+
+	@BeforeEach
+	internal fun setUp() {
+		every {
+			adGruppeProvider.hentTilgjengeligeAdGrupper()
+		} returns TestAdGrupper.testAdGrupper
+
+		policy = NavAnsattTilgangTilNavEnhetPolicyImpl(navEnhetTilgangProvider, adGruppeProvider)
+	}
 
 	@Test
 	fun `skal returnere "permit" hvis NAV ansatt har rollen 0000-GA-Modia_Admin`() {
@@ -30,7 +42,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 		every {
 			adGruppeProvider.hentAdGrupper(navIdent)
 		} returns listOf(
-			AdGruppe(UUID.randomUUID(), AdGrupper.MODIA_ADMIN)
+			testAdGrupper.modiaAdmin
 		)
 
 		val decision = policy.evaluate(NavAnsattTilgangTilNavEnhetPolicy.Input(navIdent, enhetId))

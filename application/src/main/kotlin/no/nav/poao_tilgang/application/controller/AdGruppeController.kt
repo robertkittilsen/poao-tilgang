@@ -32,7 +32,7 @@ class AdGruppeController(
 	private fun mapTilDto(adGruppe: AdGruppe): AdGruppeDto {
 		return AdGruppeDto(
 			adGruppe.id,
-			adGruppe.name
+			adGruppe.navn
 		)
 	}
 

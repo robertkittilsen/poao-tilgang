@@ -4,11 +4,15 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.poao_tilgang.core.domain.AdGruppe
-import no.nav.poao_tilgang.core.domain.AdGrupper
+import no.nav.poao_tilgang.core.domain.AdGruppeNavn
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy
+import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper
+import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.randomGruppe
+import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -16,7 +20,16 @@ class NavAnsattBehandleStrengtFortroligUtlandBrukerePolicyImplTest {
 
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
-	private val policy = NavAnsattBehandleStrengtFortroligUtlandBrukerePolicyImpl(adGruppeProvider)
+	private lateinit var policy: NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy
+
+	@BeforeEach
+	internal fun setUp() {
+		every {
+			adGruppeProvider.hentTilgjengeligeAdGrupper()
+		} returns TestAdGrupper.testAdGrupper
+
+		policy = NavAnsattBehandleStrengtFortroligUtlandBrukerePolicyImpl(adGruppeProvider)
+	}
 
 	@Test
 	fun `should return "permit" if access to 0000-GA-Strengt_Fortrolig_Adresse`() {
@@ -25,8 +38,8 @@ class NavAnsattBehandleStrengtFortroligUtlandBrukerePolicyImplTest {
 		every {
 			adGruppeProvider.hentAdGrupper(navIdent)
 		} returns listOf(
-			AdGruppe(UUID.randomUUID(), AdGrupper.STRENGT_FORTROLIG_ADRESSE),
-			AdGruppe(UUID.randomUUID(), "some-other-group"),
+			testAdGrupper.strengtFortroligAdresse,
+			randomGruppe
 		)
 
 		val decision = policy.evaluate(NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy.Input(navIdent))
@@ -41,7 +54,7 @@ class NavAnsattBehandleStrengtFortroligUtlandBrukerePolicyImplTest {
 		every {
 			adGruppeProvider.hentAdGrupper(navIdent)
 		} returns listOf(
-			AdGruppe(UUID.randomUUID(), "some-other-group"),
+			randomGruppe
 		)
 
 		val decision = policy.evaluate(NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy.Input(navIdent))
@@ -49,7 +62,7 @@ class NavAnsattBehandleStrengtFortroligUtlandBrukerePolicyImplTest {
 		decision.type shouldBe Decision.Type.DENY
 
 		if (decision is Decision.Deny) {
-			decision.message shouldBe "NAV ansatt mangler tilgang til AD gruppen 0000-GA-Strengt_Fortrolig_Adresse"
+			decision.message shouldBe "NAV ansatt mangler tilgang til AD gruppen \"0000-GA-Strengt_Fortrolig_Adresse\""
 			decision.reason shouldBe DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE
 		}
 	}

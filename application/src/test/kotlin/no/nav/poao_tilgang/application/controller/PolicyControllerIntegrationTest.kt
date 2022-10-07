@@ -1,11 +1,14 @@
 package no.nav.poao_tilgang.application.controller
 
 import io.kotest.matchers.shouldBe
-import no.nav.poao_tilgang.application.client.microsoft_graph.AdGruppe
 import no.nav.poao_tilgang.application.test_util.IntegrationTest
 import no.nav.poao_tilgang.application.utils.RestUtils.toJsonRequestBody
+import no.nav.poao_tilgang.core.domain.AdGruppe
+import no.nav.poao_tilgang.core.domain.AdGrupper
+import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import okhttp3.Response
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 class PolicyControllerIntegrationTest : IntegrationTest() {
@@ -13,6 +16,11 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	val navIdent = "Z1235"
 	val norskIdent = "6456532"
 	val navAnsattId = UUID.randomUUID()
+
+	val noAccessGroup = AdGruppe(UUID.randomUUID(), "0000-some-group")
+
+	@Autowired
+	private lateinit var adGruppeProvider: AdGruppeProvider
 
 	@Test
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1 policy - permit`() {
@@ -51,7 +59,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_MODIA_V1 policy - permit`() {
 		val requestId = UUID.randomUUID()
 
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-ga-bd06_modiagenerelltilgang"))
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell))
 
 		val response = sendPolicyRequest(
 			requestId,
@@ -66,7 +74,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_MODIA_V1 policy - deny`() {
 		val requestId = UUID.randomUUID()
 
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-some-group"))
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf(noAccessGroup))
 
 		val response = sendPolicyRequest(
 			requestId,
@@ -76,7 +84,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		response.body?.string() shouldBe denyResponse(
 			requestId,
-			"NAV ansatt mangler tilgang til en av AD gruppene [0000-ga-bd06_modiagenerelltilgang, 0000-ga-modia-oppfolging, 0000-ga-syfo-sensitiv]",
+			"NAV ansatt mangler tilgang til en av AD gruppene [0000-GA-BD06_ModiaGenerellTilgang, 0000-GA-Modia-Oppfolging, 0000-GA-SYFO-SENSITIV]",
 			"MANGLER_TILGANG_TIL_AD_GRUPPE"
 		)
 	}
@@ -118,12 +126,12 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		)
 	}
 
-	private fun mockAdGrupperResponse(navIdent: String, navAnsattId: UUID, adGrupperNavn: List<String>) {
-		val adGrupper = adGrupperNavn.map { AdGruppe(UUID.randomUUID(), it) }
+	private fun mockAdGrupperResponse(navIdent: String, navAnsattId: UUID, adGrupper: List<AdGruppe>) {
 
 		mockMicrosoftGraphHttpServer.mockHentAzureIdForNavAnsattResponse(navIdent, navAnsattId)
 
 		mockMicrosoftGraphHttpServer.mockHentAdGrupperForNavAnsatt(navAnsattId, adGrupper.map { it.id })
+
 
 		mockMicrosoftGraphHttpServer.mockHentAdGrupperResponse(adGrupper)
 	}
@@ -141,7 +149,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		)
 
 		mockVeilarbarenaHttpServer.mockOppfolgingsenhet(norskIdent, "1234")
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf("0000-some-group"))
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf(noAccessGroup))
 
 		mockAxsysHttpServer.mockHentTilgangerResponse(navIdent, listOf())
 	}

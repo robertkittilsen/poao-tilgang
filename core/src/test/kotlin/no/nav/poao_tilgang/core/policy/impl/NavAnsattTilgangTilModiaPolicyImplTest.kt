@@ -4,79 +4,74 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.poao_tilgang.core.domain.AdGruppe
-import no.nav.poao_tilgang.core.domain.AdGrupper
+import no.nav.poao_tilgang.core.domain.AdGruppeNavn
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
+import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper
+import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.randomGruppe
+import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
-import kotlin.random.Random.Default.nextBoolean
 
 class NavAnsattTilgangTilModiaPolicyImplTest {
 
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
-	private val policy = NavAnsattTilgangTilModiaPolicyImpl(adGruppeProvider)
+	private lateinit var policy: NavAnsattTilgangTilModiaPolicy
+
+	@BeforeEach
+	internal fun setUp() {
+		every {
+			adGruppeProvider.hentTilgjengeligeAdGrupper()
+		} returns TestAdGrupper.testAdGrupper
+
+		policy = NavAnsattTilgangTilModiaPolicyImpl(adGruppeProvider)
+	}
 
 	@Test
-	fun `should return "permit" if access to 0000-ga-bd06_modiagenerelltilgang`() {
+	fun `should return "permit" if access to 0000-GA-BD06_ModiaGenerellTilgang`() {
 		val navIdent = "Z1234"
 
 		every {
 			adGruppeProvider.hentAdGrupper(navIdent)
 		} returns listOf(
-			AdGruppe(UUID.randomUUID(), AdGrupper.MODIA_GENERELL),
-			AdGruppe(UUID.randomUUID(), "some-other-group"),
+			testAdGrupper.modiaGenerell,
+			randomGruppe
 		)
 
 		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
 
 	@Test
-	fun `should return "permit" if access to 0000-ga-modia-oppfolging`() {
+	fun `should return "permit" if access to 0000-GA-Modia-Oppfolging`() {
 		val navIdent = "Z1234"
 
 		every {
 			adGruppeProvider.hentAdGrupper(navIdent)
 		} returns listOf(
-			AdGruppe(UUID.randomUUID(), AdGrupper.MODIA_OPPFOLGING),
-			AdGruppe(UUID.randomUUID(), "some-other-group"),
+			testAdGrupper.modiaOppfolging,
+			randomGruppe,
 		)
 
 		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
 
 	@Test
-	fun `should return "permit" if access to 0000-ga-syfo-sensitiv`() {
+	fun `should return "permit" if access to 0000-GA-SYFO-SENSITIV`() {
 		val navIdent = "Z1234"
 
 		every {
 			adGruppeProvider.hentAdGrupper(navIdent)
 		} returns listOf(
-			AdGruppe(UUID.randomUUID(), AdGrupper.SYFO_SENSITIV),
-			AdGruppe(UUID.randomUUID(), "some-other-group"),
+			testAdGrupper.syfoSensitiv,
+			randomGruppe,
 		)
 
 		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
 	}
-
-	@Test
-	fun `should return "permit" if access to valid group with different casing`() {
-		val navIdent = "Z1234"
-
-		every {
-			adGruppeProvider.hentAdGrupper(navIdent)
-		} returns listOf(
-			AdGruppe(UUID.randomUUID(), AdGrupper.MODIA_GENERELL
-				.map { if (nextBoolean()) it.uppercase() else it.lowercase() }.joinToString("")
-			),
-			AdGruppe(UUID.randomUUID(), "some-other-group"),
-		)
-
-		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
-	}
-
 	@Test
 	fun `should return "deny" if missing access to ad groups`() {
 		val navIdent = "Z1234"
@@ -84,7 +79,7 @@ class NavAnsattTilgangTilModiaPolicyImplTest {
 		every {
 			adGruppeProvider.hentAdGrupper(navIdent)
 		} returns listOf(
-			AdGruppe(UUID.randomUUID(), "some-other-group")
+			randomGruppe
 		)
 
 		val decision = policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent))
@@ -92,7 +87,7 @@ class NavAnsattTilgangTilModiaPolicyImplTest {
 		decision.type shouldBe Decision.Type.DENY
 
 		if (decision is Decision.Deny) {
-			decision.message shouldBe "NAV ansatt mangler tilgang til en av AD gruppene [0000-ga-bd06_modiagenerelltilgang, 0000-ga-modia-oppfolging, 0000-ga-syfo-sensitiv]"
+			decision.message shouldBe "NAV ansatt mangler tilgang til en av AD gruppene [0000-GA-BD06_ModiaGenerellTilgang, 0000-GA-Modia-Oppfolging, 0000-GA-SYFO-SENSITIV]"
 			decision.reason shouldBe DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE
 		}
 	}

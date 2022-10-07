@@ -1,9 +1,9 @@
 package no.nav.poao_tilgang.application.test_util.mock_clients
 
-import no.nav.poao_tilgang.application.client.microsoft_graph.AdGruppe
 import no.nav.poao_tilgang.application.client.microsoft_graph.MicrosoftGraphClientImpl
 import no.nav.poao_tilgang.application.test_util.MockHttpServer
 import no.nav.poao_tilgang.application.utils.JsonUtils.toJsonString
+import no.nav.poao_tilgang.core.domain.AdGruppe
 import no.nav.poao_tilgang.core.domain.AzureObjectId
 import okhttp3.mockwebserver.MockResponse
 import java.util.*
@@ -15,7 +15,7 @@ class MockMicrosoftGraphHttpServer : MockHttpServer() {
 			.setBody(
 				toJsonString(
 					MicrosoftGraphClientImpl.HentAdGrupper.Response(
-						grupper.map { MicrosoftGraphClientImpl.HentAdGrupper.Response.AdGruppe(it.id, it.name) }
+						grupper.map { MicrosoftGraphClientImpl.HentAdGrupper.Response.AdGruppe(it.id, it.navn) }
 					)
 				)
 			)

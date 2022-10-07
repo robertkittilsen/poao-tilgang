@@ -1,9 +1,9 @@
 package no.nav.poao_tilgang.application.controller
 
 import io.kotest.matchers.shouldBe
-import no.nav.poao_tilgang.application.client.microsoft_graph.AdGruppe
 import no.nav.poao_tilgang.application.test_util.IntegrationTest
 import no.nav.poao_tilgang.application.utils.RestUtils.toJsonRequestBody
+import no.nav.poao_tilgang.core.domain.AdGruppe
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -34,7 +34,7 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 
 	@Test
 	fun `hentAlleAdGrupperForBruker - should return 200 with correct response`() {
-		val adGruppe = AdGruppe(id = UUID.fromString("a0036e11-5658-4d2d-aa6b-7056bdb4e758"), name = "TODO")
+		val adGruppe = AdGruppe(id = UUID.fromString("a0036e11-5658-4d2d-aa6b-7056bdb4e758"), navn = "TODO")
 
 		val navAnsattId = UUID.randomUUID()
 
@@ -54,7 +54,7 @@ class AdGruppeControllerIntegrationTest : IntegrationTest() {
 		)
 
 		val expectedJson = """
-			[{"id":"${adGruppe.id}","name":"${adGruppe.name}"}]
+			[{"id":"${adGruppe.id}","name":"${adGruppe.navn}"}]
 		""".trimIndent()
 
 		response.body?.string() shouldBe expectedJson
