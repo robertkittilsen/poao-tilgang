@@ -7,7 +7,7 @@ import no.nav.common.log.LogFilter
 import no.nav.common.token_client.builder.AzureAdTokenClientBuilder
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils
-import no.nav.poao_tilgang.application.middleware.RequesterNameLogFilter
+import no.nav.poao_tilgang.application.middleware.RequesterLogFilter
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.beans.factory.annotation.Value
@@ -44,11 +44,11 @@ open class ApplicationConfig {
 	}
 
 	@Bean
-	open fun requesterNameLogFilterRegistrationBean(
+	open fun requesterLogFilterRegistrationBean(
 		tokenValidationContextHolder: TokenValidationContextHolder
-	): FilterRegistrationBean<RequesterNameLogFilter> {
-		val registration = FilterRegistrationBean<RequesterNameLogFilter>()
-		registration.filter = RequesterNameLogFilter(tokenValidationContextHolder)
+	): FilterRegistrationBean<RequesterLogFilter> {
+		val registration = FilterRegistrationBean<RequesterLogFilter>()
+		registration.filter = RequesterLogFilter(tokenValidationContextHolder)
 
 		registration.order = 1
 		registration.addUrlPatterns("/api/*")

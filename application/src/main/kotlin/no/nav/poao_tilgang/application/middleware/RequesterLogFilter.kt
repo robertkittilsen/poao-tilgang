@@ -7,7 +7,7 @@ import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 
-class RequesterNameLogFilter(
+class RequesterLogFilter(
 	private val tokenValidationContextHolder: TokenValidationContextHolder
 ) : Filter {
 
@@ -20,9 +20,17 @@ class RequesterNameLogFilter(
 			.map { claims -> claims.getStringClaim("azp_name") }
 			.orElse(null)
 
-		MDC.remove(requesterLabelName)
-		azpName?.let { MDC.put(requesterLabelName, azpName) }
-		chain.doFilter(req, res)
+		try {
+			if (azpName == null) {
+				MDC.remove(requesterLabelName)
+			} else {
+				MDC.put(requesterLabelName, azpName)
+			}
+
+			chain.doFilter(req, res)
+		} finally {
+			MDC.remove(requesterLabelName)
+		}
 	}
 
 }
