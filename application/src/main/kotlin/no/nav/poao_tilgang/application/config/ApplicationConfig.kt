@@ -33,17 +33,6 @@ open class ApplicationConfig {
 	}
 
 	@Bean
-	open fun logFilterRegistrationBean(): FilterRegistrationBean<LogFilter> {
-		val registration = FilterRegistrationBean<LogFilter>()
-		registration.filter = LogFilter(
-			APPLICATION_NAME, EnvironmentUtils.isDevelopment().orElse(false)
-		)
-		registration.order = -1
-		registration.addUrlPatterns("/*")
-		return registration
-	}
-
-	@Bean
 	open fun requesterLogFilterRegistrationBean(
 		tokenValidationContextHolder: TokenValidationContextHolder
 	): FilterRegistrationBean<RequesterLogFilter> {
@@ -55,6 +44,16 @@ open class ApplicationConfig {
 		return registration
 	}
 
+	@Bean
+	open fun logFilterRegistrationBean(): FilterRegistrationBean<LogFilter> {
+		val registration = FilterRegistrationBean<LogFilter>()
+		registration.filter = LogFilter(
+			APPLICATION_NAME, EnvironmentUtils.isDevelopment().orElse(false)
+		)
+		registration.order = 2
+		registration.addUrlPatterns("/api/*")
+		return registration
+	}
 
 	@Bean
 	open fun abacClient(
