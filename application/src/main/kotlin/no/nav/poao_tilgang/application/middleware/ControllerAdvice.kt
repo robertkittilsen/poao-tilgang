@@ -1,4 +1,4 @@
-package no.nav.poao_tilgang.application.config
+package no.nav.poao_tilgang.application.middleware
 
 import no.nav.poao_tilgang.application.exception.InvalidPolicyRequestException
 import org.slf4j.LoggerFactory

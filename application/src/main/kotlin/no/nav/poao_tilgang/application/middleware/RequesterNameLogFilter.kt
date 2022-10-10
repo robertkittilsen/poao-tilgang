@@ -1,4 +1,4 @@
-package no.nav.poao_tilgang.application.config
+package no.nav.poao_tilgang.application.middleware
 
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.slf4j.MDC
