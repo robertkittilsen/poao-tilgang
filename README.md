@@ -1,5 +1,12 @@
 # Felles tilgangskontroll for Produktområde Arbeidsoppfølging
 
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=navikt_poao-tilgang&metric=bugs)](https://sonarcloud.io/dashboard?id=navikt_poao-tilgang)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=navikt_poao-tilgang&metric=code_smells)](https://sonarcloud.io/dashboard?id=navikt_poao-tilgang)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=navikt_poao-tilgang&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=navikt_poao-tilgang)
+
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=navikt_poao-tilgang&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=navikt_poao-tilgang)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=navikt_poao-tilgang&metric=security_rating)](https://sonarcloud.io/dashboard?id=navikt_poao-tilgang)
+
 API for tilgangskontroll med regler som er felles for Produktområde Arbeidsoppfølging.
 Har også en HTTP-klient som kan trekkes inn som en avhengighet i applikasjoner for å kalle API'et.
 
