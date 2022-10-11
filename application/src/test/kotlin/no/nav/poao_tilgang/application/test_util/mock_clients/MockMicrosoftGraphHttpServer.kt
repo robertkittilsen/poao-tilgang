@@ -5,6 +5,7 @@ import no.nav.poao_tilgang.application.test_util.MockHttpServer
 import no.nav.poao_tilgang.application.utils.JsonUtils.toJsonString
 import no.nav.poao_tilgang.core.domain.AdGruppe
 import no.nav.poao_tilgang.core.domain.AzureObjectId
+import no.nav.poao_tilgang.core.domain.NavIdent
 import okhttp3.mockwebserver.MockResponse
 import java.util.*
 
@@ -44,18 +45,34 @@ class MockMicrosoftGraphHttpServer : MockHttpServer() {
 		)
 	}
 
-	fun mockHentAzureIdForNavAnsattResponse(navIdent: String, navAnsattAzureId: UUID) {
+	fun mockHentAzureIdMedNavIdentResponse(navIdent: NavIdent, navAnsattAzureId: AzureObjectId) {
 		val response = MockResponse()
 			.setBody(
 				toJsonString(
-					MicrosoftGraphClientImpl.HentAzureIdForNavAnsatt.Response(listOf(
-						MicrosoftGraphClientImpl.HentAzureIdForNavAnsatt.Response.UserData(navAnsattAzureId)
+					MicrosoftGraphClientImpl.HentAzureIdMedNavIdent.Response(listOf(
+						MicrosoftGraphClientImpl.HentAzureIdMedNavIdent.Response.UserData(navAnsattAzureId)
 					))
 				)
 			)
 
 		handleRequest(
 			matchPath = "/v1.0/users?\$select=id&\$count=true&\$filter=onPremisesSamAccountName%20eq%20%27$navIdent%27",
+			matchMethod = "GET",
+			response = response
+		)
+	}
+	fun mockHentNavIdentMedAzureIdResponse(navAnsattAzureId: AzureObjectId, navIdent: NavIdent) {
+		val response = MockResponse()
+			.setBody(
+				toJsonString(
+					MicrosoftGraphClientImpl.HentNavIdentMedAzureId.Response(listOf(
+						MicrosoftGraphClientImpl.HentNavIdentMedAzureId.Response.UserData(navIdent)
+					))
+				)
+			)
+
+		handleRequest(
+			matchPath = "/v1.0/users?\$select=onPremisesSamAccountName&\$filter=id%20eq%20%27$navAnsattAzureId%27",
 			matchMethod = "GET",
 			response = response
 		)

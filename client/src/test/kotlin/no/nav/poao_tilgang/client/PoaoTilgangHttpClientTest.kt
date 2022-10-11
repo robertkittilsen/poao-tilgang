@@ -20,9 +20,9 @@ import java.util.*
 
 class PoaoTilgangHttpClientTest : IntegrationTest() {
 
-	val navIdent = "Z1235"
-	val norskIdent = "6456532"
-	val navAnsattId = UUID.randomUUID()
+	private val navIdent = "Z1235"
+	private val norskIdent = "6456532"
+	private val navAnsattId = UUID.randomUUID()
 
 	private val fnr1 = "124253321"
 	private val fnr2 = "654756834"
@@ -48,7 +48,7 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 		setupMocks()
 
 		val decision =
-			client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInput(navIdent, norskIdent)).getOrThrow()
+			client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInput(navAnsattId, norskIdent)).getOrThrow()
 
 		decision shouldBe Decision.Permit
 	}
@@ -61,7 +61,7 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 			listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell)
 		)
 
-		val decision = client.evaluatePolicy(NavAnsattTilgangTilModiaPolicyInput(navIdent)).getOrThrow()
+		val decision = client.evaluatePolicy(NavAnsattTilgangTilModiaPolicyInput(navAnsattId)).getOrThrow()
 
 		decision shouldBe Decision.Permit
 	}
@@ -145,7 +145,9 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 	}
 
 	private fun mockAdGrupperResponse(navIdent: String, navAnsattId: UUID, adGrupper: List<AdGruppe>) {
-		mockMicrosoftGraphHttpServer.mockHentAzureIdForNavAnsattResponse(navIdent, navAnsattId)
+		mockMicrosoftGraphHttpServer.mockHentAzureIdMedNavIdentResponse(navIdent, navAnsattId)
+
+		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
 
 		mockMicrosoftGraphHttpServer.mockHentAdGrupperForNavAnsatt(navAnsattId, adGrupper.map { it.id })
 

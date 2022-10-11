@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import no.nav.poao_tilgang.application.test_util.IntegrationTest
 import no.nav.poao_tilgang.application.utils.RestUtils.toJsonRequestBody
 import no.nav.poao_tilgang.core.domain.AdGruppe
-import no.nav.poao_tilgang.core.domain.AdGrupper
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import okhttp3.Response
 import org.junit.jupiter.api.Test
@@ -32,7 +31,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		val response = sendPolicyRequest(
 			requestId,
-			"""{"navIdent": "$navIdent", "norskIdent": "$norskIdent"}""",
+			"""{"navAnsattAzureId": "$navAnsattId", "norskIdent": "$norskIdent"}""",
 			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1"
 		)
 
@@ -48,7 +47,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		val response = sendPolicyRequest(
 			requestId,
-			"""{"navIdent": "$navIdent", "norskIdent": "$norskIdent"}""",
+			"""{"navAnsattAzureId": "$navAnsattId", "norskIdent": "$norskIdent"}""",
 			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1"
 		)
 
@@ -63,7 +62,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		val response = sendPolicyRequest(
 			requestId,
-			"""{"navIdent":"$navIdent"}""",
+			"""{"navAnsattAzureId":"$navAnsattId"}""",
 			"NAV_ANSATT_TILGANG_TIL_MODIA_V1"
 		)
 
@@ -78,7 +77,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		val response = sendPolicyRequest(
 			requestId,
-			"""{"navIdent":"$navIdent"}""",
+			"""{"navAnsattAzureId":"$navAnsattId"}""",
 			"NAV_ANSATT_TILGANG_TIL_MODIA_V1"
 		)
 
@@ -128,7 +127,8 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 	private fun mockAdGrupperResponse(navIdent: String, navAnsattId: UUID, adGrupper: List<AdGruppe>) {
 
-		mockMicrosoftGraphHttpServer.mockHentAzureIdForNavAnsattResponse(navIdent, navAnsattId)
+		mockMicrosoftGraphHttpServer.mockHentAzureIdMedNavIdentResponse(navIdent, navAnsattId)
+		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
 
 		mockMicrosoftGraphHttpServer.mockHentAdGrupperForNavAnsatt(navAnsattId, adGrupper.map { it.id })
 

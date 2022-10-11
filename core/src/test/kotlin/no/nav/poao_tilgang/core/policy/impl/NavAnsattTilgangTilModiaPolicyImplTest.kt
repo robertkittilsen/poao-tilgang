@@ -3,12 +3,9 @@ package no.nav.poao_tilgang.core.policy.impl
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.poao_tilgang.core.domain.AdGruppe
-import no.nav.poao_tilgang.core.domain.AdGruppeNavn
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
-import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper
 import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.randomGruppe
 import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
@@ -22,67 +19,65 @@ class NavAnsattTilgangTilModiaPolicyImplTest {
 
 	private lateinit var policy: NavAnsattTilgangTilModiaPolicy
 
+	private val navAnsattAzureId = UUID.randomUUID()
+
 	@BeforeEach
 	internal fun setUp() {
 		every {
 			adGruppeProvider.hentTilgjengeligeAdGrupper()
-		} returns TestAdGrupper.testAdGrupper
+		} returns testAdGrupper
 
 		policy = NavAnsattTilgangTilModiaPolicyImpl(adGruppeProvider)
 	}
 
 	@Test
 	fun `should return "permit" if access to 0000-GA-BD06_ModiaGenerellTilgang`() {
-		val navIdent = "Z1234"
 
 		every {
-			adGruppeProvider.hentAdGrupper(navIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(
 			testAdGrupper.modiaGenerell,
 			randomGruppe
 		)
 
-		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
+		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navAnsattAzureId)) shouldBe Decision.Permit
 	}
 
 	@Test
 	fun `should return "permit" if access to 0000-GA-Modia-Oppfolging`() {
-		val navIdent = "Z1234"
 
 		every {
-			adGruppeProvider.hentAdGrupper(navIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(
 			testAdGrupper.modiaOppfolging,
 			randomGruppe,
 		)
 
-		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
+		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navAnsattAzureId)) shouldBe Decision.Permit
 	}
 
 	@Test
 	fun `should return "permit" if access to 0000-GA-SYFO-SENSITIV`() {
-		val navIdent = "Z1234"
 
 		every {
-			adGruppeProvider.hentAdGrupper(navIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(
 			testAdGrupper.syfoSensitiv,
 			randomGruppe,
 		)
 
-		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent)) shouldBe Decision.Permit
+		policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navAnsattAzureId)) shouldBe Decision.Permit
 	}
 	@Test
 	fun `should return "deny" if missing access to ad groups`() {
-		val navIdent = "Z1234"
 
 		every {
-			adGruppeProvider.hentAdGrupper(navIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(
 			randomGruppe
 		)
 
-		val decision = policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navAnsattAzureId))
 
 		decision.type shouldBe Decision.Type.DENY
 

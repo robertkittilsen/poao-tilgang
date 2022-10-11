@@ -6,6 +6,7 @@ import no.nav.poao_tilgang.application.utils.JsonUtils.toJsonString
 import no.nav.poao_tilgang.application.utils.RestUtils.authorization
 import no.nav.poao_tilgang.application.utils.RestUtils.toJsonRequestBody
 import no.nav.poao_tilgang.core.domain.AzureObjectId
+import no.nav.poao_tilgang.core.domain.NavIdent
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -57,7 +58,7 @@ class MicrosoftGraphClientImpl(
 		}
 	}
 
-	override fun hentAzureIdForNavAnsatt(navIdent: String): AzureObjectId {
+	override fun hentAzureIdMedNavIdent(navIdent: NavIdent): AzureObjectId {
 		val request = Request.Builder()
 			.url("$baseUrl/v1.0/users?\$select=id&\$count=true&\$filter=onPremisesSamAccountName eq '$navIdent'")
 			.header("ConsistencyLevel", "eventual")
@@ -72,9 +73,29 @@ class MicrosoftGraphClientImpl(
 
 			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
 
-			val responseData = fromJsonString<HentAzureIdForNavAnsatt.Response>(body)
+			val responseData = fromJsonString<HentAzureIdMedNavIdent.Response>(body)
 
 			responseData.value.firstOrNull()?.id ?: throw RuntimeException("Fant ikke bruker med navIdent=$navIdent")
+		}
+	}
+
+	override fun hentNavIdentMedAzureId(navAnsattAzureId: AzureObjectId): NavIdent {
+		val request = Request.Builder()
+			.url("$baseUrl/v1.0/users?\$select=onPremisesSamAccountName&\$filter=id eq '$navAnsattAzureId'")
+			.get()
+			.authorization(tokenProvider)
+			.build()
+
+		return client.newCall(request).execute().use { response ->
+			if (!response.isSuccessful) {
+				throw RuntimeException("Klarte ikke å hente NAV-ident")
+			}
+
+			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
+
+			val responseData = fromJsonString<HentNavIdentMedAzureId.Response>(body)
+
+			responseData.value.firstOrNull()?.onPremisesSamAccountName ?: throw RuntimeException("Fant ikke NAV-ident med Azure Id=$navAnsattAzureId")
 		}
 	}
 
@@ -108,13 +129,25 @@ class MicrosoftGraphClientImpl(
 
 	}
 
-	object HentAzureIdForNavAnsatt {
+	object HentAzureIdMedNavIdent {
 
 		data class Response(
 			val value: List<UserData>
 		) {
 			data class UserData(
 				val id: AzureObjectId
+			)
+		}
+
+	}
+
+	object HentNavIdentMedAzureId {
+
+		data class Response(
+			val value: List<UserData>
+		) {
+			data class UserData(
+				val onPremisesSamAccountName: NavIdent
 			)
 		}
 

@@ -112,7 +112,7 @@ class MicrosoftGraphClientImplTest {
 	}
 
 	@Test
-	fun `hentAzureIdForNavAnsatt - skal lage riktig request og parse respons`() {
+	fun `hentAzureIdMedNavIdent - skal lage riktig request og parse respons`() {
 		val client = MicrosoftGraphClientImpl(
 			baseUrl = mockServer.serverUrl(),
 			tokenProvider = { "TOKEN" },
@@ -137,7 +137,7 @@ class MicrosoftGraphClientImplTest {
 				)
 		)
 
-		val azureId = client.hentAzureIdForNavAnsatt(navIdent)
+		val azureId = client.hentAzureIdMedNavIdent(navIdent)
 
 		azureId shouldBe navAnsattAzureId
 
@@ -147,6 +147,45 @@ class MicrosoftGraphClientImplTest {
 		request.method shouldBe "GET"
 		request.getHeader("Authorization") shouldBe "Bearer TOKEN"
 		request.getHeader("ConsistencyLevel") shouldBe "eventual"
+
+		request.body.readUtf8() shouldBe ""
+	}
+
+	@Test
+	fun `hentNavIdentMedAzureId - skal lage riktig request og parse respons`() {
+		val client = MicrosoftGraphClientImpl(
+			baseUrl = mockServer.serverUrl(),
+			tokenProvider = { "TOKEN" },
+		)
+
+		val navAnsattAzureId = UUID.randomUUID()
+		val expectedNavIdent = "Z1234"
+
+		mockServer.handleRequest(
+			response = MockResponse()
+				.setBody(
+					"""
+						{
+							"@odata.context": "https://graph.microsoft.com/v1.0/${"$"}metadata#users(id)",
+							"value": [
+								{
+									"onPremisesSamAccountName": "$expectedNavIdent"
+								}
+							]
+						}
+					""".trimIndent()
+				)
+		)
+
+		val navIdent = client.hentNavIdentMedAzureId(navAnsattAzureId)
+
+		navIdent shouldBe expectedNavIdent
+
+		val request = mockServer.latestRequest()
+
+		request.path shouldBe "/v1.0/users?\$select=onPremisesSamAccountName&\$filter=id%20eq%20%27$navAnsattAzureId%27"
+		request.method shouldBe "GET"
+		request.getHeader("Authorization") shouldBe "Bearer TOKEN"
 
 		request.body.readUtf8() shouldBe ""
 	}

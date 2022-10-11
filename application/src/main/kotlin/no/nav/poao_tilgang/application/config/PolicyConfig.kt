@@ -15,14 +15,16 @@ open class PolicyConfig {
 		navAnsattTilgangTilAdressebeskyttetBrukerPolicy: NavAnsattTilgangTilAdressebeskyttetBrukerPolicy,
 		navAnsattTilgangTilSkjermetPersonPolicy: NavAnsattTilgangTilSkjermetPersonPolicy,
 		navAnsattTilgangTilEksternBrukerNavEnhetPolicy: NavAnsattTilgangTilEksternBrukerNavEnhetPolicy,
-		navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy
+		navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy,
+		adGruppeProvider: AdGruppeProvider
 	): NavAnsattTilgangTilEksternBrukerPolicy {
 		return NavAnsattTilgangTilEksternBrukerPolicyImpl(
 			abacProvider,
 			navAnsattTilgangTilAdressebeskyttetBrukerPolicy,
 			navAnsattTilgangTilSkjermetPersonPolicy,
 			navAnsattTilgangTilEksternBrukerNavEnhetPolicy,
-			navAnsattTilgangTilOppfolgingPolicy
+			navAnsattTilgangTilOppfolgingPolicy,
+			adGruppeProvider
 		)
 	}
 

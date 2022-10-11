@@ -14,7 +14,7 @@ class NavAnsattBehandleStrengtFortroligUtlandBrukerePolicyImpl(
 	override val name = "NavAnsattBehandleStrengtFortroligUtlandBrukere"
 
 	override fun evaluate(input: NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy.Input): Decision {
-		return adGruppeProvider.hentAdGrupper(input.navIdent)
+		return adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
 			.has(strengtFortroligAdresseAdGruppe)
 	}
 

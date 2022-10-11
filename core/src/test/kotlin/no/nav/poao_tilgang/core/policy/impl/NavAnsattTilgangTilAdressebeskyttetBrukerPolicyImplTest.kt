@@ -12,6 +12,7 @@ import no.nav.poao_tilgang.core.policy.NavAnsattBehandleStrengtFortroligUtlandBr
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilAdressebeskyttetBrukerPolicy
 import no.nav.poao_tilgang.core.provider.DiskresjonskodeProvider
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 class NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImplTest {
 
@@ -30,23 +31,23 @@ class NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImplTest {
 		navAnsattBehandleStrengtFortroligUtlandBrukerePolicy
 	)
 
+	private val navAnsattAzureId = UUID.randomUUID()
+
 	@Test
 	fun `skal returnere "permit" hvis bruker ikke har adressebeskyttelse`() {
-		val navIdent = "Z1234"
 		val norskIdent = "1235645644"
 
 		every {
 			diskresjonskodeProvider.hentDiskresjonskode(norskIdent)
 		} returns null
 
-		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe Decision.Permit
 	}
 
 	@Test
 	fun `skal returnere "permit" hvis bruker er fortrolig og nav ansatt kan behandle fortrolig bruker`() {
-		val navIdent = "Z1234"
 		val norskIdent = "1235645644"
 
 		every {
@@ -55,18 +56,17 @@ class NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImplTest {
 
 		every {
 			navAnsattBehandleFortroligBrukerePolicy.evaluate(
-				NavAnsattBehandleFortroligBrukerePolicy.Input(navIdent)
+				NavAnsattBehandleFortroligBrukerePolicy.Input(navAnsattAzureId)
 			)
 		} returns Decision.Permit
 
-		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe Decision.Permit
 	}
 
 	@Test
 	fun `skal returnere "deny" hvis bruker er fortrolig og nav ansatt IKKE kan behandle fortrolig bruker`() {
-		val navIdent = "Z1234"
 		val norskIdent = "1235645644"
 
 		every {
@@ -75,18 +75,17 @@ class NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImplTest {
 
 		every {
 			navAnsattBehandleFortroligBrukerePolicy.evaluate(
-				NavAnsattBehandleFortroligBrukerePolicy.Input(navIdent)
+				NavAnsattBehandleFortroligBrukerePolicy.Input(navAnsattAzureId)
 			)
 		} returns Decision.Deny("", DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE)
 
-		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision.type shouldBe Decision.Type.DENY
 	}
 
 	@Test
 	fun `skal returnere "permit" hvis bruker er strengt fortrolig og nav ansatt kan behandle strengt fortrolig bruker`() {
-		val navIdent = "Z1234"
 		val norskIdent = "1235645644"
 
 		every {
@@ -95,18 +94,17 @@ class NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImplTest {
 
 		every {
 			navAnsattBehandleStrengtFortroligBrukerePolicy.evaluate(
-				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(navIdent)
+				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(navAnsattAzureId)
 			)
 		} returns Decision.Permit
 
-		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe Decision.Permit
 	}
 
 	@Test
 	fun `skal returnere "deny" hvis bruker er strengt fortrolig og nav ansatt IKKE kan behandle strengt fortrolig bruker`() {
-		val navIdent = "Z1234"
 		val norskIdent = "1235645644"
 
 		every {
@@ -115,18 +113,17 @@ class NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImplTest {
 
 		every {
 			navAnsattBehandleStrengtFortroligBrukerePolicy.evaluate(
-				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(navIdent)
+				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(navAnsattAzureId)
 			)
 		} returns Decision.Deny("", DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE)
 
-		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision.type shouldBe Decision.Type.DENY
 	}
 
 	@Test
 	fun `skal returnere "permit" hvis bruker er strengt fortrolig utland og nav ansatt kan behandle strengt fortrolig utland bruker`() {
-		val navIdent = "Z1234"
 		val norskIdent = "1235645644"
 
 		every {
@@ -135,18 +132,17 @@ class NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImplTest {
 
 		every {
 			navAnsattBehandleStrengtFortroligUtlandBrukerePolicy.evaluate(
-				NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy.Input(navIdent)
+				NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy.Input(navAnsattAzureId)
 			)
 		} returns Decision.Permit
 
-		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe Decision.Permit
 	}
 
 	@Test
 	fun `skal returnere "deny" hvis bruker er strengt fortrolig utland og nav ansatt IKKE kan behandle strengt fortrolig utland bruker`() {
-		val navIdent = "Z1234"
 		val norskIdent = "1235645644"
 
 		every {
@@ -155,11 +151,11 @@ class NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImplTest {
 
 		every {
 			navAnsattBehandleStrengtFortroligUtlandBrukerePolicy.evaluate(
-				NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy.Input(navIdent)
+				NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy.Input(navAnsattAzureId)
 			)
 		} returns Decision.Deny("", DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE)
 
-		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision.type shouldBe Decision.Type.DENY
 	}

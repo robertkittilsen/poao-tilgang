@@ -17,7 +17,7 @@ class NavAnsattTilgangTilSkjermetPersonPolicyImpl(
 
 		if (erSkjermet) {
 			return navAnsattBehandleSkjermedePersonerPolicy.evaluate(
-				NavAnsattBehandleSkjermedePersonerPolicy.Input(input.navIdent)
+				NavAnsattBehandleSkjermedePersonerPolicy.Input(input.navAnsattAzureId)
 			)
 		}
 

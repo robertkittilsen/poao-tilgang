@@ -59,13 +59,13 @@ class PolicyController(
 				val dto = fromJsonNode<NavAnsattTilgangTilEksternBrukerPolicyInputDto>(policyInput)
 
 				NavAnsattTilgangTilEksternBrukerPolicy.Input(
-					navIdent = dto.navIdent,
+					navAnsattAzureId = dto.navAnsattAzureId,
 					norskIdent = dto.norskIdent
 				)
 			}
 			PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1 -> {
 				val dto =  fromJsonNode<NavAnsattTilgangTilModiaPolicyInputDto>(policyInput)
-				NavAnsattTilgangTilModiaPolicy.Input(dto.navIdent)
+				NavAnsattTilgangTilModiaPolicy.Input(dto.navAnsattAzureId)
 			}
 		}
 	}

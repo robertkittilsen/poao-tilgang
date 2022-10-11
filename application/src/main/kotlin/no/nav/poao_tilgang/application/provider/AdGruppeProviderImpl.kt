@@ -16,6 +16,7 @@ import no.nav.poao_tilgang.core.domain.AdGruppeNavn.STRENGT_FORTROLIG_ADRESSE
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.SYFO_SENSITIV
 import no.nav.poao_tilgang.core.domain.AdGrupper
 import no.nav.poao_tilgang.core.domain.AzureObjectId
+import no.nav.poao_tilgang.core.domain.NavIdent
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -53,7 +54,11 @@ class AdGruppeProviderImpl(
 
 	private val navIdentToAzureIdCache = Caffeine.newBuilder()
 		.maximumSize(10_000)
-		.build<String, AzureObjectId>()
+		.build<NavIdent, AzureObjectId>()
+
+	private val azureIdToNavIdentCache = Caffeine.newBuilder()
+		.maximumSize(10_000)
+		.build<AzureObjectId, NavIdent>()
 
 	// TODO: Bruk heller List<UUID> for å redusere minnebruk
 	private val navAnsattAzureIdToAdGroupsCache = Caffeine.newBuilder()
@@ -65,14 +70,30 @@ class AdGruppeProviderImpl(
 		.maximumSize(1000)
 		.build<AzureObjectId, AdGruppe>()
 
-	override fun hentAdGrupper(navIdent: String): List<AdGruppe> {
-		val azureId = hentAzureIdWithCache(navIdent)
-
-		return hentAdGrupperForNavAnsattWithCache(azureId)
+	override fun hentAdGrupper(navAnsattAzureId: AzureObjectId): List<AdGruppe> {
+		return hentAdGrupperForNavAnsattWithCache(navAnsattAzureId)
 	}
 
-	override fun hentAdGrupper(azureId: AzureObjectId): List<AdGruppe> {
-		return hentAdGrupperForNavAnsattWithCache(azureId)
+	override fun hentAzureIdMedNavIdent(navIdent: NavIdent): AzureObjectId {
+		return tryCacheFirstNotNull(navIdentToAzureIdCache, navIdent) {
+			val azureId = microsoftGraphClient.hentAzureIdMedNavIdent(navIdent)
+
+			// Oppdaterer også motsatt cache
+			azureIdToNavIdentCache.put(azureId, navIdent)
+
+			azureId
+		}
+	}
+
+	override fun hentNavIdentMedAzureId(navAnsattAzureId: AzureObjectId): NavIdent {
+		return tryCacheFirstNotNull(azureIdToNavIdentCache, navAnsattAzureId) {
+			val navIdent = microsoftGraphClient.hentNavIdentMedAzureId(navAnsattAzureId)
+
+			// Oppdaterer også motsatt cache
+			navIdentToAzureIdCache.put(navIdent, navAnsattAzureId)
+
+			navIdent
+		}
 	}
 
 	override fun hentTilgjengeligeAdGrupper(): AdGrupper {
@@ -117,12 +138,5 @@ class AdGruppeProviderImpl(
 		return cachedGroups
 	}
 
-	private fun hentAzureIdWithCache(navIdent: String): AzureObjectId {
-		return tryCacheFirstNotNull(navIdentToAzureIdCache, navIdent) {
-			microsoftGraphClient.hentAzureIdForNavAnsatt(
-				navIdent
-			)
-		}
-	}
 
 }

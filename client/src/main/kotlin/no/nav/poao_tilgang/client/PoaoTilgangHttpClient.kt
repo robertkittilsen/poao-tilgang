@@ -139,7 +139,7 @@ class PoaoTilgangHttpClient(
 			is NavAnsattTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
 				policyInput = NavAnsattTilgangTilEksternBrukerPolicyInputDto(
-					policyRequest.policyInput.navIdent,
+					policyRequest.policyInput.navAnsattAzureId,
 					policyRequest.policyInput.norskIdent
 				),
 				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1
@@ -148,7 +148,7 @@ class PoaoTilgangHttpClient(
 			is NavAnsattTilgangTilModiaPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
 				policyInput = NavAnsattTilgangTilModiaPolicyInputDto(
-					policyRequest.policyInput.navIdent,
+					policyRequest.policyInput.navAnsattAzureId,
 				),
 				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1
 			)

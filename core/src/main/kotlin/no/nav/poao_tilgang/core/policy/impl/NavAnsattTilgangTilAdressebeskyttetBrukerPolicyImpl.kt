@@ -23,13 +23,13 @@ class NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImpl(
 
 		return when (diskresjonskode) {
 			Diskresjonskode.FORTROLIG -> navAnsattBehandleFortroligBrukerePolicy.evaluate(
-				NavAnsattBehandleFortroligBrukerePolicy.Input(input.navIdent)
+				NavAnsattBehandleFortroligBrukerePolicy.Input(input.navAnsattAzureId)
 			)
 			Diskresjonskode.STRENGT_FORTROLIG -> navAnsattBehandleStrengtFortroligBrukerePolicy.evaluate(
-				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(input.navIdent)
+				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(input.navAnsattAzureId)
 			)
 			Diskresjonskode.STRENGT_FORTROLIG_UTLAND -> navAnsattBehandleStrengtFortroligUtlandBrukerePolicy.evaluate(
-				NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy.Input(input.navIdent)
+				NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy.Input(input.navAnsattAzureId)
 			)
 		}
 	}

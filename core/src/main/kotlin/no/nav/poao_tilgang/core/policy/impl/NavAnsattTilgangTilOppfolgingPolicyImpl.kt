@@ -14,7 +14,7 @@ class NavAnsattTilgangTilOppfolgingPolicyImpl(
 	override val name = "NavAnsattTilgangTilOppfolgingPolicy"
 
 	override fun evaluate(input: NavAnsattTilgangTilOppfolgingPolicy.Input): Decision {
-		return adGruppeProvider.hentAdGrupper(input.navIdent)
+		return adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
 			.has(modiaOppfolging)
 	}
 

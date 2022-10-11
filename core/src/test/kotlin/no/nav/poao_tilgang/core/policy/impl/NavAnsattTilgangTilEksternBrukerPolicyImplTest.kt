@@ -7,12 +7,14 @@ import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.provider.AbacProvider
+import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.Test
 import java.util.*
 
 class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 
 	private val navIdent = "Z1234"
+	private val navAnsattAzureId = UUID.randomUUID()
 	private val norskIdent = "63546454"
 
 	private val abacProvider = mockk<AbacProvider>()
@@ -21,20 +23,22 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	private val navAnsattTilgangTilSkjermetPersonPolicy = mockk<NavAnsattTilgangTilSkjermetPersonPolicy>()
 	private val navAnsattTilgangTilEksternBrukerNavEnhetPolicy = mockk<NavAnsattTilgangTilEksternBrukerNavEnhetPolicy>()
 	private val navAnsattTilgangTilOppfolgingPolicy = mockk<NavAnsattTilgangTilOppfolgingPolicy>()
+	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
 	private val policy = NavAnsattTilgangTilEksternBrukerPolicyImpl(
 		abacProvider,
 		navAnsattTilgangTilAdressebeskyttetBrukerPolicy,
 		navAnsattTilgangTilSkjermetPersonPolicy,
 		navAnsattTilgangTilEksternBrukerNavEnhetPolicy,
-		navAnsattTilgangTilOppfolgingPolicy
+		navAnsattTilgangTilOppfolgingPolicy,
+		adGruppeProvider
 	)
 
 	@Test
 	fun `should return "permit" if ABAC returns "permit"`() {
 		mockAbacDecision(true)
 
-		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe Decision.Permit
 	}
@@ -43,7 +47,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	fun `should return "deny" if ABAC returns "deny"`() {
 		mockAbacDecision(false)
 
-		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe Decision.Deny("Deny fra ABAC", DecisionDenyReason.IKKE_TILGANG_FRA_ABAC)
 	}
@@ -55,7 +59,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 			adressebeskyttetBrukerPolicyDecision = deny()
 		)
 
-		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe Decision.Permit
 	}
@@ -65,7 +69,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 		mockAbacDecision(false)
 		mockDecision()
 
-		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe Decision.Deny(
 			message = "Deny fra ABAC",
@@ -81,7 +85,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 			adressebeskyttetBrukerPolicyDecision = deny(message)
 		)
 
-		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe deny(message)
 	}
@@ -94,7 +98,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 			skjermetPersonPolicyDecision = deny(message)
 		)
 
-		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe deny(message)
 	}
@@ -107,7 +111,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 			eksternBrukerNavEnhetPolicyDecision = deny(message)
 		)
 
-		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe deny(message)
 	}
@@ -120,7 +124,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 			oppfolgingPolicyDecision = deny(message)
 		)
 
-		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navIdent, norskIdent))
+		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
 
 		decision shouldBe deny(message)
 	}
@@ -133,6 +137,10 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	}
 
 	private fun mockAbacDecision(harTilgang: Boolean) {
+		every {
+			adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
+		} returns navIdent
+
 		every {
 			abacProvider.harVeilederTilgangTilPerson(navIdent, norskIdent)
 		} returns harTilgang
@@ -148,7 +156,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 		every {
 			navAnsattTilgangTilAdressebeskyttetBrukerPolicy.evaluate(
 				NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(
-					navIdent, norskIdent
+					navAnsattAzureId, norskIdent
 				)
 			)
 		} returns adressebeskyttetBrukerPolicyDecision
@@ -156,7 +164,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 		every {
 			navAnsattTilgangTilSkjermetPersonPolicy.evaluate(
 				NavAnsattTilgangTilSkjermetPersonPolicy.Input(
-					navIdent = navIdent,
+					navAnsattAzureId = navAnsattAzureId,
 					norskIdent = norskIdent
 				)
 			)
@@ -165,7 +173,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 		every {
 			navAnsattTilgangTilEksternBrukerNavEnhetPolicy.evaluate(
 				NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
-					navIdent = navIdent,
+					navAnsattAzureId = navAnsattAzureId,
 					norskIdent = norskIdent
 				)
 			)
@@ -173,7 +181,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 
 		every {
 			navAnsattTilgangTilOppfolgingPolicy.evaluate(
-				NavAnsattTilgangTilOppfolgingPolicy.Input(navIdent)
+				NavAnsattTilgangTilOppfolgingPolicy.Input(navAnsattAzureId)
 			)
 		} returns oppfolgingPolicyDecision
 

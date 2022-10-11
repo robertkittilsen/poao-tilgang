@@ -19,7 +19,7 @@ class NavAnsattBehandleSkjermedePersonerPolicyImpl(
 	}
 
 	override fun evaluate(input: NavAnsattBehandleSkjermedePersonerPolicy.Input): Decision {
-		return adGruppeProvider.hentAdGrupper(input.navIdent)
+		return adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
 			.hasAtLeastOne(behandleSkjermedePersonerGrupper)
 	}
 

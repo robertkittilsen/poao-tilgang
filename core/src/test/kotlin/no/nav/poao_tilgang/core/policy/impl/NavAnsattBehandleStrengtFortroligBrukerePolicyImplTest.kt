@@ -3,8 +3,6 @@ package no.nav.poao_tilgang.core.policy.impl
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.poao_tilgang.core.domain.AdGruppe
-import no.nav.poao_tilgang.core.domain.AdGruppeNavn
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattBehandleStrengtFortroligBrukerePolicy
@@ -14,13 +12,15 @@ import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 
 class NavAnsattBehandleStrengtFortroligBrukerePolicyImplTest {
 
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
 	private lateinit var policy: NavAnsattBehandleStrengtFortroligBrukerePolicy
+
+	private val navAnsattAzureId = UUID.randomUUID()
 
 	@BeforeEach
 	internal fun setUp() {
@@ -34,31 +34,29 @@ class NavAnsattBehandleStrengtFortroligBrukerePolicyImplTest {
 
 	@Test
 	fun `should return "permit" if access to 0000-GA-Strengt_Fortrolig_Adresse`() {
-		val navIdent = "Z1234"
 
 		every {
-			adGruppeProvider.hentAdGrupper(navIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(
 			testAdGrupper.strengtFortroligAdresse,
 			randomGruppe,
 		)
 
-		val decision = policy.evaluate(NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(navIdent))
+		val decision = policy.evaluate(NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(navAnsattAzureId))
 
 		decision shouldBe Decision.Permit
 	}
 
 	@Test
 	fun `should return "deny" if not access to 0000-GA-Strengt_Fortrolig_Adresse`() {
-		val navIdent = "Z1234"
 
 		every {
-			adGruppeProvider.hentAdGrupper(navIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(
 			randomGruppe
 		)
 
-		val decision = policy.evaluate(NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(navIdent))
+		val decision = policy.evaluate(NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(navAnsattAzureId))
 
 		decision.type shouldBe Decision.Type.DENY
 
