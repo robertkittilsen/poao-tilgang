@@ -22,12 +22,9 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	override val name = "NavAnsattTilgangTilNavEnhet"
 
 	override fun evaluate(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
-		val erModiaAdmin = adGruppeProvider.hentAdGrupper(input.navIdent)
+		adGruppeProvider.hentAdGrupper(input.navIdent)
 			.has(modiaAdmin)
-			.isPermit
-
-		if (erModiaAdmin)
-			return Decision.Permit
+			.whenPermit { return it }
 
 		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(input.navIdent)
 			.any { input.navEnhetId == it.enhetId }
