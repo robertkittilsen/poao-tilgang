@@ -18,7 +18,7 @@ import java.net.UnknownHostException
 import java.time.Duration
 import java.util.*
 
-class TilgangHttpClientTest : IntegrationTest() {
+class PoaoTilgangHttpClientTest : IntegrationTest() {
 
 	val navIdent = "Z1235"
 	val norskIdent = "6456532"

@@ -10,18 +10,18 @@ class BadHttpStatusApiException(
 	val responseBody: String? = null
 ) : ApiException("Received response with bad HTTP status. status=$httpStatus response=$responseBody")
 
-class MalformedResponseApiException(
+class ResponseDataApiException(
 	message: String
 ) : ApiException(message) {
 	companion object {
-		fun missingBody() = MalformedResponseApiException("Body is missing from response")
+		fun missingBody() = ResponseDataApiException("Body is missing from response")
 	}
 }
 
-class ResponseDataApiException(
-	message: String
-) : ApiException(message)
-
 class NetworkApiException(
-	override val cause: java.lang.Exception
+	override val cause: Throwable
 ) : ApiException("HTTP request failed: ${cause.message}", cause)
+
+class UnspecifiedApiException(
+	override val cause: Throwable
+) : ApiException("Unspecified exception: ${cause.message}", cause)

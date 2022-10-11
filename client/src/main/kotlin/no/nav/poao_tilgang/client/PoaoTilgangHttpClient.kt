@@ -15,6 +15,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.IOException
 import java.util.*
 
 class PoaoTilgangHttpClient(
@@ -46,12 +47,12 @@ class PoaoTilgangHttpClient(
 	override fun hentAdGrupper(navAnsattAzureId: UUID): ApiResult<List<AdGruppe>> {
 		val requestJson = objectMapper.writeValueAsString(HentAdGrupperForBrukerRequest(navAnsattAzureId))
 
-		return sendRequest(
-			path = "/api/v1/ad-gruppe",
-			body = requestJson
-		).map { body ->
-			objectMapper.readValue<HentAdGrupperForBrukerResponse>(body)
-				.map { AdGruppe(it.id, it.name) }
+		return sendRequest<HentAdGrupperForBrukerResponse>(
+			path = "/api/v1/ad-gruppe", body = requestJson
+		).map { adGrupper ->
+			adGrupper.map { adGruppe ->
+				AdGruppe(adGruppe.id, adGruppe.name)
+			}
 		}
 	}
 
@@ -69,25 +70,24 @@ class PoaoTilgangHttpClient(
 		return sendRequest(
 			path = "/api/v1/skjermet-person",
 			body = requestJson
-		).map { objectMapper.readValue<ErSkjermetPersonBulkResponse>(it) }
+		)
 	}
 
 	private fun sendPolicyRequests(requests: List<PolicyRequest>): ApiResult<List<PolicyEvaluationResultDto>> {
 		val requestDtos = requests.map { toRequestDto(it) }
 		val requestJson = objectMapper.writeValueAsString(EvaluatePoliciesRequest(requestDtos))
 
-		return sendRequest(
+		return sendRequest<EvaluatePoliciesResponse>(
 			path = "/api/v1/policy/evaluate",
 			body = requestJson
-		).map { objectMapper.readValue<EvaluatePoliciesResponse>(it).results }
+		).map { it.results }
 	}
 
-	//TODO Legg til håndtering av malformedBody (JSON feil)
-	private fun sendRequest(
+	private inline fun <reified D> sendRequest(
 		path: String,
 		method: String = "POST",
 		body: String? = null,
-	): ApiResult<String> {
+	): ApiResult<D> {
 		val request = Request.Builder()
 			.url(joinPaths(baseUrl, path))
 			.method(method, body?.toRequestBody(jsonMediaType))
@@ -100,11 +100,22 @@ class PoaoTilgangHttpClient(
 					return@use failure(BadHttpStatusApiException(response.code, response.body?.string()))
 				}
 
-				response.body?.string()?.let { success(it) }
-					?: failure(MalformedResponseApiException.missingBody())
+				return response.body?.string()?.let { parseBody(it) }
+					?: failure(ResponseDataApiException.missingBody())
 			}
-		} catch (e: Exception) {
-			failure(NetworkApiException(e))
+		} catch (e: Throwable) {
+			when (e) {
+				is IOException -> failure(NetworkApiException(e))
+				else -> failure(UnspecifiedApiException(e))
+			}
+		}
+	}
+
+	private inline fun <reified D> parseBody(body: String): ApiResult<D> {
+		return try {
+			success(objectMapper.readValue(body))
+		} catch (e: Throwable) {
+			failure(ResponseDataApiException(e.message ?: "Unknown error"))
 		}
 	}
 
@@ -133,6 +144,7 @@ class PoaoTilgangHttpClient(
 				),
 				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1
 			)
+
 			is NavAnsattTilgangTilModiaPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
 				policyInput = NavAnsattTilgangTilModiaPolicyInputDto(
