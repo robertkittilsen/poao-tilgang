@@ -4,7 +4,6 @@ import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import no.nav.poao_tilgang.client.api.ApiResult
 import no.nav.poao_tilgang.client.utils.CacheUtils.tryCacheFirstNotNull
-import java.lang.IllegalStateException
 import java.time.Duration
 import java.util.*
 
@@ -84,11 +83,19 @@ class PoaoTilgangCachedClient(
 			else cachedResults[it] = maybeResult
 		}
 
+		// Hvis alle identer er cachet så trenger vi ikke hente med klienten
+		if (uncachedIdenter.isEmpty()) {
+			return ApiResult.success(cachedResults)
+		}
+
 		val apiResult = poaoTilgangClient.erSkjermetPerson(uncachedIdenter)
+
 		if (apiResult.isFailure) {
 			return apiResult
 		}
+
 		val erSkjermetPersonMap = apiResult.get()!!
+
 		erSkjermetPersonMap.forEach {
 			norskIdentToErSkjermetCache.put(it.key, it.value)
 		}
