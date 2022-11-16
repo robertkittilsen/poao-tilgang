@@ -8,7 +8,7 @@ import java.time.Duration
 import java.util.*
 
 class PoaoTilgangCachedClient(
-	private val poaoTilgangClient: PoaoTilgangClient,
+	private val client: PoaoTilgangClient,
 	private val policyInputToDecisionCache: Cache<PolicyInput, Decision> = Caffeine.newBuilder()
 		.expireAfterWrite(Duration.ofMinutes(30))
 		.build(),
@@ -22,7 +22,7 @@ class PoaoTilgangCachedClient(
 
 	override fun evaluatePolicy(input: PolicyInput): ApiResult<Decision> {
 		val decision = tryCacheFirstNotNull(policyInputToDecisionCache, input) {
-			val resultat = poaoTilgangClient.evaluatePolicy(input)
+			val resultat = client.evaluatePolicy(input)
 			if (resultat.isFailure) return resultat
 
 			return@tryCacheFirstNotNull resultat.get()!!
@@ -38,7 +38,7 @@ class PoaoTilgangCachedClient(
 			return@map if (maybeResult != null) PolicyResult(it.requestId, maybeResult) else null
 		}.filterNotNull()
 
-		val apiResult = poaoTilgangClient.evaluatePolicies(uncachedRequests)
+		val apiResult = client.evaluatePolicies(uncachedRequests)
 		if (apiResult.isFailure) {
 			return apiResult
 		}
@@ -55,7 +55,7 @@ class PoaoTilgangCachedClient(
 
 	override fun hentAdGrupper(navAnsattAzureId: UUID): ApiResult<List<AdGruppe>> {
 		val adGrupper = tryCacheFirstNotNull(navAnsattIdToAzureAdGrupperCache, navAnsattAzureId) {
-			val resultat = poaoTilgangClient.hentAdGrupper(navAnsattAzureId)
+			val resultat = client.hentAdGrupper(navAnsattAzureId)
 			if (resultat.isFailure) return resultat
 
 			return@tryCacheFirstNotNull resultat.get()!!
@@ -65,7 +65,7 @@ class PoaoTilgangCachedClient(
 
 	override fun erSkjermetPerson(norskIdent: NorskIdent): ApiResult<Boolean> {
 		val erSkjermet = tryCacheFirstNotNull(norskIdentToErSkjermetCache, norskIdent) {
-			val resultat = poaoTilgangClient.erSkjermetPerson(norskIdent)
+			val resultat = client.erSkjermetPerson(norskIdent)
 			if (resultat.isFailure) return resultat
 
 			return@tryCacheFirstNotNull resultat.get()!!
@@ -88,7 +88,7 @@ class PoaoTilgangCachedClient(
 			return ApiResult.success(cachedResults)
 		}
 
-		val apiResult = poaoTilgangClient.erSkjermetPerson(uncachedIdenter)
+		val apiResult = client.erSkjermetPerson(uncachedIdenter)
 
 		if (apiResult.isFailure) {
 			return apiResult
