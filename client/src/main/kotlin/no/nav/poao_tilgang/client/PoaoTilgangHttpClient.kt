@@ -4,8 +4,9 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.UrlUtils.joinPaths
 import no.nav.poao_tilgang.api.dto.request.*
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputDto
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputDto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV1Dto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.response.*
 import no.nav.poao_tilgang.client.ClientObjectMapper.objectMapper
 import no.nav.poao_tilgang.client.api.*
@@ -136,19 +137,28 @@ class PoaoTilgangHttpClient(
 
 	private fun toRequestDto(policyRequest: PolicyRequest): PolicyEvaluationRequestDto<Any> {
 		return when (policyRequest.policyInput) {
-			is NavAnsattTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
+			is NavAnsattTilgangTilEksternBrukerPolicyInputV1 -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
-				policyInput = NavAnsattTilgangTilEksternBrukerPolicyInputDto(
-					policyRequest.policyInput.navAnsattAzureId,
-					policyRequest.policyInput.norskIdent
+				policyInput = NavAnsattTilgangTilEksternBrukerPolicyInputV1Dto(
+					navIdent = policyRequest.policyInput.navIdent,
+					norskIdent = policyRequest.policyInput.norskIdent
 				),
 				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1
 			)
 
-			is NavAnsattTilgangTilModiaPolicyInput -> PolicyEvaluationRequestDto(
+			is NavAnsattTilgangTilEksternBrukerPolicyInputV2 -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
-				policyInput = NavAnsattTilgangTilModiaPolicyInputDto(
-					policyRequest.policyInput.navAnsattAzureId,
+				policyInput = NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto(
+					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
+					norskIdent = policyRequest.policyInput.norskIdent
+				),
+				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2
+			)
+
+			is NavAnsattTilgangTilModiaPolicyInputV1 -> PolicyEvaluationRequestDto(
+				requestId = policyRequest.requestId,
+				policyInput = NavAnsattTilgangTilModiaPolicyInputV1Dto(
+					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
 				),
 				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1
 			)

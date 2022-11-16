@@ -31,7 +31,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		val response = sendPolicyRequest(
 			requestId,
-			"""{"navAnsattAzureId": "$navAnsattId", "norskIdent": "$norskIdent"}""",
+			"""{"navIdent": "$navIdent", "norskIdent": "$norskIdent"}""",
 			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1"
 		)
 
@@ -47,8 +47,41 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		val response = sendPolicyRequest(
 			requestId,
-			"""{"navAnsattAzureId": "$navAnsattId", "norskIdent": "$norskIdent"}""",
+			"""{"navIdent": "$navIdent", "norskIdent": "$norskIdent"}""",
 			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1"
+		)
+
+		response.body?.string() shouldBe denyResponse(requestId, "Deny fra ABAC", "IKKE_TILGANG_FRA_ABAC")
+	}
+
+	@Test
+	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2 policy - permit`() {
+		setupMocks()
+
+		val requestId = UUID.randomUUID()
+
+		mockAbacHttpServer.mockPermit()
+
+		val response = sendPolicyRequest(
+			requestId,
+			"""{"navAnsattAzureId": "$navAnsattId", "norskIdent": "$norskIdent"}""",
+			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2"
+		)
+
+		response.body?.string() shouldBe permitResponse(requestId)
+	}
+
+	@Test
+	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2 policy - deny`() {
+		setupMocks()
+		mockAbacHttpServer.mockDeny()
+
+		val requestId = UUID.randomUUID()
+
+		val response = sendPolicyRequest(
+			requestId,
+			"""{"navAnsattAzureId": "$navAnsattId", "norskIdent": "$norskIdent"}""",
+			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2"
 		)
 
 		response.body?.string() shouldBe denyResponse(requestId, "Deny fra ABAC", "IKKE_TILGANG_FRA_ABAC")
