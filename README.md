@@ -12,8 +12,8 @@ Har også en HTTP-klient som kan trekkes inn som en avhengighet i applikasjoner 
 
 ## Bruk av HTTP-klient
 
-Legg til jitpack som repository. Det er anbefalt å legge til Jitpack til slutt for å først søke igjennom
-andre repositories for avhengigheter.
+### 1.Legg til jitpack som repository
+Det er anbefalt å legge til Jitpack til slutt for å først søke igjennom andre repositories for avhengigheter.
 
 Maven:
 ```xml
@@ -33,28 +33,35 @@ Maven:
 Gradle:
 ```groovy
 repositories {
+    // Legger til central eksplisitt for prioritet over jitpack
     mavenCentral()
     maven { url "https://jitpack.io" }
 }
 ```
 
-Legg til avhengighet der `VERSION` = full SHA.
+### 2. Legg til dependency for klienten 
+
+Hent siste versjon av klienten på https://github.com/navikt/poao-tilgang/releases og legg til avhengigheten.
+NB: Jitpack bygger avhengigheter lazy, dvs når noen først prøver å laste avhengigheten ned. Hvis du er den første som laster 
+ned en ny versjon, så kan det potensielt ta noen minutter før avhengigheten er bygget ferdig. 
 
 Maven:
 ```xml
 <dependency>
     <groupId>com.github.navikt.poao-tilgang</groupId>
     <artifactId>client</artifactId>
-    <version>VERSION</version>
+    <version>YYYY.MM.DD_HH.mm-SHA</version>
 </dependency>
 ```
+
+Gradle:
 ```groovy
 dependencies {
-    implementation 'com.github.navikt.poao-tilgang:client:VERSION'
+    implementation 'com.github.navikt.poao-tilgang:client:YYYY.MM.DD_HH.mm-SHA'
 }
 ```
 
-Instantiate new client:
+### 3. Opprett en instans av klienten
 
 ```kotlin
 val client = PoaoTilgangCachedClient(
