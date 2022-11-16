@@ -38,7 +38,7 @@ class PolicyService(
 	) {
 		val (policyName, timeTakenMs, decision) = policyResult
 
-		val logLine = listOfNotNull(
+		val policyResultInfo = listOfNotNull(
 			logLabel("policy", policyName),
 			logLabel("input", policyInput),
 			logLabel("decision", decision.type),
@@ -48,7 +48,7 @@ class PolicyService(
 			logLabel("denyReason", if (decision is Decision.Deny) decision.reason else null),
 		).joinToString(" ")
 
-		SecureLog.secureLog.info(logLine)
+		SecureLog.secureLog.info("Policy result: $policyResultInfo")
 	}
 
 	private fun logLabel(label: String, value: Any?): String? {
