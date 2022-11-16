@@ -91,7 +91,7 @@ spec:
     - name: AD_GRUPPE_ID_STRENGT_FORTROLIG_ADRESSE
       value: 5ef775f2-61f8-4283-bf3d-8d03f428aa14
     - name: AD_GRUPPE_ID_MODIA_ADMIN
-      value: dd1aacab-7e63-47fc-9d8f-852dc736ed98 # Må oppdateres
+      value: fd0e475e-698b-4bcd-aa62-7540433f3e80
     - name: AD_GRUPPE_ID_MODIA_OPPFOLGING
       value: 554a66fb-fbec-4b92-90c1-0d9c085c362c
     - name: AD_GRUPPE_ID_MODIA_GENERELL

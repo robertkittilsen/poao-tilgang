@@ -53,3 +53,14 @@ dependencies {
     implementation 'com.github.navikt.poao-tilgang:client:VERSION'
 }
 ```
+
+Instantiate new client:
+
+```kotlin
+val client = PoaoTilgangCachedClient(
+    PoaoTilgangHttpClient(
+        baseUrl = "http://poao-tilgang.poao.svc.cluster.local", // or use "https://poao-tilgang(.dev).intern.nav.no" if your sending the request from dev-fss/prod-fss
+        tokenProvider = { "machine-to-machine token" }
+    )
+)
+```
