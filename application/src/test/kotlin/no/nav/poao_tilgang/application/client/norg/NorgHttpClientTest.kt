@@ -27,8 +27,7 @@ class NorgHttpClientTest {
 	@Test
 	fun `hentTilhorendeEnhet skal lage riktig request og parse response`() {
 		val client = NorgHttpClient(
-			baseUrl = mockServer.serverUrl(),
-			tokenProvider = { "TOKEN" }
+			baseUrl = mockServer.serverUrl()
 		)
 
 		mockServer.mockTilhorendeEnhet(geografiskTilknytning = "12345", tilhorendeEnhet = "4321")
@@ -41,14 +40,12 @@ class NorgHttpClientTest {
 
 		request.path shouldBe "/api/v1/enhet/navkontor/12345"
 		request.method shouldBe "GET"
-		request.getHeader("Authorization") shouldBe "Bearer TOKEN"
 	}
 
 	@Test
 	fun `hentTilhorendeEnhet feiler hvis Norg returnerer 404`() {
 		val client = NorgHttpClient(
-			baseUrl = mockServer.serverUrl(),
-			tokenProvider = { "TOKEN" }
+			baseUrl = mockServer.serverUrl()
 		)
 
 		mockServer.mockIngenTilhorendeEnhet("23456")

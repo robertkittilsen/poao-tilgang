@@ -64,10 +64,6 @@ spec:
       value: api://prod-gcp.nom.skjermede-personer-pip/.default
     - name: SKJERMET_PERSON_URL
       value: http://skjermede-personer-pip.nom.svc.cluster.local
-    - name: POAO_GCP_PROXY_SCOPE
-      value: api://prod-fss.pto.poao-gcp-proxy/.default
-    - name: POAO_GCP_PROXY_URL
-      value: https://poao-gcp-proxy.prod-fss-pub.nais.io
     - name: AXSYS_URL
       value: https://axsys.prod-fss-pub.nais.io
     - name: AXSYS_SCOPE
@@ -84,8 +80,8 @@ spec:
       value: api://prod-fss.pdl.pdl-api/.default
     - name: PDL_URL
       value: https://pdl-api.prod-fss-pub.nais.io
-    - name: RUNTIME_LOCATION
-      value: GCP
+    - name: NORG_URL
+      value: https://norg2.prod-fss-pub.nais.io
     - name: AD_GRUPPE_ID_FORTROLIG_ADRESSE
       value: 9ec6487d-f37a-4aad-a027-cd221c1ac32b
     - name: AD_GRUPPE_ID_STRENGT_FORTROLIG_ADRESSE

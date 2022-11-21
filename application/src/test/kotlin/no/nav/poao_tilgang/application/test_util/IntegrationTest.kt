@@ -40,6 +40,7 @@ open class IntegrationTest {
 		val mockNorgHttpServer = MockNorgHttpServer()
 		val mockMachineToMachineHttpServer = MockMachineToMachineHttpServer()
 
+		@Suppress("UNUSED_PARAMETER")
 		@JvmStatic
 		@DynamicPropertySource
 		fun registerProperties(_registry: DynamicPropertyRegistry) {
@@ -57,8 +58,6 @@ open class IntegrationTest {
 				"AZURE_OPENID_CONFIG_TOKEN_ENDPOINT",
 				mockMachineToMachineHttpServer.serverUrl() + MockMachineToMachineHttpServer.tokenPath
 			)
-
-			System.setProperty("RUNTIME_LOCATION", "TEST")
 		}
 
 
