@@ -4,16 +4,11 @@ import java.util.*
 
 sealed class PolicyInput
 
-data class NavAnsattTilgangTilEksternBrukerPolicyInputV1(
-	val navIdent: String,
-	val norskIdent: String
-) : PolicyInput()
-
-data class NavAnsattTilgangTilEksternBrukerPolicyInputV2(
+data class NavAnsattTilgangTilEksternBrukerPolicyInput(
 	val navAnsattAzureId: UUID,
 	val norskIdent: String
 ) : PolicyInput()
 
-data class NavAnsattTilgangTilModiaPolicyInputV1(
+data class NavAnsattTilgangTilModiaPolicyInput(
 	val navAnsattAzureId: UUID
 ) : PolicyInput()

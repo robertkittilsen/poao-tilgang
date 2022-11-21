@@ -43,23 +43,12 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `evaluatePolicy - should evaluate NavAnsattTilgangTilEksternBrukerPolicy V1`() {
-		mockAbacHttpServer.mockPermit()
-		setupMocks()
-
-		val decision =
-			client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInputV1(navIdent, norskIdent)).getOrThrow()
-
-		decision shouldBe Decision.Permit
-	}
-
-	@Test
 	fun `evaluatePolicy - should evaluate NavAnsattTilgangTilEksternBrukerPolicy V2`() {
 		mockAbacHttpServer.mockPermit()
 		setupMocks()
 
 		val decision =
-			client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInputV2(navAnsattId, norskIdent)).getOrThrow()
+			client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInput(navAnsattId, norskIdent)).getOrThrow()
 
 		decision shouldBe Decision.Permit
 	}
@@ -72,7 +61,7 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 			listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell)
 		)
 
-		val decision = client.evaluatePolicy(NavAnsattTilgangTilModiaPolicyInputV1(navAnsattId)).getOrThrow()
+		val decision = client.evaluatePolicy(NavAnsattTilgangTilModiaPolicyInput(navAnsattId)).getOrThrow()
 
 		decision shouldBe Decision.Permit
 	}

@@ -22,7 +22,7 @@ class PoaoTilgangCachedClientTest {
 
 	@Test
 	fun `evaluatePolicy - skal cache og returnere decision`() {
-		val input = NavAnsattTilgangTilEksternBrukerPolicyInputV2(UUID.randomUUID(), "1321321321")
+		val input = NavAnsattTilgangTilEksternBrukerPolicyInput(UUID.randomUUID(), "1321321321")
 		every { client.evaluatePolicy(input) } returns ApiResult.success(Decision.Permit)
 
 		val result = cachedClient.evaluatePolicy(input)
@@ -34,9 +34,9 @@ class PoaoTilgangCachedClientTest {
 
 	@Test
 	fun `evaluatePolicy - skal cache riktig input`() {
-		val input = NavAnsattTilgangTilEksternBrukerPolicyInputV2(UUID.randomUUID(), "1321321321")
-		val input2 = NavAnsattTilgangTilModiaPolicyInputV1(UUID.randomUUID())
-		val input3 = NavAnsattTilgangTilEksternBrukerPolicyInputV2(UUID.randomUUID(), "6464654654")
+		val input = NavAnsattTilgangTilEksternBrukerPolicyInput(UUID.randomUUID(), "1321321321")
+		val input2 = NavAnsattTilgangTilModiaPolicyInput(UUID.randomUUID())
+		val input3 = NavAnsattTilgangTilEksternBrukerPolicyInput(UUID.randomUUID(), "6464654654")
 
 		every { client.evaluatePolicy(any()) } returns ApiResult.success(Decision.Permit)
 
