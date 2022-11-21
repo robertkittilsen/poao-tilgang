@@ -3,8 +3,6 @@ package no.nav.poao_tilgang.core.policy.impl
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import no.nav.poao_tilgang.core.domain.AdGruppe
-import no.nav.poao_tilgang.core.domain.AdGruppeNavn
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattBehandleSkjermedePersonerPolicy
@@ -22,6 +20,8 @@ class NavAnsattBehandleSkjermedePersonerPolicyImplTest {
 
 	private lateinit var policy: NavAnsattBehandleSkjermedePersonerPolicy
 
+	private val navAnsattAzureId = UUID.randomUUID()
+
 	@BeforeEach
 	internal fun setUp() {
 		every {
@@ -33,47 +33,44 @@ class NavAnsattBehandleSkjermedePersonerPolicyImplTest {
 
 	@Test
 	fun `should return "permit" if access to 0000-GA-GOSYS_UTVIDET`() {
-		val navIdent = "Z1234"
 
 		every {
-			adGruppeProvider.hentAdGrupper(navIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(
 			testAdGrupper.gosysUtvidet,
 			randomGruppe
 		)
 
-		val decision = policy.evaluate(NavAnsattBehandleSkjermedePersonerPolicy.Input(navIdent))
+		val decision = policy.evaluate(NavAnsattBehandleSkjermedePersonerPolicy.Input(navAnsattAzureId))
 
 		decision shouldBe Decision.Permit
 	}
 
 	@Test
 	fun `should return "permit" if access to 0000-GA-Pensjon_UTVIDET`() {
-		val navIdent = "Z1234"
 
 		every {
-			adGruppeProvider.hentAdGrupper(navIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(
 			testAdGrupper.pensjonUtvidet,
 			randomGruppe
 		)
 
-		val decision = policy.evaluate(NavAnsattBehandleSkjermedePersonerPolicy.Input(navIdent))
+		val decision = policy.evaluate(NavAnsattBehandleSkjermedePersonerPolicy.Input(navAnsattAzureId))
 
 		decision shouldBe Decision.Permit
 	}
 
 	@Test
 	fun `should return "deny" if not access to correct AD group`() {
-		val navIdent = "Z1234"
 
 		every {
-			adGruppeProvider.hentAdGrupper(navIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(
 			randomGruppe
 		)
 
-		val decision = policy.evaluate(NavAnsattBehandleSkjermedePersonerPolicy.Input(navIdent))
+		val decision = policy.evaluate(NavAnsattBehandleSkjermedePersonerPolicy.Input(navAnsattAzureId))
 
 		decision.type shouldBe Decision.Type.DENY
 

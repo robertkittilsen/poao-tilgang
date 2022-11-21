@@ -26,17 +26,17 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 	override val name = "NavAnsattTilgangTilEksternBrukerNavEnhetPolicy"
 
 	override fun evaluate(input: NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input): Decision {
-		val (navIdent, norskIdent) = input
+		val (navAnsattAzureId, norskIdent) = input
 
 		// Hvis man har nasjonal tilgang så trengs det ikke sjekk på enhet tilgang
-		adGruppeProvider.hentAdGrupper(input.navIdent)
+		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
 			.hasAtLeastOne(nasjonalTilgangGrupper)
 			.whenPermit { return it }
 
 		oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)?.let { navEnhetId ->
 			return tilgangTilNavEnhetPolicy.evaluate(
 				NavAnsattTilgangTilNavEnhetPolicy.Input(
-					navIdent = navIdent,
+					navAnsattAzureId = navAnsattAzureId,
 					navEnhetId = navEnhetId
 				)
 			)
@@ -45,7 +45,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 		geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)?.let { navEnhetId ->
 			return tilgangTilNavEnhetPolicy.evaluate(
 				NavAnsattTilgangTilNavEnhetPolicy.Input(
-					navIdent = navIdent,
+					navAnsattAzureId = navAnsattAzureId,
 					navEnhetId = navEnhetId
 				)
 			)

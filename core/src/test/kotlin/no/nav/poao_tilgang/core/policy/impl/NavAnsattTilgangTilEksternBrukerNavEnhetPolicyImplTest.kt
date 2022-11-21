@@ -14,11 +14,12 @@ import no.nav.poao_tilgang.core.provider.GeografiskTilknyttetEnhetProvider
 import no.nav.poao_tilgang.core.provider.OppfolgingsenhetProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 
 	private val norskIdent = "63546454"
-	private val navAnsattIdent = "Z1234"
+	private val navAnsattAzureId = UUID.randomUUID()
 	private val navEnhet = "1234"
 
 	private val oppfolgingsenhetProvider = mockk<OppfolgingsenhetProvider>()
@@ -45,12 +46,12 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 	@Test
 	internal fun `skal ikke sjekke tilgang til enhet og returnere permit hvis tilgang til "0000-GA-GOSYS_NASJONAL"`() {
 		every {
-			adGruppeProvider.hentAdGrupper(navAnsattIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(testAdGrupper.gosysNasjonal)
 
 		val decision = policy.evaluate(
 			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
-				navIdent = navAnsattIdent,
+				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
 		)
@@ -69,12 +70,12 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 	@Test
 	internal fun `skal ikke sjekke tilgang til enhet og returnere permit hvis tilgang til "0000-GA-GOSYS_UTVIDBAR_TIL_NASJONAL"`() {
 		every {
-			adGruppeProvider.hentAdGrupper(navAnsattIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(testAdGrupper.gosysUtvidbarTilNasjonal)
 
 		val decision = policy.evaluate(
 			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
-				navIdent = navAnsattIdent,
+				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
 		)
@@ -93,7 +94,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 	@Test
 	internal fun `skal sjekke tilgang til oppfølgingsenhet hvis finnes`() {
 		every {
-			adGruppeProvider.hentAdGrupper(navAnsattIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns emptyList()
 
 		every {
@@ -103,7 +104,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		every {
 			tilgangTilNavEnhetPolicy.evaluate(
 				NavAnsattTilgangTilNavEnhetPolicy.Input(
-					navIdent = navAnsattIdent,
+					navAnsattAzureId = navAnsattAzureId,
 					navEnhetId = navEnhet
 				)
 			)
@@ -111,7 +112,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 
 		val decision = policy.evaluate(
 			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
-				navIdent = navAnsattIdent,
+				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
 		)
@@ -126,7 +127,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 	@Test
 	internal fun `skal sjekke tilgang til geografisk enhet hvis oppfølgingsenheten ikke finnes`() {
 		every {
-			adGruppeProvider.hentAdGrupper(navAnsattIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns emptyList()
 
 		every {
@@ -140,7 +141,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		every {
 			tilgangTilNavEnhetPolicy.evaluate(
 				NavAnsattTilgangTilNavEnhetPolicy.Input(
-					navIdent = navAnsattIdent,
+					navAnsattAzureId = navAnsattAzureId,
 					navEnhetId = navEnhet
 				)
 			)
@@ -148,7 +149,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 
 		val decision = policy.evaluate(
 			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
-				navIdent = navAnsattIdent,
+				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
 		)
@@ -159,7 +160,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 	@Test
 	internal fun `skal returnere DENY om oppfølgingsenhet og geografisk enhet er null`() {
 		every {
-			adGruppeProvider.hentAdGrupper(navAnsattIdent)
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns emptyList()
 
 		every {
@@ -172,7 +173,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 
 		val decision = policy.evaluate(
 			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
-				navIdent = navAnsattIdent,
+				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
 		)

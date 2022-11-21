@@ -4,6 +4,7 @@ import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.provider.AbacProvider
+import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.slf4j.LoggerFactory
 
 class NavAnsattTilgangTilEksternBrukerPolicyImpl(
@@ -11,7 +12,8 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	private val navAnsattTilgangTilAdressebeskyttetBrukerPolicy: NavAnsattTilgangTilAdressebeskyttetBrukerPolicy,
 	private val navAnsattTilgangTilSkjermetPersonPolicy: NavAnsattTilgangTilSkjermetPersonPolicy,
 	private val navAnsattTilgangTilEksternBrukerNavEnhetPolicy: NavAnsattTilgangTilEksternBrukerNavEnhetPolicy,
-	private val navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy
+	private val navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy,
+	private val adGruppeProvider: AdGruppeProvider
 ) : NavAnsattTilgangTilEksternBrukerPolicy {
 
 	private val log = LoggerFactory.getLogger(javaClass)
@@ -36,9 +38,10 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 		return harTilgangAbac
 	}
 
-	internal fun harTilgangAbac(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
-		val (navIdent, norskIdent) = input
+	private fun harTilgangAbac(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
+		val (navAnsattAzureId, norskIdent) = input
 
+		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 		val harTilgang = abacProvider.harVeilederTilgangTilPerson(navIdent, norskIdent)
 
 		return if (harTilgang) Decision.Permit else Decision.Deny(
@@ -48,31 +51,31 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	}
 
 	internal fun harTilgang(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
-		val (navIdent, norskIdent) = input
+		val (navAnsattAzureId, norskIdent) = input
 
 		navAnsattTilgangTilAdressebeskyttetBrukerPolicy.evaluate(
 			NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(
-				navIdent = navIdent,
+				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
 		).whenDeny { return it }
 
 		navAnsattTilgangTilSkjermetPersonPolicy.evaluate(
 			NavAnsattTilgangTilSkjermetPersonPolicy.Input(
-				navIdent = navIdent,
+				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
 		).whenDeny { return it }
 
 		navAnsattTilgangTilEksternBrukerNavEnhetPolicy.evaluate(
 			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
-				navIdent = navIdent,
+				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
 		).whenDeny { return it }
 
 		navAnsattTilgangTilOppfolgingPolicy.evaluate(
-			NavAnsattTilgangTilOppfolgingPolicy.Input(navIdent)
+			NavAnsattTilgangTilOppfolgingPolicy.Input(navAnsattAzureId)
 		).whenDeny { return it }
 
 		return Decision.Permit

@@ -20,7 +20,7 @@ class NavAnsattTilgangTilModiaPolicyImpl(
 	override val name = "NavAnsattTilgangTilModiaPolicy"
 
 	override fun evaluate(input: NavAnsattTilgangTilModiaPolicy.Input): Decision {
-		return adGruppeProvider.hentAdGrupper(input.navIdent)
+		return adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
 			.hasAtLeastOne(tilgangTilModiaGrupper)
 	}
 }

@@ -14,7 +14,7 @@ class NavAnsattBehandleStrengtFortroligBrukerePolicyImpl(
 	private val strengtFortroligAdresseAdGruppe = adGruppeProvider.hentTilgjengeligeAdGrupper().strengtFortroligAdresse
 
 	override fun evaluate(input: NavAnsattBehandleStrengtFortroligBrukerePolicy.Input): Decision {
-		return adGruppeProvider.hentAdGrupper(input.navIdent)
+		return adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
 			.has(strengtFortroligAdresseAdGruppe)
 	}
 

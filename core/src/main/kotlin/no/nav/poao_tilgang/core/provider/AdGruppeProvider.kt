@@ -2,13 +2,16 @@ package no.nav.poao_tilgang.core.provider
 
 import no.nav.poao_tilgang.core.domain.AdGruppe
 import no.nav.poao_tilgang.core.domain.AdGrupper
-import java.util.*
+import no.nav.poao_tilgang.core.domain.AzureObjectId
+import no.nav.poao_tilgang.core.domain.NavIdent
 
 interface AdGruppeProvider {
 
-	fun hentAdGrupper(navIdent: String): List<AdGruppe>
+	fun hentAdGrupper(navAnsattAzureId: AzureObjectId): List<AdGruppe>
 
-	fun hentAdGrupper(azureId: UUID): List<AdGruppe>
+	fun hentNavIdentMedAzureId(navAnsattAzureId: AzureObjectId): NavIdent
+
+	fun hentAzureIdMedNavIdent(navIdent: NavIdent): AzureObjectId
 
 	fun hentTilgjengeligeAdGrupper(): AdGrupper
 

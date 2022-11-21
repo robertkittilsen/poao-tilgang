@@ -5,16 +5,20 @@ import no.nav.poao_tilgang.application.utils.SecureLog.secureLog
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.NavIdent
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
+import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.slf4j.MDC
 import org.springframework.stereotype.Service
 
 @Service
 class TilgangService(
-	private val navAnsattTilgangTilModiaPolicy: NavAnsattTilgangTilModiaPolicy
+	private val navAnsattTilgangTilModiaPolicy: NavAnsattTilgangTilModiaPolicy,
+	private val adGruppeProvider: AdGruppeProvider
 ) {
 
 	fun harTilgangTilModia(navIdent: NavIdent): Decision {
-		return executePolicy(navAnsattTilgangTilModiaPolicy.name, NavAnsattTilgangTilModiaPolicy.Input(navIdent), navAnsattTilgangTilModiaPolicy::evaluate)
+		val azureId = adGruppeProvider.hentAzureIdMedNavIdent(navIdent)
+
+		return executePolicy(navAnsattTilgangTilModiaPolicy.name, NavAnsattTilgangTilModiaPolicy.Input(azureId), navAnsattTilgangTilModiaPolicy::evaluate)
 	}
 
 	private fun <I> executePolicy(policyName: String, policyInput: I, policy: (input: I) -> Decision): Decision {

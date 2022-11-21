@@ -1,6 +1,7 @@
 package no.nav.poao_tilgang.application.client.microsoft_graph
 
 import no.nav.poao_tilgang.core.domain.AzureObjectId
+import no.nav.poao_tilgang.core.domain.NavIdent
 
 
 interface MicrosoftGraphClient {
@@ -9,8 +10,9 @@ interface MicrosoftGraphClient {
 
 	fun hentAdGrupperForNavAnsatt(navAnsattAzureId: AzureObjectId): List<AzureObjectId>
 
-	fun hentAzureIdForNavAnsatt(navIdent: String): AzureObjectId
+	fun hentAzureIdMedNavIdent(navIdent: String): AzureObjectId
 
+	fun hentNavIdentMedAzureId(navAnsattAzureId: AzureObjectId): NavIdent
 }
 
 data class AdGruppe(

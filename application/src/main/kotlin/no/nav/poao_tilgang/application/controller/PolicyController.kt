@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode
 import no.nav.poao_tilgang.api.dto.request.EvaluatePoliciesRequest
 import no.nav.poao_tilgang.api.dto.request.PolicyEvaluationRequestDto
 import no.nav.poao_tilgang.api.dto.request.PolicyId
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputDto
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputDto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV1Dto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.response.DecisionDto
 import no.nav.poao_tilgang.api.dto.response.DecisionType
 import no.nav.poao_tilgang.api.dto.response.EvaluatePoliciesResponse
@@ -19,6 +20,7 @@ import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.PolicyInput
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
+import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController
 class PolicyController(
 	private val authService: AuthService,
 	private val policyService: PolicyService,
+	private val adGruppeProvider: AdGruppeProvider
 ) {
 
 	@ProtectedWithClaims(issuer = Issuer.AZURE_AD)
@@ -56,16 +59,24 @@ class PolicyController(
 	private fun mapToPolicyInput(policyId: PolicyId, policyInput: JsonNode): PolicyInput {
 		return when (policyId) {
 			PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1 -> {
-				val dto = fromJsonNode<NavAnsattTilgangTilEksternBrukerPolicyInputDto>(policyInput)
+				val dto = fromJsonNode<NavAnsattTilgangTilEksternBrukerPolicyInputV1Dto>(policyInput)
 
 				NavAnsattTilgangTilEksternBrukerPolicy.Input(
-					navIdent = dto.navIdent,
+					navAnsattAzureId = adGruppeProvider.hentAzureIdMedNavIdent(dto.navIdent),
+					norskIdent = dto.norskIdent
+				)
+			}
+			PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2 -> {
+				val dto = fromJsonNode<NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto>(policyInput)
+
+				NavAnsattTilgangTilEksternBrukerPolicy.Input(
+					navAnsattAzureId = dto.navAnsattAzureId,
 					norskIdent = dto.norskIdent
 				)
 			}
 			PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1 -> {
-				val dto =  fromJsonNode<NavAnsattTilgangTilModiaPolicyInputDto>(policyInput)
-				NavAnsattTilgangTilModiaPolicy.Input(dto.navIdent)
+				val dto =  fromJsonNode<NavAnsattTilgangTilModiaPolicyInputV1Dto>(policyInput)
+				NavAnsattTilgangTilModiaPolicy.Input(dto.navAnsattAzureId)
 			}
 		}
 	}

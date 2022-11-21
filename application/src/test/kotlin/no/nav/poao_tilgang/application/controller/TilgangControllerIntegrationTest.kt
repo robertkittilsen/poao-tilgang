@@ -118,7 +118,7 @@ class TilgangControllerIntegrationTest : IntegrationTest() {
 	private fun mockAdGrupperResponse(navIdent: String, adGrupper: List<AdGruppe>) {
 		val navAnsattId = UUID.randomUUID()
 
-		mockMicrosoftGraphHttpServer.mockHentAzureIdForNavAnsattResponse(navIdent, navAnsattId)
+		mockMicrosoftGraphHttpServer.mockHentAzureIdMedNavIdentResponse(navIdent, navAnsattId)
 
 		mockMicrosoftGraphHttpServer.mockHentAdGrupperForNavAnsatt(navAnsattId, adGrupper.map { it.id })
 

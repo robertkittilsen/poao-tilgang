@@ -1,12 +1,14 @@
 package no.nav.poao_tilgang.client
 
+import java.util.*
+
 sealed class PolicyInput
 
 data class NavAnsattTilgangTilEksternBrukerPolicyInput(
-	val navIdent: String,
+	val navAnsattAzureId: UUID,
 	val norskIdent: String
 ) : PolicyInput()
 
 data class NavAnsattTilgangTilModiaPolicyInput(
-	val navIdent: String
+	val navAnsattAzureId: UUID
 ) : PolicyInput()
