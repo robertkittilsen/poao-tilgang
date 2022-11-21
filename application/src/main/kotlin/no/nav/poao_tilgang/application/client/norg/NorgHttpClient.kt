@@ -10,7 +10,6 @@ import org.springframework.http.HttpHeaders
 
 class NorgHttpClient(
 	private val baseUrl: String,
-	private val tokenProvider: (() -> String)?,
 	private val httpClient: OkHttpClient = RestClient.baseClient(),
 ) : NorgClient {
 
@@ -21,10 +20,6 @@ class NorgHttpClient(
 		val requestBuilder = Request.Builder()
 			.url(joinPaths(baseUrl, "/api/v1/enhet/navkontor/", geografiskTilknytning))
 			.get()
-
-		if (tokenProvider != null) {
-			requestBuilder.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + tokenProvider.invoke())
-		}
 
 		val request = requestBuilder.build()
 
