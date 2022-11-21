@@ -10,16 +10,13 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.context.annotation.Import
 import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.Duration
+import java.util.*
 
-@ActiveProfiles("test")
-@Import(TestConfig::class)
 @ExtendWith(SpringExtension::class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [Application::class])
@@ -41,44 +38,74 @@ open class IntegrationTest {
 		val mockVeilarbarenaHttpServer = MockVeilarbarenaHttpServer()
 		val mockPdlHttpServer = MockPdlHttpServer()
 		val mockNorgHttpServer = MockNorgHttpServer()
+		val mockMachineToMachineHttpServer = MockMachineToMachineHttpServer()
 
 		@JvmStatic
 		@DynamicPropertySource
-		fun registerProperties(registry: DynamicPropertyRegistry) {
+		fun registerProperties(_registry: DynamicPropertyRegistry) {
+			setupClients()
+			setupAdGrupperIder()
+
 			mockOAuthServer.start()
-			mockMicrosoftGraphHttpServer.start()
-			mockSkjermetPersonHttpServer.start()
-			mockAxsysHttpServer.start()
-			mockAbacHttpServer.start()
-			mockVeilarbarenaHttpServer.start()
-			mockPdlHttpServer.start()
-			mockNorgHttpServer.start()
+			System.setProperty("AZURE_APP_WELL_KNOWN_URL", mockOAuthServer.getDiscoveryUrl())
+			System.setProperty("AZURE_APP_CLIENT_ID", "test")
 
-			registry.add("no.nav.security.jwt.issuer.azuread.discovery-url", mockOAuthServer::getDiscoveryUrl)
-			registry.add("no.nav.security.jwt.issuer.azuread.accepted-audience") { "test" }
 
-			registry.add("microsoft_graph.url", mockMicrosoftGraphHttpServer::serverUrl)
-			registry.add("skjermet_person.url", mockSkjermetPersonHttpServer::serverUrl)
-			registry.add("axsys.url", mockAxsysHttpServer::serverUrl)
-			registry.add("abac.url", mockAbacHttpServer::serverUrl)
-			registry.add("veilarbarena.url", mockVeilarbarenaHttpServer::serverUrl)
-			registry.add("pdl.url", mockPdlHttpServer::serverUrl)
-			registry.add("norg.url", mockNorgHttpServer::serverUrl)
+			mockMachineToMachineHttpServer.start()
+			System.setProperty("AZURE_APP_JWK", MockMachineToMachineHttpServer.jwk)
+			System.setProperty(
+				"AZURE_OPENID_CONFIG_TOKEN_ENDPOINT",
+				mockMachineToMachineHttpServer.serverUrl() + MockMachineToMachineHttpServer.tokenPath
+			)
 
-			setAdGrupperIder(registry)
+			System.setProperty("RUNTIME_LOCATION", "TEST")
 		}
 
-		private fun setAdGrupperIder(registry: DynamicPropertyRegistry) {
-			registry.add("ad-gruppe-id.fortrolig-adresse") { "97690ad9-d423-4c1f-9885-b01fb9f9feab" }
-			registry.add("ad-gruppe-id.strengt-fortrolig-adresse") {"49dfad60-e125-4216-b627-632f93054610"}
-			registry.add("ad-gruppe-id.modia-admin") {"d765c025-d56c-4b15-b824-a8e12d9de60e"}
-			registry.add("ad-gruppe-id.modia-oppfolging") {"d58e5b23-b7ea-4151-b6c1-8945c5438554"}
-			registry.add("ad-gruppe-id.modia-generell") {"78d24b90-988a-4c6e-9862-3e0933ac2cd7"}
-			registry.add("ad-gruppe-id.gosys-nasjonal") {"2866c090-cd46-4167-8e9e-4522d44312d0"}
-			registry.add("ad-gruppe-id.gosys-utvidbar-til-nasjonal") {"b57870b5-3580-4e59-99f2-4c8c6083415d"}
-			registry.add("ad-gruppe-id.gosys-utvidet") {"4ccf584e-098e-4625-aed7-97d82b450bcc"}
-			registry.add("ad-gruppe-id.syfo-sensitiv") {"6681d1b1-e39f-4e34-b688-63584710772f"}
-			registry.add("ad-gruppe-id.pensjon-utvidet") {"f7b20d6c-cf4b-47e0-b6ff-5383d9b6e57d"}
+
+		private fun setupClients() {
+
+			mockSkjermetPersonHttpServer.start()
+			System.setProperty("SKJERMET_PERSON_URL", mockSkjermetPersonHttpServer.serverUrl())
+			System.setProperty("SKJERMET_PERSON_SCOPE", "api://test.nom.skjermede-personer-pip/.default")
+
+			mockMicrosoftGraphHttpServer.start()
+			System.setProperty("MICROSOFT_GRAPH_URL", mockMicrosoftGraphHttpServer.serverUrl())
+			System.setProperty("MICROSOFT_GRAPH_SCOPE", "https://graph.microsoft.com/.default")
+
+
+			mockAxsysHttpServer.start()
+			System.setProperty("AXSYS_URL", mockAxsysHttpServer.serverUrl())
+			System.setProperty("AXSYS_SCOPE", "api://test.org.axsys/.default")
+
+
+			mockAbacHttpServer.start()
+			System.setProperty("ABAC_URL", mockAbacHttpServer.serverUrl())
+			System.setProperty("ABAC_SCOPE", "api://test.pto.abac-veilarb-proxy/.default")
+
+			mockVeilarbarenaHttpServer.start()
+			System.setProperty("VEILARBARENA_URL", mockVeilarbarenaHttpServer.serverUrl())
+			System.setProperty("VEILARBARENA_SCOPE", "api://test.pto.veilarbarena/.default")
+
+			mockPdlHttpServer.start()
+			System.setProperty("PDL_URL", mockPdlHttpServer.serverUrl())
+			System.setProperty("PDL_SCOPE", "api://test.pdl.pdl-api/.default")
+
+			mockNorgHttpServer.start()
+			System.setProperty("NORG_URL", mockNorgHttpServer.serverUrl())
+		}
+
+		private fun setupAdGrupperIder() {
+			System.setProperty("AD_GRUPPE_ID_FORTROLIG_ADRESSE", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_STRENGT_FORTROLIG_ADRESSE", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_MODIA_ADMIN", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_MODIA_OPPFOLGING", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_MODIA_GENERELL", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_GOSYS_NASJONAL", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_GOSYS_UTVIDBAR_TIL_NASJONAL", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_GOSYS_UTVIDET", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_SYFO_SENSITIV", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_PENSJON_UTVIDET", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_EGNE_ANSATTE", UUID.randomUUID().toString())
 		}
 
 	}

@@ -106,3 +106,5 @@ spec:
       value: 100e88eb-79af-4136-8bfe-f79b32021f43
     - name: AD_GRUPPE_ID_PENSJON_UTVIDET
       value: 676b5e1f-84e6-46e5-8814-04233699ed4b
+    - name: AD_GRUPPE_ID_EGNE_ANSATTE
+      value: e750ceb5-b70b-4d94-b4fa-9d22467b786b

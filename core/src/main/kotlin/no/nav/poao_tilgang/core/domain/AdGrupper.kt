@@ -13,5 +13,6 @@ data class AdGrupper(
 	val gosysUtvidet: AdGruppe,
 
 	val syfoSensitiv: AdGruppe,
-	val pensjonUtvidet: AdGruppe
+	val pensjonUtvidet: AdGruppe,
+	val egneAnsatte: AdGruppe
 )

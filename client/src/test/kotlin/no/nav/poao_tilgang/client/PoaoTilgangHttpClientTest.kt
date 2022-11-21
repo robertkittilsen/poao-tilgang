@@ -67,7 +67,7 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `hentAdGrupper - skal hente ad grupper`() {
+	fun `hentAdGrupper - skal hente AD-grupper`() {
 		mockAdGrupperResponse(
 			navIdent, navAnsattId, listOf(
 				AdGruppe(UUID.randomUUID(), "0000-ga-123"),
