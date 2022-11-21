@@ -16,7 +16,7 @@ interface PoaoTilgangClient {
 	fun evaluatePolicies(requests: List<PolicyRequest>): ApiResult<List<PolicyResult>>
 
 	/**
-	 * Henter alle Azure AD grupper til en NAV Ansatt ved bruk av objekt IDen til den ansatte
+	 * Henter alle Azure AD-grupper til en NAV Ansatt ved bruk av objekt IDen til den ansatte
 	 */
 	fun hentAdGrupper(navAnsattAzureId: UUID): ApiResult<List<AdGruppe>>
 

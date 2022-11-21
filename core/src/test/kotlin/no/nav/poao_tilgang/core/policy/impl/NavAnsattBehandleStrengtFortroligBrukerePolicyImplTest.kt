@@ -61,7 +61,7 @@ class NavAnsattBehandleStrengtFortroligBrukerePolicyImplTest {
 		decision.type shouldBe Decision.Type.DENY
 
 		if (decision is Decision.Deny) {
-			decision.message shouldBe "NAV ansatt mangler tilgang til AD gruppen \"0000-GA-Strengt_Fortrolig_Adresse\""
+			decision.message shouldBe "NAV-ansatt mangler tilgang til AD-gruppen \"0000-GA-Strengt_Fortrolig_Adresse\""
 			decision.reason shouldBe DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE
 		}
 	}

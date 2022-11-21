@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 
 @Configuration
 @EnableJwtTokenValidation
@@ -24,11 +23,16 @@ open class ApplicationConfig {
 		const val APPLICATION_NAME = "poao-tilgang"
 	}
 
-	@Profile("default")
 	@Bean
-	open fun machineToMachineTokenClient(): MachineToMachineTokenClient {
+	open fun machineToMachineTokenClient(
+		@Value("\${nais.env.azureAppClientId}") azureAdClientId: String,
+		@Value("\${nais.env.azureOpenIdConfigTokenEndpoint}") azureTokenEndpoint: String,
+		@Value("\${nais.env.azureAppJWK}") azureAdJWK: String
+	): MachineToMachineTokenClient {
 		return AzureAdTokenClientBuilder.builder()
-			.withNaisDefaults()
+			.withClientId(azureAdClientId)
+			.withTokenEndpointUrl(azureTokenEndpoint)
+			.withPrivateJwk(azureAdJWK)
 			.buildMachineToMachineTokenClient()
 	}
 

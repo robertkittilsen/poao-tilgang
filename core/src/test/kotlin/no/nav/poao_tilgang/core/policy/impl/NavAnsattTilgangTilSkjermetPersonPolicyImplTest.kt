@@ -60,11 +60,11 @@ class NavAnsattTilgangTilSkjermetPersonPolicyImplTest {
 
 		every {
 			navAnsattBehandleSkjermedePersonerPolicy.evaluate(NavAnsattBehandleSkjermedePersonerPolicy.Input(navAnsattAzureId))
-		} returns Decision.Deny("mangler ad gruppe", DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE)
+		} returns Decision.Deny("mangler AD-gruppe", DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE)
 
 		val decision = policy.evaluate(NavAnsattTilgangTilSkjermetPersonPolicy.Input(navAnsattAzureId, norskIdent))
 
-		decision shouldBe Decision.Deny("mangler ad gruppe", DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE)
+		decision shouldBe Decision.Deny("mangler AD-gruppe", DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE)
 	}
 
 }

@@ -116,7 +116,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		response.body?.string() shouldBe denyResponse(
 			requestId,
-			"NAV ansatt mangler tilgang til en av AD gruppene [0000-GA-BD06_ModiaGenerellTilgang, 0000-GA-Modia-Oppfolging, 0000-GA-SYFO-SENSITIV]",
+			"NAV-ansatt mangler tilgang til en av AD-gruppene [0000-GA-BD06_ModiaGenerellTilgang, 0000-GA-Modia-Oppfolging, 0000-GA-SYFO-SENSITIV]",
 			"MANGLER_TILGANG_TIL_AD_GRUPPE"
 		)
 	}

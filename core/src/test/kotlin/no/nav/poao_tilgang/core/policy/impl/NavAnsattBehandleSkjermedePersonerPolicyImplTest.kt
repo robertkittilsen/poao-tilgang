@@ -62,6 +62,21 @@ class NavAnsattBehandleSkjermedePersonerPolicyImplTest {
 	}
 
 	@Test
+	fun `should return "permit" if access to 0000-GA-Egne_ansatte`() {
+
+		every {
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
+		} returns listOf(
+			testAdGrupper.egneAnsatte,
+			randomGruppe
+		)
+
+		val decision = policy.evaluate(NavAnsattBehandleSkjermedePersonerPolicy.Input(navAnsattAzureId))
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
 	fun `should return "deny" if not access to correct AD group`() {
 
 		every {
@@ -75,7 +90,7 @@ class NavAnsattBehandleSkjermedePersonerPolicyImplTest {
 		decision.type shouldBe Decision.Type.DENY
 
 		if (decision is Decision.Deny) {
-			decision.message shouldBe "NAV ansatt mangler tilgang til en av AD gruppene [0000-GA-GOSYS_UTVIDET, 0000-GA-Pensjon_UTVIDET]"
+			decision.message shouldBe "NAV-ansatt mangler tilgang til en av AD-gruppene [0000-GA-GOSYS_UTVIDET, 0000-GA-Pensjon_UTVIDET, 0000-GA-Egne_ansatte]"
 			decision.reason shouldBe DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE
 		}
 	}
