@@ -1,14 +1,16 @@
 package no.nav.poao_tilgang.application.test_util.mock_clients
 
 import no.nav.poao_tilgang.application.test_util.MockHttpServer
+import no.nav.poao_tilgang.core.domain.TilgangType
 import okhttp3.mockwebserver.MockResponse
 
 class MockAbacHttpServer : MockHttpServer() {
 
-	fun mockPermit() {
+	fun mockPermit(tilgangType: TilgangType) {
 		handleRequest(
 			matchPath = "/",
 			matchMethod = "POST",
+			matchBodyContains = matchAbacTilgangAction(tilgangType),
 			response = MockResponse()
 				.setBody(
 					"""
@@ -30,10 +32,11 @@ class MockAbacHttpServer : MockHttpServer() {
 		)
 	}
 
-	fun mockDeny() {
+	fun mockDeny(tilgangType: TilgangType) {
 		handleRequest(
 			matchPath = "/",
 			matchMethod = "POST",
+			matchBodyContains = matchAbacTilgangAction(tilgangType),
 			response = MockResponse()
 				.setBody(
 					"""
@@ -84,4 +87,11 @@ class MockAbacHttpServer : MockHttpServer() {
 		)
 	}
 
+	private fun matchAbacTilgangAction(tilgangType: TilgangType): String {
+		val action = when(tilgangType) {
+			TilgangType.LESE -> "read"
+			TilgangType.SKRIVE -> "update"
+		}
+		return """"Value": "$action""""
+	}
 }

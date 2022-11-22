@@ -16,6 +16,7 @@ open class PolicyConfig {
 		navAnsattTilgangTilSkjermetPersonPolicy: NavAnsattTilgangTilSkjermetPersonPolicy,
 		navAnsattTilgangTilEksternBrukerNavEnhetPolicy: NavAnsattTilgangTilEksternBrukerNavEnhetPolicy,
 		navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy,
+		navAnsattTilgangTilModiaGenerellPolicy: NavAnsattTilgangTilModiaGenerellPolicy,
 		adGruppeProvider: AdGruppeProvider
 	): NavAnsattTilgangTilEksternBrukerPolicy {
 		return NavAnsattTilgangTilEksternBrukerPolicyImpl(
@@ -24,6 +25,7 @@ open class PolicyConfig {
 			navAnsattTilgangTilSkjermetPersonPolicy,
 			navAnsattTilgangTilEksternBrukerNavEnhetPolicy,
 			navAnsattTilgangTilOppfolgingPolicy,
+			navAnsattTilgangTilModiaGenerellPolicy,
 			adGruppeProvider
 		)
 	}
@@ -110,4 +112,8 @@ open class PolicyConfig {
 		return NavAnsattTilgangTilOppfolgingPolicyImpl(adGruppeProvider)
 	}
 
+	@Bean
+	open fun navAnsattTilgangTilModiaGenerellPolicy(adGruppeProvider: AdGruppeProvider): NavAnsattTilgangTilModiaGenerellPolicy {
+		return NavAnsattTilgangTilModiaGenerellPolicyImpl(adGruppeProvider)
+	}
 }

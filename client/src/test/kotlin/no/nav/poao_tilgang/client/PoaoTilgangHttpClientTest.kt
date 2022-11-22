@@ -13,6 +13,8 @@ import no.nav.poao_tilgang.core.domain.AdGruppe
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.beans.factory.annotation.Autowired
 import java.net.UnknownHostException
 import java.time.Duration
@@ -42,13 +44,18 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 		)
 	}
 
-	@Test
-	fun `evaluatePolicy - should evaluate NavAnsattTilgangTilEksternBrukerPolicy V2`() {
-		mockAbacHttpServer.mockPermit()
+	@ParameterizedTest
+	@EnumSource(TilgangType::class)
+	fun `evaluatePolicy - should evaluate NavAnsattTilgangTilEksternBrukerPolicy V2`(tilgangType: TilgangType) {
+		val coreTilgangType = when(tilgangType) {
+			TilgangType.LESE -> no.nav.poao_tilgang.core.domain.TilgangType.LESE
+			TilgangType.SKRIVE -> no.nav.poao_tilgang.core.domain.TilgangType.SKRIVE
+		}
+		mockAbacHttpServer.mockPermit(coreTilgangType)
 		setupMocks()
 
 		val decision =
-			client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInput(navAnsattId, norskIdent)).getOrThrow()
+			client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInput(navAnsattId, tilgangType, norskIdent)).getOrThrow()
 
 		decision shouldBe Decision.Permit
 	}
@@ -155,8 +162,6 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 	}
 
 	private fun setupMocks() {
-		mockAbacHttpServer.mockDeny()
-
 		mockPdlHttpServer.mockBrukerInfo(
 			norskIdent = norskIdent,
 			gtKommune = "1234"

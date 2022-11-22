@@ -4,9 +4,12 @@ import io.kotest.matchers.shouldBe
 import no.nav.poao_tilgang.application.test_util.IntegrationTest
 import no.nav.poao_tilgang.application.utils.RestUtils.toJsonRequestBody
 import no.nav.poao_tilgang.core.domain.AdGruppe
+import no.nav.poao_tilgang.core.domain.TilgangType
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import okhttp3.Response
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
@@ -27,7 +30,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		val requestId = UUID.randomUUID()
 
-		mockAbacHttpServer.mockPermit()
+		mockAbacHttpServer.mockPermit(TilgangType.SKRIVE)
 
 		val response = sendPolicyRequest(
 			requestId,
@@ -41,7 +44,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	@Test
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1 policy - deny`() {
 		setupMocks()
-		mockAbacHttpServer.mockDeny()
+		mockAbacHttpServer.mockDeny(TilgangType.SKRIVE)
 
 		val requestId = UUID.randomUUID()
 
@@ -54,33 +57,35 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		response.body?.string() shouldBe denyResponse(requestId, "Deny fra ABAC", "IKKE_TILGANG_FRA_ABAC")
 	}
 
-	@Test
-	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2 policy - permit`() {
+	@ParameterizedTest
+	@EnumSource(TilgangType::class)
+	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2 policy - permit`(tilgangType: TilgangType) {
 		setupMocks()
 
 		val requestId = UUID.randomUUID()
 
-		mockAbacHttpServer.mockPermit()
+		mockAbacHttpServer.mockPermit(tilgangType)
 
 		val response = sendPolicyRequest(
 			requestId,
-			"""{"navAnsattAzureId": "$navAnsattId", "norskIdent": "$norskIdent"}""",
+			"""{"navAnsattAzureId": "$navAnsattId", "tilgangType": "${tilgangType.name}", "norskIdent": "$norskIdent"}""",
 			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2"
 		)
 
 		response.body?.string() shouldBe permitResponse(requestId)
 	}
 
-	@Test
-	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2 policy - deny`() {
+	@ParameterizedTest
+	@EnumSource(TilgangType::class)
+	fun `should evaluate NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2 policy - deny`(tilgangType: TilgangType) {
 		setupMocks()
-		mockAbacHttpServer.mockDeny()
+		mockAbacHttpServer.mockDeny(tilgangType)
 
 		val requestId = UUID.randomUUID()
 
 		val response = sendPolicyRequest(
 			requestId,
-			"""{"navAnsattAzureId": "$navAnsattId", "norskIdent": "$norskIdent"}""",
+			"""{"navAnsattAzureId": "$navAnsattId", "tilgangType": "${tilgangType.name}", "norskIdent": "$norskIdent"}""",
 			"NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2"
 		)
 
