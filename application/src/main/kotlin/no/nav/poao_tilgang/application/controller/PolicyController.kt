@@ -18,6 +18,7 @@ import no.nav.poao_tilgang.application.utils.Issuer
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonNode
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.PolicyInput
+import no.nav.poao_tilgang.core.domain.TilgangType
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
@@ -63,7 +64,8 @@ class PolicyController(
 
 				NavAnsattTilgangTilEksternBrukerPolicy.Input(
 					navAnsattAzureId = adGruppeProvider.hentAzureIdMedNavIdent(dto.navIdent),
-					norskIdent = dto.norskIdent
+					norskIdent = dto.norskIdent,
+					tilgangType = TilgangType.SKRIVE
 				)
 			}
 			PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2 -> {
@@ -71,7 +73,11 @@ class PolicyController(
 
 				NavAnsattTilgangTilEksternBrukerPolicy.Input(
 					navAnsattAzureId = dto.navAnsattAzureId,
-					norskIdent = dto.norskIdent
+					norskIdent = dto.norskIdent,
+					tilgangType = when (dto.tilgangType) {
+						no.nav.poao_tilgang.api.dto.request.TilgangType.LESE -> TilgangType.LESE
+						no.nav.poao_tilgang.api.dto.request.TilgangType.SKRIVE -> TilgangType.SKRIVE
+					}
 				)
 			}
 			PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1 -> {

@@ -3,8 +3,11 @@ package no.nav.poao_tilgang.core.policy.impl
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verifyAll
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
+import no.nav.poao_tilgang.core.domain.TilgangType
+import no.nav.poao_tilgang.core.domain.TilgangType.*
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.provider.AbacProvider
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
@@ -23,6 +26,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	private val navAnsattTilgangTilSkjermetPersonPolicy = mockk<NavAnsattTilgangTilSkjermetPersonPolicy>()
 	private val navAnsattTilgangTilEksternBrukerNavEnhetPolicy = mockk<NavAnsattTilgangTilEksternBrukerNavEnhetPolicy>()
 	private val navAnsattTilgangTilOppfolgingPolicy = mockk<NavAnsattTilgangTilOppfolgingPolicy>()
+	private val navAnsattTilgangTilModiaGenerellPolicy = mockk<NavAnsattTilgangTilModiaGenerellPolicy>()
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
 	private val policy = NavAnsattTilgangTilEksternBrukerPolicyImpl(
@@ -31,50 +35,85 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 		navAnsattTilgangTilSkjermetPersonPolicy,
 		navAnsattTilgangTilEksternBrukerNavEnhetPolicy,
 		navAnsattTilgangTilOppfolgingPolicy,
+		navAnsattTilgangTilModiaGenerellPolicy,
 		adGruppeProvider
 	)
 
 	@Test
 	fun `should return "permit" if ABAC returns "permit"`() {
-		mockAbacDecision(true)
+		mockAbacDecision(true, LESE)
 
-		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, LESE, norskIdent))
 
 		decision shouldBe Decision.Permit
 	}
 
 	@Test
 	fun `should return "deny" if ABAC returns "deny"`() {
-		mockAbacDecision(false)
+		mockAbacDecision(false, LESE)
 
-		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, LESE, norskIdent))
 
 		decision shouldBe Decision.Deny("Deny fra ABAC", DecisionDenyReason.IKKE_TILGANG_FRA_ABAC)
 	}
 
 	@Test
 	internal fun `should return PERMIT if abacs decision PERMIT and poao-tilgang is DENY`() {
-		mockAbacDecision(true)
+		mockAbacDecision(true, LESE)
 		mockDecision(
 			adressebeskyttetBrukerPolicyDecision = deny()
 		)
 
-		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, LESE, norskIdent))
 
 		decision shouldBe Decision.Permit
 	}
 
 	@Test
 	internal fun `should return DENY if abacs decision DENY and poao-tilgang is PERMIT`() {
-		mockAbacDecision(false)
+		mockAbacDecision(false, LESE)
 		mockDecision()
 
-		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
+		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, LESE, norskIdent))
 
 		decision shouldBe Decision.Deny(
 			message = "Deny fra ABAC",
 			reason = DecisionDenyReason.IKKE_TILGANG_FRA_ABAC
 		)
+	}
+
+	@Test
+	internal fun `harTilgang should return PERMIT for LESE`() {
+		mockDecision()
+
+		val decision =
+			policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, LESE, norskIdent))
+
+		verifyAll {
+			navAnsattTilgangTilAdressebeskyttetBrukerPolicy.evaluate(any())
+			navAnsattTilgangTilSkjermetPersonPolicy.evaluate(any())
+			navAnsattTilgangTilEksternBrukerNavEnhetPolicy.evaluate(any())
+			navAnsattTilgangTilModiaGenerellPolicy.evaluate(any())
+		}
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
+	internal fun `harTilgang should return PERMIT for SKRIVE`() {
+		mockDecision()
+
+		val decision =
+			policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, SKRIVE, norskIdent))
+
+		verifyAll {
+			navAnsattTilgangTilAdressebeskyttetBrukerPolicy.evaluate(any())
+			navAnsattTilgangTilSkjermetPersonPolicy.evaluate(any())
+			navAnsattTilgangTilEksternBrukerNavEnhetPolicy.evaluate(any())
+			navAnsattTilgangTilOppfolgingPolicy.evaluate(any())
+		}
+
+		decision shouldBe Decision.Permit
 	}
 
 	@Test
@@ -85,7 +124,8 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 			adressebeskyttetBrukerPolicyDecision = deny(message)
 		)
 
-		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
+		val decision =
+			policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, SKRIVE, norskIdent))
 
 		decision shouldBe deny(message)
 	}
@@ -98,7 +138,8 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 			skjermetPersonPolicyDecision = deny(message)
 		)
 
-		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
+		val decision =
+			policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, SKRIVE, norskIdent))
 
 		decision shouldBe deny(message)
 	}
@@ -111,7 +152,8 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 			eksternBrukerNavEnhetPolicyDecision = deny(message)
 		)
 
-		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
+		val decision =
+			policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, SKRIVE, norskIdent))
 
 		decision shouldBe deny(message)
 	}
@@ -124,7 +166,37 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 			oppfolgingPolicyDecision = deny(message)
 		)
 
-		val decision = policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, norskIdent))
+		val decision =
+			policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, SKRIVE, norskIdent))
+
+		decision shouldBe deny(message)
+	}
+
+
+	@Test
+	internal fun `harTilgang should return DENY if tilgangType is SKRIVE and tilgangTilOppfolging is DENY`() {
+		val message = UUID.randomUUID().toString()
+
+		mockDecision(
+			oppfolgingPolicyDecision = deny(message)
+		)
+
+		val decision =
+			policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, SKRIVE, norskIdent))
+
+		decision shouldBe deny(message)
+	}
+
+	@Test
+	internal fun `harTilgang should return DENY if tilgangType is LESE and tilgangTilmodiaGenerell is DENY`() {
+		val message = UUID.randomUUID().toString()
+
+		mockDecision(
+			modiaGenerellPolicyDecision = deny(message)
+		)
+
+		val decision =
+			policy.harTilgang(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, LESE, norskIdent))
 
 		decision shouldBe deny(message)
 	}
@@ -136,13 +208,13 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 		)
 	}
 
-	private fun mockAbacDecision(harTilgang: Boolean) {
+	private fun mockAbacDecision(harTilgang: Boolean, tilgangType: TilgangType) {
 		every {
 			adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 		} returns navIdent
 
 		every {
-			abacProvider.harVeilederTilgangTilPerson(navIdent, norskIdent)
+			abacProvider.harVeilederTilgangTilPerson(navIdent, tilgangType, norskIdent)
 		} returns harTilgang
 	}
 
@@ -150,7 +222,8 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 		adressebeskyttetBrukerPolicyDecision: Decision = Decision.Permit,
 		skjermetPersonPolicyDecision: Decision = Decision.Permit,
 		eksternBrukerNavEnhetPolicyDecision: Decision = Decision.Permit,
-		oppfolgingPolicyDecision: Decision = Decision.Permit
+		oppfolgingPolicyDecision: Decision = Decision.Permit,
+		modiaGenerellPolicyDecision: Decision = Decision.Permit
 	) {
 
 		every {
@@ -185,5 +258,10 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 			)
 		} returns oppfolgingPolicyDecision
 
+		every {
+			navAnsattTilgangTilModiaGenerellPolicy.evaluate(
+				NavAnsattTilgangTilModiaGenerellPolicy.Input(navAnsattAzureId)
+			)
+		} returns modiaGenerellPolicyDecision
 	}
 }

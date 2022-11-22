@@ -9,6 +9,7 @@ interface NavAnsattTilgangTilEksternBrukerPolicy : Policy<NavAnsattTilgangTilEks
 
 	data class Input(
 		val navAnsattAzureId: AzureObjectId,
+		val tilgangType: TilgangType,
 		val norskIdent: NorskIdent
 	) : PolicyInput
 
