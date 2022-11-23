@@ -42,6 +42,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	@Test
 	fun `should return "permit" if ABAC returns "permit"`() {
 		mockAbacDecision(true, LESE)
+		mockDecision()
 
 		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, LESE, norskIdent))
 
@@ -51,6 +52,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	@Test
 	fun `should return "deny" if ABAC returns "deny"`() {
 		mockAbacDecision(false, LESE)
+		mockDecision()
 
 		val decision = policy.evaluate(NavAnsattTilgangTilEksternBrukerPolicy.Input(navAnsattAzureId, LESE, norskIdent))
 

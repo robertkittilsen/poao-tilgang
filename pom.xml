@@ -88,6 +88,17 @@
             </dependency>
 
             <dependency>
+                <groupId>org.jetbrains.kotlinx</groupId>
+                <artifactId>kotlinx-coroutines-core</artifactId>
+                <version>${kotlin-coroutines.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlinx</groupId>
+                <artifactId>kotlinx-coroutines-slf4j</artifactId>
+                <version>${kotlin-coroutines.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>no.nav.security</groupId>
                 <artifactId>token-validation-spring</artifactId>
                 <version>${token-validaiton.version}</version>

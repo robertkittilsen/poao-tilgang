@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.core.policy.impl
 
+import kotlinx.coroutines.slf4j.MDCContext
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.domain.TilgangType
@@ -7,6 +8,8 @@ import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.provider.AbacProvider
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.slf4j.LoggerFactory
+
+import kotlinx.coroutines.*
 
 class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	private val abacProvider: AbacProvider,
@@ -26,16 +29,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	override fun evaluate(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
 		val harTilgangAbac = harTilgangAbac(input)
 
-		try {
-			val harTilgang = harTilgang(input)
-
-			if (harTilgangAbac != harTilgang) {
-				secureLog.info("ABAC=($harTilgangAbac) og POAO-tilgang=($harTilgang) har ulikt svar om tilgang. Input=$input")
-			}
-		} catch (e: Throwable) {
-			log.error("Feil i POAO-tilgang implementasjon", e)
-		}
-
+		asyncLogDecisionDiff(input, harTilgangAbac)
 
 		return harTilgangAbac
 	}
@@ -52,11 +46,28 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 		)
 	}
 
+	@OptIn(DelicateCoroutinesApi::class)
+	private fun asyncLogDecisionDiff(input: NavAnsattTilgangTilEksternBrukerPolicy.Input, harTilgangAbac: Decision) {
+		GlobalScope.launch(MDCContext()) {
+			try {
+				val harTilgang = harTilgang(input)
+
+				if (harTilgangAbac != harTilgang) {
+					secureLog.info("Decision diff - ulikt svar: ABAC=($harTilgangAbac) POAO-tilgang=($harTilgang) Input=$input")
+				} else {
+					secureLog.info("Decision diff - likt svar: ABAC=($harTilgangAbac) POAO-tilgang=($harTilgang) Input=$input")
+				}
+			} catch (e: Throwable) {
+				log.error("Feil i POAO-tilgang implementasjon", e)
+			}
+		}
+	}
+
+	// Er ikke private slik at vi kan teste implementasjonen
 	internal fun harTilgang(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
-		val (navAnsattAzureId, _, norskIdent) = input
+		val (navAnsattAzureId, tilgangType, norskIdent) = input
 
-		when (input.tilgangType) {
-
+		when (tilgangType) {
 			TilgangType.LESE ->
 				navAnsattTilgangTilModiaGenerellPolicy.evaluate(
 					NavAnsattTilgangTilModiaGenerellPolicy.Input(navAnsattAzureId)
