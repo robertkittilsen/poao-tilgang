@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import no.nav.poao_tilgang.api.dto.request.EvaluatePoliciesRequest
 import no.nav.poao_tilgang.api.dto.request.PolicyEvaluationRequestDto
 import no.nav.poao_tilgang.api.dto.request.PolicyId
+import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerTilgangTilEksternBrukerPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto
 import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputV1Dto
@@ -19,6 +20,7 @@ import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonNode
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.PolicyInput
 import no.nav.poao_tilgang.core.domain.TilgangType
+import no.nav.poao_tilgang.core.policy.EksternBrukerTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
@@ -83,6 +85,14 @@ class PolicyController(
 			PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1 -> {
 				val dto =  fromJsonNode<NavAnsattTilgangTilModiaPolicyInputV1Dto>(policyInput)
 				NavAnsattTilgangTilModiaPolicy.Input(dto.navAnsattAzureId)
+			}
+
+			PolicyId.EKSTERN_BRUKER_TILGANG_TIL_EKSTERN_BRUKER_V1 -> {
+				val dto = fromJsonNode<EksternBrukerTilgangTilEksternBrukerPolicyInputV1Dto>(policyInput)
+				EksternBrukerTilgangTilEksternBrukerPolicy.Input(
+					rekvirentNorskIdent = dto.rekvirentNorskIdent,
+					ressursNorskIdent = dto.ressursNorskIdent
+				)
 			}
 		}
 	}

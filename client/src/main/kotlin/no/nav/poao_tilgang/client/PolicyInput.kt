@@ -18,3 +18,7 @@ data class NavAnsattTilgangTilModiaPolicyInput(
 	val navAnsattAzureId: UUID
 ) : PolicyInput()
 
+data class EksternBrukerTilgangTilEksternBrukerPolicyInput(
+	val rekvirentNorskIdent: String, // Den som ber om tilgang
+	val ressursNorskIdent: String // Den som bes tilgang om
+) : PolicyInput()

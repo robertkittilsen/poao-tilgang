@@ -96,7 +96,11 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_MODIA_V1 policy - permit`() {
 		val requestId = UUID.randomUUID()
 
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell))
+		mockAdGrupperResponse(
+			navIdent,
+			navAnsattId,
+			listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell)
+		)
 
 		val response = sendPolicyRequest(
 			requestId,
@@ -123,6 +127,36 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 			requestId,
 			"NAV-ansatt mangler tilgang til en av AD-gruppene [0000-GA-BD06_ModiaGenerellTilgang, 0000-GA-Modia-Oppfolging, 0000-GA-SYFO-SENSITIV]",
 			"MANGLER_TILGANG_TIL_AD_GRUPPE"
+		)
+	}
+
+	@Test
+	fun `should evaluate EKSTERN_BRUKER_TILGANG_TIL_EKSTERN_BRUKER_V1 policy - permit`() {
+
+		val requestId = UUID.randomUUID()
+
+		val response = sendPolicyRequest(
+			requestId,
+			"""{"rekvirentNorskIdent": "$norskIdent", "ressursNorskIdent": "$norskIdent"}""",
+			"EKSTERN_BRUKER_TILGANG_TIL_EKSTERN_BRUKER_V1"
+		)
+
+		response.body?.string() shouldBe permitResponse(requestId)
+	}
+
+	@Test
+	fun `should evaluate EKSTERN_BRUKER_TILGANG_TIL_EKSTERN_BRUKER_V1 policy - deny`() {
+
+		val requestId = UUID.randomUUID()
+
+		val response = sendPolicyRequest(
+			requestId,
+			"""{"rekvirentNorskIdent": "$norskIdent", "ressursNorskIdent": "453634"}""",
+			"EKSTERN_BRUKER_TILGANG_TIL_EKSTERN_BRUKER_V1"
+		)
+
+		response.body?.string() shouldBe denyResponse(
+			requestId, "Rekvirent har ikke samme ident som ressurs", "EKSTERN_BRUKER_HAR_IKKE_TILGANG"
 		)
 	}
 

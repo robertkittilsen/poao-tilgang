@@ -81,6 +81,11 @@ open class PolicyConfig {
 	}
 
 	@Bean
+	open fun eksternBrukerTilgangTilEksternBrukerPolicy(): EksternBrukerTilgangTilEksternBrukerPolicy {
+		return EksternBrukerTilgangTilEksternBrukerPolicyImpl()
+	}
+
+	@Bean
 	open fun navAnsattBehandleStrengtFortroligUtlandBrukerePolicy(
 		adGruppeProvider: AdGruppeProvider
 	): NavAnsattBehandleStrengtFortroligUtlandBrukerePolicy {

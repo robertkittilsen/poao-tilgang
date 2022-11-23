@@ -74,6 +74,16 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 	}
 
 	@Test
+	fun `evaluatePolicy - should evaluate EksternBrukerTilgangTilEksternBrukerPolicy`() {
+		val decision = client.evaluatePolicy(EksternBrukerTilgangTilEksternBrukerPolicyInput(
+			rekvirentNorskIdent = "234",
+			ressursNorskIdent = "234"
+		)).getOrThrow()
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
 	fun `hentAdGrupper - skal hente AD-grupper`() {
 		mockAdGrupperResponse(
 			navIdent, navAnsattId, listOf(

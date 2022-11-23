@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.UrlUtils.joinPaths
 import no.nav.poao_tilgang.api.dto.request.*
+import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerTilgangTilEksternBrukerPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto
 import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.response.*
@@ -156,6 +157,15 @@ class PoaoTilgangHttpClient(
 					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
 				),
 				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1
+			)
+
+			is EksternBrukerTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
+				requestId = policyRequest.requestId,
+				policyInput = EksternBrukerTilgangTilEksternBrukerPolicyInputV1Dto(
+					rekvirentNorskIdent = policyRequest.policyInput.rekvirentNorskIdent,
+					ressursNorskIdent = policyRequest.policyInput.ressursNorskIdent
+				),
+				policyId = PolicyId.EKSTERN_BRUKER_TILGANG_TIL_EKSTERN_BRUKER_V1
 			)
 		}
 	}

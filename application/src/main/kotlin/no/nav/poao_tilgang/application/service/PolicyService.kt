@@ -7,6 +7,7 @@ import no.nav.poao_tilgang.application.utils.SecureLog
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.Policy
 import no.nav.poao_tilgang.core.domain.PolicyInput
+import no.nav.poao_tilgang.core.policy.EksternBrukerTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
 import org.springframework.stereotype.Service
@@ -17,6 +18,7 @@ import kotlin.system.measureTimeMillis
 class PolicyService(
 	private val navAnsattTilgangTilEksternBrukerPolicy: NavAnsattTilgangTilEksternBrukerPolicy,
 	private val navAnsattTilgangTilModiaPolicy: NavAnsattTilgangTilModiaPolicy,
+	private val eksternBrukerTilgangTilEksternBrukerPolicy: EksternBrukerTilgangTilEksternBrukerPolicy
 ) {
 
 	fun evaluatePolicyRequest(request: PolicyEvaluationRequest): PolicyEvaluationResult {
@@ -59,6 +61,7 @@ class PolicyService(
 		return when (input) {
 			is NavAnsattTilgangTilEksternBrukerPolicy.Input -> evaluate(input, navAnsattTilgangTilEksternBrukerPolicy)
 			is NavAnsattTilgangTilModiaPolicy.Input -> evaluate(input, navAnsattTilgangTilModiaPolicy)
+			is EksternBrukerTilgangTilEksternBrukerPolicy.Input -> evaluate(input, eksternBrukerTilgangTilEksternBrukerPolicy)
 			else -> throw PolicyNotImplementedException("Håndtering av policy ${input.javaClass.canonicalName} er ikke implementert")
 		}
 	}
