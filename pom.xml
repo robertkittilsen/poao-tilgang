@@ -36,7 +36,7 @@
         <java.version>17</java.version>
 
         <mock-oauth-server.version>0.4.7</mock-oauth-server.version>
-        <token-validaiton.version>2.1.5</token-validaiton.version>
+        <token-validaiton.version>2.1.6</token-validaiton.version>
         <mockk.version>1.12.5</mockk.version>
         <kotest.version>5.3.0</kotest.version>
         <okhttp.version>4.10.0</okhttp.version>
