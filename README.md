@@ -64,10 +64,76 @@ dependencies {
 ### 3. Opprett en instans av klienten
 
 ```kotlin
-val client = PoaoTilgangCachedClient(
+ val client: PoaoTilgangClient = PoaoTilgangCachedClient(
     PoaoTilgangHttpClient(
         baseUrl = "http://poao-tilgang.poao.svc.cluster.local", // or use "https://poao-tilgang(.dev).intern.nav.no" if your sending the request from dev-fss/prod-fss
         tokenProvider = { "machine-to-machine token" }
     )
 )
+```
+
+### 4. Ta klienten i bruk
+
+```kotlin
+val decision = client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInput(
+    navAnsattAzureId = UUID.fromString("some id"), // Dette kan hentes fra "oid"-claimet til en NAV ansatt sitt Azure AD JWT token 
+    tilgangType = TilgangType.LESE,
+    norskIdent = "01234567890" // fnr, dnr etc
+)).getOrThrow()
+
+println("Nav ansatt har lesetilgang til bruker: ${decision.isPermit}")
+```
+## Klient API
+
+```kotlin
+interface PoaoTilgangClient {
+
+	/**
+	 * Evaluer en policy med gitt input, sjekk {@link no.nav.poao_tilgang.client.PolicyInput.kt} for hvilke policies som er tilgjengelig
+	 */
+	fun evaluatePolicy(input: PolicyInput): ApiResult<Decision>
+
+	/**
+	 * Evaluer flere policies, sjekk {@link no.nav.poao_tilgang.client.PolicyInput.kt} for hvilke policies som er tilgjengelig
+	 */
+	fun evaluatePolicies(requests: List<PolicyRequest>): ApiResult<List<PolicyResult>>
+
+	/**
+	 * Henter alle Azure AD-grupper til en NAV Ansatt ved bruk av objekt IDen til den ansatte
+	 */
+	fun hentAdGrupper(navAnsattAzureId: UUID): ApiResult<List<AdGruppe>>
+
+	/**
+	 * Henter om en enkelt person er skjermet. Skjermet person var tidligere kjent som "egen ansatt"
+	 */
+	fun erSkjermetPerson(norskIdent: NorskIdent): ApiResult<Boolean>
+
+	/**
+	 * Henter om flere personer er skjermet. Skjermet person var tidligere kjent som "egen ansatt"
+	 */
+	fun erSkjermetPerson(norskeIdenter: List<NorskIdent>): ApiResult<Map<NorskIdent, Boolean>>
+
+}
+```
+
+## Tilgjengelig policies
+
+```kotlin
+/*
+ Sjekker om en NAV ansatt har lese- eller skrivetilgang til en ekstern bruker.
+ For funksjoner som gjør endringer på data så ønsker man oftest å benytte sjekk på skrivetilgang,
+ mens for funksjoner som kun henter data så benyttes oftest lesetilgang.
+ 
+ Veiledere har både lese- og skrivetilgang, mens f.eks NKS kun har lesetilgang.
+*/
+data class NavAnsattTilgangTilEksternBrukerPolicyInput(
+	val navAnsattAzureId: UUID,
+	val tilgangType: TilgangType,
+	val norskIdent: String
+) : PolicyInput()
+
+// Sjekker om en NAV ansatt har tilgang til å bruke Modia-flaten
+data class NavAnsattTilgangTilModiaPolicyInput(
+	val navAnsattAzureId: UUID
+) : PolicyInput()
 ```
