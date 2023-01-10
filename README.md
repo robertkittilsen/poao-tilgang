@@ -61,7 +61,18 @@ dependencies {
 }
 ```
 
-### 3. Opprett en instans av klienten
+### 3. Legg til applikasjonen din i poao-tilgang sin ACL
+```yaml
+# nais-(dev|prod).yaml
+ accessPolicy:
+   inbound:
+     rules:
+       - application: <application>
+         namespace: <namespace>
+         cluster: <cluster>
+```
+
+### 4. Opprett en instans av klienten
 
 ```kotlin
  val client: PoaoTilgangClient = PoaoTilgangCachedClient(
@@ -72,7 +83,7 @@ dependencies {
 )
 ```
 
-### 4. Ta klienten i bruk
+### 5. Ta klienten i bruk
 
 ```kotlin
 val decision = client.evaluatePolicy(NavAnsattTilgangTilEksternBrukerPolicyInput(
