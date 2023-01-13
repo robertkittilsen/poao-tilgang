@@ -150,3 +150,13 @@ data class NavAnsattTilgangTilModiaPolicyInput(
 	val navAnsattAzureId: UUID
 ) : PolicyInput()
 ```
+
+## Prosjektstruktur
+
+Poao-tilgang er delt opp i flere moduler for å gjøre det enklere å vedlikeholde en tydelig arkitektur.
+
+Modulene er som følger:
+* **api** - felles DTOer som brukes av _client-modulen_ og _application-modulen_
+* **application** - kjører opp applikasjonen, definerer endepunkter, etc. Tar i bruk _core-modulen_ for å eksponere tilgangskontrollregler med et REST API
+* **client** - brukes ikke direkte av poao-tilgang, men av andre konsumerende applikasjoner som ønsker en ferdig testet klient for å gjøre requests mot poao-tilgang
+* **core** - inneholder implementasjon og definisjon av alle de ulike tilgangskontrollreglene til poao-tilgang   
