@@ -135,7 +135,7 @@ interface PoaoTilgangClient {
  For funksjoner som gjør endringer på data så ønsker man oftest å benytte sjekk på skrivetilgang,
  mens for funksjoner som kun henter data så benyttes oftest lesetilgang.
  
- Veiledere har både lese- og skrivetilgang, mens f.eks NKS kun har lesetilgang.
+ Veiledere har både lese- og skrivetilgang, mens f.eks NKS har kun lesetilgang.
 */
 data class NavAnsattTilgangTilEksternBrukerPolicyInput(
 	val navAnsattAzureId: UUID,
@@ -143,7 +143,9 @@ data class NavAnsattTilgangTilEksternBrukerPolicyInput(
 	val norskIdent: String
 ) : PolicyInput()
 
-// Sjekker om en NAV ansatt har tilgang til å bruke Modia-flaten
+/* 
+ Sjekker om en NAV ansatt har tilgang til å bruke Modia-flaten
+*/
 data class NavAnsattTilgangTilModiaPolicyInput(
 	val navAnsattAzureId: UUID
 ) : PolicyInput()
