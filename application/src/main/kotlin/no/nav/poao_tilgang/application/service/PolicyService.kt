@@ -10,6 +10,7 @@ import no.nav.poao_tilgang.core.domain.PolicyInput
 import no.nav.poao_tilgang.core.policy.EksternBrukerTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.system.measureTimeMillis
@@ -18,7 +19,8 @@ import kotlin.system.measureTimeMillis
 class PolicyService(
 	private val navAnsattTilgangTilEksternBrukerPolicy: NavAnsattTilgangTilEksternBrukerPolicy,
 	private val navAnsattTilgangTilModiaPolicy: NavAnsattTilgangTilModiaPolicy,
-	private val eksternBrukerTilgangTilEksternBrukerPolicy: EksternBrukerTilgangTilEksternBrukerPolicy
+	private val eksternBrukerTilgangTilEksternBrukerPolicy: EksternBrukerTilgangTilEksternBrukerPolicy,
+	private val navAnsattTilgangTilNavEnhetPolicy: NavAnsattTilgangTilNavEnhetPolicy
 ) {
 
 	fun evaluatePolicyRequest(request: PolicyEvaluationRequest): PolicyEvaluationResult {
@@ -62,6 +64,7 @@ class PolicyService(
 			is NavAnsattTilgangTilEksternBrukerPolicy.Input -> evaluate(input, navAnsattTilgangTilEksternBrukerPolicy)
 			is NavAnsattTilgangTilModiaPolicy.Input -> evaluate(input, navAnsattTilgangTilModiaPolicy)
 			is EksternBrukerTilgangTilEksternBrukerPolicy.Input -> evaluate(input, eksternBrukerTilgangTilEksternBrukerPolicy)
+			is NavAnsattTilgangTilNavEnhetPolicy.Input -> evaluate(input, navAnsattTilgangTilNavEnhetPolicy)
 			else -> throw PolicyNotImplementedException("Håndtering av policy ${input.javaClass.canonicalName} er ikke implementert")
 		}
 	}

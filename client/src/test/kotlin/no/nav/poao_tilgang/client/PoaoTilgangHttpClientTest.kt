@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.beInstanceOf
 import no.nav.common.rest.client.RestClient
+import no.nav.poao_tilgang.application.client.axsys.EnhetTilgang
 import no.nav.poao_tilgang.application.test_util.IntegrationTest
 import no.nav.poao_tilgang.client.api.BadHttpStatusApiException
 import no.nav.poao_tilgang.client.api.NetworkApiException
@@ -78,6 +79,24 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 		val decision = client.evaluatePolicy(EksternBrukerTilgangTilEksternBrukerPolicyInput(
 			rekvirentNorskIdent = "234",
 			ressursNorskIdent = "234"
+		)).getOrThrow()
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
+	fun `evaluatePolicy - should evaluate NavAnsattHarTilgangTilNavEnhetPolicy`() {
+		mockAdGrupperResponse(
+			navIdent, navAnsattId, listOf(
+				AdGruppe(UUID.randomUUID(), "0000-ga-123"),
+				AdGruppe(UUID.randomUUID(), "0000-ga-456")
+			)
+		)
+
+		mockAxsysHttpServer.mockHentTilgangerResponse(navIdent, listOf(EnhetTilgang(enhetId = "0123", enhetNavn = "", temaer = emptyList())))
+		val decision = client.evaluatePolicy(NavAnsattTilgangTilNavEnhetPolicyInput(
+			navAnsattAzureId = navAnsattId,
+			navEnhetId = "0123"
 		)).getOrThrow()
 
 		decision shouldBe Decision.Permit

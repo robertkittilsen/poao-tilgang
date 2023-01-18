@@ -8,6 +8,7 @@ import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerTilgangTilE
 import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto
 import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputV1Dto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilNavEnhetPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.response.DecisionDto
 import no.nav.poao_tilgang.api.dto.response.DecisionType
 import no.nav.poao_tilgang.api.dto.response.EvaluatePoliciesResponse
@@ -23,6 +24,7 @@ import no.nav.poao_tilgang.core.domain.TilgangType
 import no.nav.poao_tilgang.core.policy.EksternBrukerTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.web.bind.annotation.PostMapping
@@ -92,6 +94,14 @@ class PolicyController(
 				EksternBrukerTilgangTilEksternBrukerPolicy.Input(
 					rekvirentNorskIdent = dto.rekvirentNorskIdent,
 					ressursNorskIdent = dto.ressursNorskIdent
+				)
+			}
+
+			PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_V1 -> {
+				val dto = fromJsonNode<NavAnsattTilgangTilNavEnhetPolicyInputV1Dto>(policyInput)
+				NavAnsattTilgangTilNavEnhetPolicy.Input(
+					navEnhetId = dto.navEnhetId,
+					navAnsattAzureId = dto.navAnsattAzureId
 				)
 			}
 		}
