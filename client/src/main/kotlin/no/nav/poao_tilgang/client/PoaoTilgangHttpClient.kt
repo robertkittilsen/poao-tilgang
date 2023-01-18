@@ -6,6 +6,7 @@ import no.nav.common.utils.UrlUtils.joinPaths
 import no.nav.poao_tilgang.api.dto.request.*
 import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerTilgangTilEksternBrukerPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto
+import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilNavEnhetPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputV1Dto
 import no.nav.poao_tilgang.api.dto.response.*
 import no.nav.poao_tilgang.client.ClientObjectMapper.objectMapper
@@ -166,6 +167,15 @@ class PoaoTilgangHttpClient(
 					ressursNorskIdent = policyRequest.policyInput.ressursNorskIdent
 				),
 				policyId = PolicyId.EKSTERN_BRUKER_TILGANG_TIL_EKSTERN_BRUKER_V1
+			)
+
+			is NavAnsattTilgangTilNavEnhetPolicyInput -> PolicyEvaluationRequestDto(
+				requestId = policyRequest.requestId,
+				policyInput = NavAnsattTilgangTilNavEnhetPolicyInputV1Dto(
+					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
+					navEnhetId = policyRequest.policyInput.enhetId
+					),
+				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_ENHET_V1
 			)
 		}
 	}
