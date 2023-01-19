@@ -198,6 +198,78 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		)
 	}
 
+	@Test
+	fun `should evaluate NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE policy - permit`() {
+		val requestId = UUID.randomUUID()
+
+		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().strengtFortroligAdresse))
+
+		val response = sendPolicyRequest(
+			requestId,
+			"""{"navAnsattAzureId": "$navAnsattId"}""",
+			"NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE"
+		)
+
+		response.body?.string() shouldBe permitResponse(requestId)
+	}
+
+	@Test
+	fun `should evaluate NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE policy - deny`() {
+		val requestId = UUID.randomUUID()
+
+		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().modiaOppfolging))
+
+		val response = sendPolicyRequest(
+			requestId,
+			"""{"navAnsattAzureId": "$navAnsattId"}""",
+			"NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE"
+		)
+
+		response.body?.string() shouldBe denyResponse(
+			requestId,
+			"NAV-ansatt mangler tilgang til AD-gruppen \\\"0000-GA-Strengt_Fortrolig_Adresse\\\"",
+			"MANGLER_TILGANG_TIL_AD_GRUPPE"
+		)
+	}
+
+	@Test
+	fun `should evaluate NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE policy - permit`() {
+		val requestId = UUID.randomUUID()
+
+		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().fortroligAdresse))
+
+		val response = sendPolicyRequest(
+			requestId,
+			"""{"navAnsattAzureId": "$navAnsattId"}""",
+			"NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE"
+		)
+
+		response.body?.string() shouldBe permitResponse(requestId)
+	}
+
+	@Test
+	fun `should evaluate NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE policy - deny`() {
+		val requestId = UUID.randomUUID()
+
+		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().modiaOppfolging))
+
+		val response = sendPolicyRequest(
+			requestId,
+			"""{"navAnsattAzureId": "$navAnsattId"}""",
+			"NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE"
+		)
+
+		response.body?.string() shouldBe denyResponse(
+			requestId,
+			"NAV-ansatt mangler tilgang til AD-gruppen \\\"0000-GA-Fortrolig_Adresse\\\"",
+			"MANGLER_TILGANG_TIL_AD_GRUPPE"
+		)
+	}
+
 	private fun permitResponse(requestId: UUID): String {
 		return """
 			{"results":[{"requestId":"$requestId","decision":{"type":"PERMIT","message":null,"reason":null}}]}
