@@ -149,6 +149,14 @@ data class NavAnsattTilgangTilEksternBrukerPolicyInput(
 data class NavAnsattTilgangTilModiaPolicyInput(
 	val navAnsattAzureId: UUID
 ) : PolicyInput()
+
+/* 
+ Sjekker om en NAV ansatt har tilgang til spesifik NAVenhet
+*/
+data class NavAnsattTilgangTilNavEnhetPolicyInput(
+    val navAnsattAzureId: UUID,
+    val navEnhetId: String
+) : PolicyInput()
 ```
 
 ## Prosjektstruktur
