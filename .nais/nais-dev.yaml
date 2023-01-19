@@ -54,6 +54,27 @@ spec:
         - application: veilarbvedtaksstotte
           namespace: pto
           cluster: dev-fss
+        - application: pto-admin
+          namespace: pto
+          cluster: dev-fss
+        - application: veilarbfilter
+          namespace: pto
+          cluster: dev-fss
+        - application: veilarbarena
+          namespace: pto
+          cluster: dev-fss
+        - application: veilarbperson
+          namespace: pto
+          cluster: dev-fss
+        - application: veilarboppgave
+          namespace: pto
+          cluster: dev-fss
+        - application: veilarboppfolging
+          namespace: pto
+          cluster: dev-fss
+        - application: veilarbvedtakinfo
+          namespace: pto
+          cluster: dev-fss
     outbound:
       rules:
         - application: skjermede-personer-pip
