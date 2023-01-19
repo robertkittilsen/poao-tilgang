@@ -175,6 +175,8 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 			listOf(EnhetTilgang(enhetId = "0123", enhetNavn = "", temaer = emptyList()))
 		)
 
+		mockAbacHttpServer.mockPermit(TilgangType.LESE)
+
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navAnsattAzureId": "$navAnsattId", "navEnhetId": "0123"}""",
@@ -191,6 +193,8 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf(noAccessGroup))
 		mockAxsysHttpServer.mockHentTilgangerResponse(navIdent, listOf())
 
+		mockAbacHttpServer.mockDeny(TilgangType.LESE)
+
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navAnsattAzureId": "$navAnsattId", "navEnhetId": "0123"}""",
@@ -199,8 +203,8 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		response.body?.string() shouldBe denyResponse(
 			requestId,
-			"Har ikke tilgang til NAV enhet",
-			"IKKE_TILGANG_TIL_NAV_ENHET"
+			"Deny fra ABAC",
+			"IKKE_TILGANG_FRA_ABAC"
 		)
 	}
 
