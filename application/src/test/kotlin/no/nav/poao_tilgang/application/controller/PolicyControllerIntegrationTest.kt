@@ -1,7 +1,6 @@
 package no.nav.poao_tilgang.application.controller
 
 import io.kotest.matchers.shouldBe
-import no.nav.poao_tilgang.application.client.axsys.EnhetTilgang
 import no.nav.poao_tilgang.application.test_util.IntegrationTest
 import no.nav.poao_tilgang.application.utils.RestUtils.toJsonRequestBody
 import no.nav.poao_tilgang.core.domain.AdGruppe
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.UUID
+import java.util.*
 
 class PolicyControllerIntegrationTest : IntegrationTest() {
 
@@ -165,17 +164,9 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_NAV_ENHET_V1 policy - permit`() {
 		val requestId = UUID.randomUUID()
 
-		mockAdGrupperResponse(
-			navIdent,
-			navAnsattId,
-			listOf(AdGruppe(UUID.randomUUID(), "0000-ga-123"))
-		)
-		mockAxsysHttpServer.mockHentTilgangerResponse(
-			navIdent,
-			listOf(EnhetTilgang(enhetId = "0123", enhetNavn = "", temaer = emptyList()))
-		)
+		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
 
-		mockAbacHttpServer.mockPermit(TilgangType.LESE)
+		mockAbacHttpServer.mockPermitAll()
 
 		val response = sendPolicyRequest(
 			requestId,
@@ -190,10 +181,9 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_NAV_ENHET_V1 policy - deny`() {
 		val requestId = UUID.randomUUID()
 
-		mockAdGrupperResponse(navIdent, navAnsattId, listOf(noAccessGroup))
-		mockAxsysHttpServer.mockHentTilgangerResponse(navIdent, listOf())
+		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
 
-		mockAbacHttpServer.mockDeny(TilgangType.LESE)
+		mockAbacHttpServer.mockDenyAll()
 
 		val response = sendPolicyRequest(
 			requestId,
@@ -246,12 +236,11 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	}
 
 	private fun mockAdGrupperResponse(navIdent: String, navAnsattId: UUID, adGrupper: List<AdGruppe>) {
-
 		mockMicrosoftGraphHttpServer.mockHentAzureIdMedNavIdentResponse(navIdent, navAnsattId)
+
 		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
 
 		mockMicrosoftGraphHttpServer.mockHentAdGrupperForNavAnsatt(navAnsattId, adGrupper.map { it.id })
-
 
 		mockMicrosoftGraphHttpServer.mockHentAdGrupperResponse(adGrupper)
 	}

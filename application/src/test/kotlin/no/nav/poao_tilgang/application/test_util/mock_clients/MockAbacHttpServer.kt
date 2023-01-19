@@ -6,14 +6,9 @@ import okhttp3.mockwebserver.MockResponse
 
 class MockAbacHttpServer : MockHttpServer() {
 
-	fun mockPermit(tilgangType: TilgangType) {
-		handleRequest(
-			matchPath = "/",
-			matchMethod = "POST",
-			matchBodyContains = matchAbacTilgangAction(tilgangType),
-			response = MockResponse()
-				.setBody(
-					"""
+	private val abacPermitResponse = MockResponse()
+		.setBody(
+			"""
 						{
 						  "Response": {
 						    "Decision": "Permit",
@@ -28,18 +23,11 @@ class MockAbacHttpServer : MockHttpServer() {
 						  }
 						}
 					""".trimIndent()
-				)
 		)
-	}
 
-	fun mockDeny(tilgangType: TilgangType) {
-		handleRequest(
-			matchPath = "/",
-			matchMethod = "POST",
-			matchBodyContains = matchAbacTilgangAction(tilgangType),
-			response = MockResponse()
-				.setBody(
-					"""
+	private val abacDenyResponse = MockResponse()
+		.setBody(
+			"""
 						{
 						  "Response": {
 						    "Decision": "Deny",
@@ -83,7 +71,39 @@ class MockAbacHttpServer : MockHttpServer() {
 						  }
 						}
 					""".trimIndent()
-				)
+		)
+
+	fun mockPermitAll() {
+		handleRequest(
+			matchPath = "/",
+			matchMethod = "POST",
+			response = abacPermitResponse
+		)
+	}
+
+	fun mockDenyAll() {
+		handleRequest(
+			matchPath = "/",
+			matchMethod = "POST",
+			response = abacDenyResponse
+		)
+	}
+
+	fun mockPermit(tilgangType: TilgangType) {
+		handleRequest(
+			matchPath = "/",
+			matchMethod = "POST",
+			matchBodyContains = matchAbacTilgangAction(tilgangType),
+			response = abacPermitResponse
+		)
+	}
+
+	fun mockDeny(tilgangType: TilgangType) {
+		handleRequest(
+			matchPath = "/",
+			matchMethod = "POST",
+			matchBodyContains = matchAbacTilgangAction(tilgangType),
+			response = abacDenyResponse
 		)
 	}
 

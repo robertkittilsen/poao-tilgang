@@ -6,12 +6,12 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.beInstanceOf
 import no.nav.common.rest.client.RestClient
-import no.nav.poao_tilgang.application.client.axsys.EnhetTilgang
 import no.nav.poao_tilgang.application.test_util.IntegrationTest
 import no.nav.poao_tilgang.client.api.BadHttpStatusApiException
 import no.nav.poao_tilgang.client.api.NetworkApiException
 import no.nav.poao_tilgang.core.domain.AdGruppe
-import no.nav.poao_tilgang.core.domain.TilgangType.*
+import no.nav.poao_tilgang.core.domain.TilgangType.LESE
+import no.nav.poao_tilgang.core.domain.TilgangType.SKRIVE
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -94,8 +94,7 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 			)
 		)
 
-		mockAxsysHttpServer.mockHentTilgangerResponse(navIdent, listOf(EnhetTilgang(enhetId = "0123", enhetNavn = "", temaer = emptyList())))
-		mockAbacHttpServer.mockPermit(LESE)
+		mockAbacHttpServer.mockPermitAll()
 
 		val decision = client.evaluatePolicy(NavAnsattTilgangTilNavEnhetPolicyInput(
 			navAnsattAzureId = navAnsattId,
