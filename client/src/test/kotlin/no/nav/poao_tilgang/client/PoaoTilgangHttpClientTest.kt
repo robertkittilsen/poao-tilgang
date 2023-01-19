@@ -6,10 +6,12 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.beInstanceOf
 import no.nav.common.rest.client.RestClient
+import no.nav.poao_tilgang.application.client.axsys.EnhetTilgang
 import no.nav.poao_tilgang.application.test_util.IntegrationTest
 import no.nav.poao_tilgang.client.api.BadHttpStatusApiException
 import no.nav.poao_tilgang.client.api.NetworkApiException
 import no.nav.poao_tilgang.core.domain.AdGruppe
+import no.nav.poao_tilgang.core.domain.TilgangType.*
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -48,8 +50,8 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 	@EnumSource(TilgangType::class)
 	fun `evaluatePolicy - should evaluate NavAnsattTilgangTilEksternBrukerPolicy V2`(tilgangType: TilgangType) {
 		val coreTilgangType = when(tilgangType) {
-			TilgangType.LESE -> no.nav.poao_tilgang.core.domain.TilgangType.LESE
-			TilgangType.SKRIVE -> no.nav.poao_tilgang.core.domain.TilgangType.SKRIVE
+			TilgangType.LESE -> LESE
+			TilgangType.SKRIVE -> SKRIVE
 		}
 		mockAbacHttpServer.mockPermit(coreTilgangType)
 		setupMocks()
@@ -78,6 +80,26 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 		val decision = client.evaluatePolicy(EksternBrukerTilgangTilEksternBrukerPolicyInput(
 			rekvirentNorskIdent = "234",
 			ressursNorskIdent = "234"
+		)).getOrThrow()
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
+	fun `evaluatePolicy - should evaluate NavAnsattHarTilgangTilNavEnhetPolicy`() {
+		mockAdGrupperResponse(
+			navIdent, navAnsattId, listOf(
+				AdGruppe(UUID.randomUUID(), "0000-ga-123"),
+				AdGruppe(UUID.randomUUID(), "0000-ga-456")
+			)
+		)
+
+		mockAxsysHttpServer.mockHentTilgangerResponse(navIdent, listOf(EnhetTilgang(enhetId = "0123", enhetNavn = "", temaer = emptyList())))
+		mockAbacHttpServer.mockPermit(LESE)
+
+		val decision = client.evaluatePolicy(NavAnsattTilgangTilNavEnhetPolicyInput(
+			navAnsattAzureId = navAnsattId,
+			navEnhetId = "0123"
 		)).getOrThrow()
 
 		decision shouldBe Decision.Permit

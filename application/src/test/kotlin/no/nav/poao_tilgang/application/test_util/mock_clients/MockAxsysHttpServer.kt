@@ -7,22 +7,21 @@ import okhttp3.mockwebserver.MockResponse
 class MockAxsysHttpServer : MockHttpServer() {
 
 	fun mockHentTilgangerResponse(navIdent: String, tilganger: List<EnhetTilgang>) {
+		val enheter = tilganger.map {
+			"""
+				{
+					"navn": "${it.enhetNavn}",
+					"enhetId": "${it.enhetId}",
+					"temaer": [${it.temaer.joinToString(",")}]
+				}
+			""".trimIndent()
+		}.joinToString(",")
 		val response = MockResponse()
 			.setBody(
 				"""
 					{
 					  "enheter": [
-						${
-						tilganger.map {
-							"""
-									{
-										"navn": "${it.enhetNavn}",
-										"enhetId": "${it.enhetId}",
-										"temaer": [${it.temaer.joinToString(",")}]
-									}
-								""".trimMargin()
-						}.joinToString { "," }
-					}
+						$enheter
 					  ]
 					}
 				""".trimIndent()
