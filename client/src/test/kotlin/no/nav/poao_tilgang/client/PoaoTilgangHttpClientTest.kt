@@ -11,6 +11,7 @@ import no.nav.poao_tilgang.application.test_util.IntegrationTest
 import no.nav.poao_tilgang.client.api.BadHttpStatusApiException
 import no.nav.poao_tilgang.client.api.NetworkApiException
 import no.nav.poao_tilgang.core.domain.AdGruppe
+import no.nav.poao_tilgang.core.domain.TilgangType.*
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -49,8 +50,8 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 	@EnumSource(TilgangType::class)
 	fun `evaluatePolicy - should evaluate NavAnsattTilgangTilEksternBrukerPolicy V2`(tilgangType: TilgangType) {
 		val coreTilgangType = when(tilgangType) {
-			TilgangType.LESE -> no.nav.poao_tilgang.core.domain.TilgangType.LESE
-			TilgangType.SKRIVE -> no.nav.poao_tilgang.core.domain.TilgangType.SKRIVE
+			TilgangType.LESE -> LESE
+			TilgangType.SKRIVE -> SKRIVE
 		}
 		mockAbacHttpServer.mockPermit(coreTilgangType)
 		setupMocks()
@@ -94,6 +95,8 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 		)
 
 		mockAxsysHttpServer.mockHentTilgangerResponse(navIdent, listOf(EnhetTilgang(enhetId = "0123", enhetNavn = "", temaer = emptyList())))
+		mockAbacHttpServer.mockPermit(LESE)
+
 		val decision = client.evaluatePolicy(NavAnsattTilgangTilNavEnhetPolicyInput(
 			navAnsattAzureId = navAnsattId,
 			navEnhetId = "0123"
