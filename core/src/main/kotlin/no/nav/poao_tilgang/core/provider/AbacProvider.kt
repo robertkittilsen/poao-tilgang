@@ -10,4 +10,9 @@ interface AbacProvider {
 		eksternBrukerId: String
 	): Boolean
 
+	fun harVeilederTilgangTilNavEnhet(
+		veilederIdent: String,
+		navEnhetId: String
+	): Boolean
+
 }

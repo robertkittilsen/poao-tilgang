@@ -73,10 +73,11 @@ open class PolicyConfig {
 	@Bean
 	open fun tilgangTilNavEnhetPolicy(
 		navEnhetTilgangProvider: NavEnhetTilgangProvider,
-		adGruppeProvider: AdGruppeProvider
+		adGruppeProvider: AdGruppeProvider,
+		abacProvider: AbacProvider
 	): NavAnsattTilgangTilNavEnhetPolicy {
 		return NavAnsattTilgangTilNavEnhetPolicyImpl(
-			navEnhetTilgangProvider, adGruppeProvider
+			navEnhetTilgangProvider, adGruppeProvider, abacProvider
 		)
 	}
 
