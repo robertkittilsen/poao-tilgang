@@ -4,10 +4,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.UrlUtils.joinPaths
 import no.nav.poao_tilgang.api.dto.request.*
-import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerTilgangTilEksternBrukerPolicyInputV1Dto
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputV1Dto
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilNavEnhetPolicyInputV1Dto
+import no.nav.poao_tilgang.api.dto.request.policy_input.*
 import no.nav.poao_tilgang.api.dto.response.*
 import no.nav.poao_tilgang.client.ClientObjectMapper.objectMapper
 import no.nav.poao_tilgang.client.api.*
@@ -176,6 +173,22 @@ class PoaoTilgangHttpClient(
 					navEnhetId = policyRequest.policyInput.navEnhetId
 				),
 				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_V1
+			)
+
+			is NavAnsattBehandleStrengtFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
+				requestId = policyRequest.requestId,
+				policyInput = NavAnsattBehandleStrengtFortroligBrukerePolicyInputV1Dto(
+					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
+				),
+				policyId = PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE
+			)
+
+			is NavAnsattBehandleFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
+				requestId = policyRequest.requestId,
+				policyInput = NavAnsattBehandleFortroligBrukerePolicyInputV1Dto(
+					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
+				),
+				policyId = PolicyId.NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE
 			)
 		}
 	}

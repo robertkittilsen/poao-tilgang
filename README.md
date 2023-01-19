@@ -161,14 +161,14 @@ data class NavAnsattTilgangTilNavEnhetPolicyInput(
 /* 
  Sjekker om en NAV ansatt kan behandle **strengt** fortrolig brukere (kode 6)
 */
-data class NavAnsattBehandleStrengtFortroligBrukerePolicyInputV1Dto(
+data class NavAnsattBehandleStrengtFortroligBrukerePolicyInput(
     val navAnsattAzureId: UUID
 )
 
 /* 
  Sjekker om en NAV ansatt kan behandle fortrolig brukere (kode 7)
 */
-data class NavAnsattBehandleFortroligBrukerePolicyInputV1Dto(
+data class NavAnsattBehandleFortroligBrukerePolicyInput(
     val navAnsattAzureId: UUID
 )
 
