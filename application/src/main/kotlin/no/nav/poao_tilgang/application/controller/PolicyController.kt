@@ -4,11 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import no.nav.poao_tilgang.api.dto.request.EvaluatePoliciesRequest
 import no.nav.poao_tilgang.api.dto.request.PolicyEvaluationRequestDto
 import no.nav.poao_tilgang.api.dto.request.PolicyId
-import no.nav.poao_tilgang.api.dto.request.policy_input.EksternBrukerTilgangTilEksternBrukerPolicyInputV1Dto
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV1Dto
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilModiaPolicyInputV1Dto
-import no.nav.poao_tilgang.api.dto.request.policy_input.NavAnsattTilgangTilNavEnhetPolicyInputV1Dto
+import no.nav.poao_tilgang.api.dto.request.policy_input.*
 import no.nav.poao_tilgang.api.dto.response.DecisionDto
 import no.nav.poao_tilgang.api.dto.response.DecisionType
 import no.nav.poao_tilgang.api.dto.response.EvaluatePoliciesResponse
@@ -21,10 +17,7 @@ import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonNode
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.PolicyInput
 import no.nav.poao_tilgang.core.domain.TilgangType
-import no.nav.poao_tilgang.core.policy.EksternBrukerTilgangTilEksternBrukerPolicy
-import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
-import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
-import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
+import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.web.bind.annotation.PostMapping
@@ -101,6 +94,20 @@ class PolicyController(
 				val dto = fromJsonNode<NavAnsattTilgangTilNavEnhetPolicyInputV1Dto>(policyInput)
 				NavAnsattTilgangTilNavEnhetPolicy.Input(
 					navEnhetId = dto.navEnhetId,
+					navAnsattAzureId = dto.navAnsattAzureId
+				)
+			}
+
+			PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1 -> {
+				val dto = fromJsonNode<NavAnsattBehandleStrengtFortroligBrukerePolicyInputV1Dto>(policyInput)
+				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(
+					navAnsattAzureId = dto.navAnsattAzureId
+				)
+			}
+
+			PolicyId.NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE_V1 -> {
+				val dto = fromJsonNode<NavAnsattBehandleFortroligBrukerePolicyInputV1Dto>(policyInput)
+				NavAnsattBehandleFortroligBrukerePolicy.Input(
 					navAnsattAzureId = dto.navAnsattAzureId
 				)
 			}

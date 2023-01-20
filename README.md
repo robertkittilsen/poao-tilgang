@@ -157,6 +157,21 @@ data class NavAnsattTilgangTilNavEnhetPolicyInput(
     val navAnsattAzureId: UUID,
     val navEnhetId: String
 ) : PolicyInput()
+
+/* 
+ Sjekker om en NAV ansatt kan behandle **strengt** fortrolig brukere (kode 6)
+*/
+data class NavAnsattBehandleStrengtFortroligBrukerePolicyInput(
+    val navAnsattAzureId: UUID
+)
+
+/* 
+ Sjekker om en NAV ansatt kan behandle fortrolig brukere (kode 7)
+*/
+data class NavAnsattBehandleFortroligBrukerePolicyInput(
+    val navAnsattAzureId: UUID
+)
+
 ```
 
 ## Prosjektstruktur
