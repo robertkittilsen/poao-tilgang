@@ -208,7 +208,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navAnsattAzureId": "$navAnsattId"}""",
-			"NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE"
+			"NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1"
 		)
 
 		response.body?.string() shouldBe permitResponse(requestId)
@@ -224,7 +224,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navAnsattAzureId": "$navAnsattId"}""",
-			"NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE"
+			"NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1"
 		)
 
 		response.body?.string() shouldBe denyResponse(
@@ -244,7 +244,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navAnsattAzureId": "$navAnsattId"}""",
-			"NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE"
+			"NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE_V1"
 		)
 
 		response.body?.string() shouldBe permitResponse(requestId)
@@ -260,7 +260,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 		val response = sendPolicyRequest(
 			requestId,
 			"""{"navAnsattAzureId": "$navAnsattId"}""",
-			"NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE"
+			"NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE_V1"
 		)
 
 		response.body?.string() shouldBe denyResponse(
