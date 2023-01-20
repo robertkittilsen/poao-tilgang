@@ -98,14 +98,14 @@ class PolicyController(
 				)
 			}
 
-			PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE -> {
+			PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1 -> {
 				val dto = fromJsonNode<NavAnsattBehandleStrengtFortroligBrukerePolicyInputV1Dto>(policyInput)
 				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(
 					navAnsattAzureId = dto.navAnsattAzureId
 				)
 			}
 
-			PolicyId.NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE -> {
+			PolicyId.NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE_V1 -> {
 				val dto = fromJsonNode<NavAnsattBehandleFortroligBrukerePolicyInputV1Dto>(policyInput)
 				NavAnsattBehandleFortroligBrukerePolicy.Input(
 					navAnsattAzureId = dto.navAnsattAzureId

@@ -182,6 +182,68 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 		exception?.cause should beInstanceOf<UnknownHostException>()
 	}
 
+	@Test
+	fun `evaluatePolicy - should permit NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE`() {
+		mockAdGrupperResponse(
+			navIdent, navAnsattId, listOf(
+				adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell,
+				adGruppeProvider.hentTilgjengeligeAdGrupper().strengtFortroligAdresse
+			)
+		)
+
+		val decision = client.evaluatePolicy(NavAnsattBehandleStrengtFortroligBrukerePolicyInput(
+			navAnsattAzureId = navAnsattId
+		)).getOrThrow()
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
+	fun `evaluatePolicy - should deny NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE`() {
+		mockAdGrupperResponse(
+			navIdent, navAnsattId, listOf(
+				adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell
+			)
+		)
+
+		val decision = client.evaluatePolicy(NavAnsattBehandleStrengtFortroligBrukerePolicyInput(
+			navAnsattAzureId = navAnsattId
+		)).getOrThrow()
+
+		decision shouldBe Decision.Deny("NAV-ansatt mangler tilgang til AD-gruppen \"0000-GA-Strengt_Fortrolig_Adresse\"","MANGLER_TILGANG_TIL_AD_GRUPPE")
+	}
+
+	@Test
+	fun `evaluatePolicy - should permit NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE`() {
+		mockAdGrupperResponse(
+			navIdent, navAnsattId, listOf(
+				adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell,
+				adGruppeProvider.hentTilgjengeligeAdGrupper().fortroligAdresse
+			)
+		)
+
+		val decision = client.evaluatePolicy(NavAnsattBehandleFortroligBrukerePolicyInput(
+			navAnsattAzureId = navAnsattId
+		)).getOrThrow()
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
+	fun `evaluatePolicy - should deny NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE`() {
+		mockAdGrupperResponse(
+			navIdent, navAnsattId, listOf(
+				adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell
+			)
+		)
+
+		val decision = client.evaluatePolicy(NavAnsattBehandleFortroligBrukerePolicyInput(
+			navAnsattAzureId = navAnsattId
+		)).getOrThrow()
+
+		decision shouldBe Decision.Deny("NAV-ansatt mangler tilgang til AD-gruppen \"0000-GA-Fortrolig_Adresse\"","MANGLER_TILGANG_TIL_AD_GRUPPE")
+	}
+
 	private fun mockAdGrupperResponse(navIdent: String, navAnsattId: UUID, adGrupper: List<AdGruppe>) {
 		mockMicrosoftGraphHttpServer.mockHentAzureIdMedNavIdentResponse(navIdent, navAnsattId)
 

@@ -180,7 +180,7 @@ class PoaoTilgangHttpClient(
 				policyInput = NavAnsattBehandleStrengtFortroligBrukerePolicyInputV1Dto(
 					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
 				),
-				policyId = PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE
+				policyId = PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1
 			)
 
 			is NavAnsattBehandleFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
@@ -188,7 +188,7 @@ class PoaoTilgangHttpClient(
 				policyInput = NavAnsattBehandleFortroligBrukerePolicyInputV1Dto(
 					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
 				),
-				policyId = PolicyId.NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE
+				policyId = PolicyId.NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE_V1
 			)
 		}
 	}
