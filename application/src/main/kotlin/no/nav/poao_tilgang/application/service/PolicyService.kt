@@ -19,7 +19,8 @@ class PolicyService(
 	private val eksternBrukerTilgangTilEksternBrukerPolicy: EksternBrukerTilgangTilEksternBrukerPolicy,
 	private val navAnsattTilgangTilNavEnhetPolicy: NavAnsattTilgangTilNavEnhetPolicy,
 	private val navAnsattBehandleStrengtFortroligBrukerePolicy: NavAnsattBehandleStrengtFortroligBrukerePolicy,
-	private val navAnsattBehandleFortroligBrukerePolicy: NavAnsattBehandleFortroligBrukerePolicy
+	private val navAnsattBehandleFortroligBrukerePolicy: NavAnsattBehandleFortroligBrukerePolicy,
+	private val navAnsattTiltangTilEnhetMedSperrePolicy: NavAnsattTilgangTilNavEnhetMedSperrePolicy
 ) {
 
 	fun evaluatePolicyRequest(request: PolicyEvaluationRequest): PolicyEvaluationResult {
@@ -66,6 +67,7 @@ class PolicyService(
 			is NavAnsattTilgangTilNavEnhetPolicy.Input -> evaluate(input, navAnsattTilgangTilNavEnhetPolicy)
 			is NavAnsattBehandleFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleFortroligBrukerePolicy)
 			is NavAnsattBehandleStrengtFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleStrengtFortroligBrukerePolicy)
+			is NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input -> evaluate(input, navAnsattTiltangTilEnhetMedSperrePolicy)
 			else -> throw PolicyNotImplementedException("Håndtering av policy ${input.javaClass.canonicalName} er ikke implementert")
 		}
 	}

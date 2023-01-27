@@ -46,6 +46,19 @@ open class PolicyConfig {
 	}
 
 	@Bean
+	open fun navAnsattTilgangTilNavEnhetMedSperrePolicy(
+		navEnhetTilgangProvider: NavEnhetTilgangProvider,
+		adGruppeProvider: AdGruppeProvider,
+		abacProvider: AbacProvider
+	): NavAnsattTilgangTilNavEnhetMedSperrePolicy {
+		return NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
+			navEnhetTilgangProvider,
+			adGruppeProvider,
+			abacProvider
+		)
+	}
+
+	@Bean
 	open fun navAnsattTilgangTilSkjermetPersonPolicy(
 		skjermetPersonProvider: SkjermetPersonProvider,
 		navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy

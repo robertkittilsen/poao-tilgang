@@ -40,8 +40,20 @@
         <mockk.version>1.12.5</mockk.version>
         <kotest.version>5.3.0</kotest.version>
         <okhttp.version>4.10.0</okhttp.version>
-        <common.version>2.2022.11.16_08.36-35c94368bc44</common.version>
+        <common.version>2023.01.27_13.51-6e9c8984cb8b</common.version>
     </properties>
+
+    <repositories>
+        <!-- Legger til central eksplisitt for prioritet over jitpack -->
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -67,22 +79,22 @@
             </dependency>
 
             <dependency>
-                <groupId>no.nav.common</groupId>
+                <groupId>com.github.navikt.common-java-modules</groupId>
                 <artifactId>log</artifactId>
                 <version>${common.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.common</groupId>
+                <groupId>com.github.navikt.common-java-modules</groupId>
                 <artifactId>abac</artifactId>
                 <version>${common.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.common</groupId>
+                <groupId>com.github.navikt.common-java-modules</groupId>
                 <artifactId>token-client</artifactId>
                 <version>${common.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.common</groupId>
+                <groupId>com.github.navikt.common-java-modules</groupId>
                 <artifactId>rest</artifactId>
                 <version>${common.version}</version>
             </dependency>
