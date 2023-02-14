@@ -27,3 +27,16 @@ data class NavAnsattTilgangTilNavEnhetPolicyInput(
 	val navAnsattAzureId: UUID,
 	val navEnhetId: String
 ) : PolicyInput()
+
+data class NavAnsattBehandleStrengtFortroligBrukerePolicyInput(
+	val navAnsattAzureId: UUID,
+) : PolicyInput()
+
+data class NavAnsattBehandleFortroligBrukerePolicyInput(
+	val navAnsattAzureId: UUID,
+) : PolicyInput()
+
+data class NavAnsattTilgangTilNavEnhetMedSperrePolicyInput(
+	val navAnsattAzureId: UUID,
+	val navEnhetId: String
+) : PolicyInput()

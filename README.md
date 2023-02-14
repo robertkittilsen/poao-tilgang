@@ -157,6 +157,28 @@ data class NavAnsattTilgangTilNavEnhetPolicyInput(
     val navAnsattAzureId: UUID,
     val navEnhetId: String
 ) : PolicyInput()
+
+/* 
+ Sjekker om en NAV ansatt kan behandle **strengt** fortrolig brukere (kode 6)
+*/
+data class NavAnsattBehandleStrengtFortroligBrukerePolicyInput(
+    val navAnsattAzureId: UUID
+) : PolicyInput()
+
+/* 
+ Sjekker om en NAV ansatt kan behandle fortrolig brukere (kode 7)
+*/
+data class NavAnsattBehandleFortroligBrukerePolicyInput(
+    val navAnsattAzureId: UUID
+) : PolicyInput()
+
+/* 
+ Sjekker om en NAV ansatt har tilgang til NAV enhet med sperre. Brukes i forbindelse med KVP.
+*/
+data class NavAnsattTilgangTilNavEnhetMedSperrePolicyInput(
+    val navAnsattAzureId: UUID,
+    val navEnhetId: String
+) : PolicyInput()
 ```
 
 ## Prosjektstruktur

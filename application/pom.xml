@@ -88,19 +88,19 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>log</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>abac</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>token-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>rest</artifactId>
         </dependency>
 

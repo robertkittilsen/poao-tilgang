@@ -12,4 +12,5 @@ object AdGruppeNavn {
     const val GOSYS_UTVIDET                 = "0000-GA-GOSYS_UTVIDET"
 	const val PENSJON_UTVIDET               = "0000-GA-Pensjon_UTVIDET"
 	const val EGNE_ANSATTE               	= "0000-GA-Egne_ansatte"
+	const val AKTIVITETSPLAN_KVP            = "0000-GA-aktivitesplan_kvp"
 }

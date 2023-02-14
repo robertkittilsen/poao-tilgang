@@ -30,4 +30,8 @@ class AbacProviderImpl(private val pep: Pep) : AbacProvider {
 		return pep.harVeilederTilgangTilEnhet(NavIdent.of(veilederIdent), EnhetId.of(navEnhetId))
 	}
 
+	override fun harVeilederTilgangTilNavEnhetMedSperre(veilederIdent: String, navEnhetId: String): Boolean {
+		return pep.harTilgangTilEnhetMedSperre(NavIdent.of(veilederIdent), EnhetId.of(navEnhetId))
+	}
+
 }
