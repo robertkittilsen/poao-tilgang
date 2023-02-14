@@ -118,6 +118,12 @@ class PolicyController(
 					navEnhetId = dto.navEnhetId,
 				)
 			}
+			PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1 -> {
+				val dto = fromJsonNode<NavAnsattBehandleSkjermedePersonerPolicyInputV1Dto>(policyInput)
+				NavAnsattBehandleSkjermedePersonerPolicy.Input(
+					navAnsattAzureId = dto.navAnsattAzureId
+				)
+			}
 		}
 	}
 

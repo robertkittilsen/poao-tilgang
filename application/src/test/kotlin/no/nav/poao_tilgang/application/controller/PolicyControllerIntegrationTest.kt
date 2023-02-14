@@ -271,6 +271,42 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 	}
 
 	@Test
+	fun `should evaluate NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER policy - permit`() {
+		val requestId = UUID.randomUUID()
+
+		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().egneAnsatte))
+
+		val response = sendPolicyRequest(
+			requestId,
+			"""{"navAnsattAzureId": "$navAnsattId"}""",
+			"NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1"
+		)
+
+		response.body?.string() shouldBe permitResponse(requestId)
+	}
+
+	@Test
+	fun `should evaluate NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER policy - deny`() {
+		val requestId = UUID.randomUUID()
+
+		mockMicrosoftGraphHttpServer.mockHentNavIdentMedAzureIdResponse(navAnsattId, navIdent)
+		mockAdGrupperResponse(navIdent, navAnsattId, listOf(adGruppeProvider.hentTilgjengeligeAdGrupper().modiaOppfolging))
+
+		val response = sendPolicyRequest(
+			requestId,
+			"""{"navAnsattAzureId": "$navAnsattId"}""",
+			"NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1"
+		)
+
+		response.body?.string() shouldBe denyResponse(
+			requestId,
+			"NAV-ansatt mangler tilgang til en av AD-gruppene [0000-GA-GOSYS_UTVIDET, 0000-GA-Pensjon_UTVIDET, 0000-GA-Egne_ansatte]",
+			"MANGLER_TILGANG_TIL_AD_GRUPPE"
+		)
+	}
+
+	@Test
 	fun `should evaluate NAV_ANSATT_TILGANG_TIL_NAV_ENHET_MED_SPERRE_V1 policy - permit`() {
 		val requestId = UUID.randomUUID()
 

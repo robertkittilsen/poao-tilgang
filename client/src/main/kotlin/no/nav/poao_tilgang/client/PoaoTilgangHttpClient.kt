@@ -199,6 +199,14 @@ class PoaoTilgangHttpClient(
 				),
 				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_MED_SPERRE_V1
 			)
+
+			is NavAnsattBehandleSkjermedePersonerPolicyInput -> PolicyEvaluationRequestDto(
+				requestId = policyRequest.requestId,
+				policyInput = NavAnsattBehandleSkjermedePersonerPolicyInputV1Dto(
+					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
+				),
+				policyId = PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1
+			)
 		}
 	}
 }

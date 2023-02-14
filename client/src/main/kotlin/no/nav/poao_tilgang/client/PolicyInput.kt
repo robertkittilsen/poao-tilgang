@@ -40,3 +40,7 @@ data class NavAnsattTilgangTilNavEnhetMedSperrePolicyInput(
 	val navAnsattAzureId: UUID,
 	val navEnhetId: String
 ) : PolicyInput()
+
+data class NavAnsattBehandleSkjermedePersonerPolicyInput(
+	val navAnsattAzureId: UUID,
+) : PolicyInput()
