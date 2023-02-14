@@ -105,6 +105,25 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 	}
 
 	@Test
+	fun `evaluatePolicy - should evaluate NavAnsattHarTilgangTilNavEnhetMedSperrePolicy`() {
+		mockAdGrupperResponse(
+			navIdent, navAnsattId, listOf(
+				AdGruppe(UUID.randomUUID(), "0000-ga-123"),
+				AdGruppe(UUID.randomUUID(), "0000-ga-456")
+			)
+		)
+
+		mockAbacHttpServer.mockPermitAll()
+
+		val decision = client.evaluatePolicy(NavAnsattTilgangTilNavEnhetMedSperrePolicyInput(
+			navAnsattAzureId = navAnsattId,
+			navEnhetId = "0123"
+		)).getOrThrow()
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
 	fun `hentAdGrupper - skal hente AD-grupper`() {
 		mockAdGrupperResponse(
 			navIdent, navAnsattId, listOf(

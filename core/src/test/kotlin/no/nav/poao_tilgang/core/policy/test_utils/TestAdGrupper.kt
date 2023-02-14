@@ -21,6 +21,7 @@ object TestAdGrupper {
 		syfoSensitiv = AdGruppe(UUID.randomUUID(), AdGruppeNavn.SYFO_SENSITIV),
 		pensjonUtvidet = AdGruppe(UUID.randomUUID(), AdGruppeNavn.PENSJON_UTVIDET),
 		egneAnsatte = AdGruppe(UUID.randomUUID(), AdGruppeNavn.EGNE_ANSATTE),
+		aktivitetsplanKvp = AdGruppe(UUID.randomUUID(), AdGruppeNavn.AKTIVITETSPLAN_KVP)
 	)
 
 

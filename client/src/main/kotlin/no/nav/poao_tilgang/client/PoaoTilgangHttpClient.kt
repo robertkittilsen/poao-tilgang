@@ -190,6 +190,15 @@ class PoaoTilgangHttpClient(
 				),
 				policyId = PolicyId.NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE_V1
 			)
+
+			is NavAnsattTilgangTilNavEnhetMedSperrePolicyInput -> PolicyEvaluationRequestDto(
+				requestId = policyRequest.requestId,
+				policyInput = NavAnsattTilgangTilNavEnhetMedSperrePolicyInputV1Dto(
+					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
+					navEnhetId = policyRequest.policyInput.navEnhetId
+				),
+				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_MED_SPERRE_V1
+			)
 		}
 	}
 }

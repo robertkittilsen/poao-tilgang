@@ -15,4 +15,9 @@ interface AbacProvider {
 		navEnhetId: String
 	): Boolean
 
+	fun harVeilederTilgangTilNavEnhetMedSperre(
+		veilederIdent: String,
+		navEnhetId: String
+	): Boolean
+
 }

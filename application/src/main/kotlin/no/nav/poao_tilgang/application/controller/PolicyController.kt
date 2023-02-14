@@ -111,6 +111,13 @@ class PolicyController(
 					navAnsattAzureId = dto.navAnsattAzureId
 				)
 			}
+			PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_MED_SPERRE_V1 -> {
+				val dto = fromJsonNode<NavAnsattTilgangTilNavEnhetMedSperrePolicyInputV1Dto>(policyInput)
+				NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input(
+					navAnsattAzureId = dto.navAnsattAzureId,
+					navEnhetId = dto.navEnhetId,
+				)
+			}
 		}
 	}
 

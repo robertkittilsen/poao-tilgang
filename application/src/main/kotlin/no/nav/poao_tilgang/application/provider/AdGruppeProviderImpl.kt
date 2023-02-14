@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import no.nav.poao_tilgang.application.client.microsoft_graph.MicrosoftGraphClient
 import no.nav.poao_tilgang.application.utils.CacheUtils.tryCacheFirstNotNull
 import no.nav.poao_tilgang.core.domain.AdGruppe
+import no.nav.poao_tilgang.core.domain.AdGruppeNavn.AKTIVITETSPLAN_KVP
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.EGNE_ANSATTE
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.FORTROLIG_ADRESSE
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.GOSYS_NASJONAL
@@ -37,7 +38,8 @@ class AdGruppeProviderImpl(
 	@Value("\${ad-gruppe-id.gosys-utvidet}") private val adGruppeIdGosysUtvidet: UUID,
 	@Value("\${ad-gruppe-id.syfo-sensitiv}") private val adGruppeIdSyfoSensitiv: UUID,
 	@Value("\${ad-gruppe-id.pensjon-utvidet}") private val adGruppeIdPensjonUtvidet: UUID,
-	@Value("\${ad-gruppe-id.egne-ansatte}") private val adGruppeIdEgneAnsatte: UUID
+	@Value("\${ad-gruppe-id.egne-ansatte}") private val adGruppeIdEgneAnsatte: UUID,
+	@Value("\${ad-gruppe-id.aktivitetsplan-kvp}") private val adGruppeIdAktivitetsplanKvp: UUID
 ) : AdGruppeProvider {
 
 	private val tilgjengligeAdGrupper = AdGrupper(
@@ -51,9 +53,9 @@ class AdGruppeProviderImpl(
 		gosysUtvidet = AdGruppe(adGruppeIdGosysUtvidet, GOSYS_UTVIDET),
 		syfoSensitiv = AdGruppe(adGruppeIdSyfoSensitiv, SYFO_SENSITIV),
 		pensjonUtvidet = AdGruppe(adGruppeIdPensjonUtvidet, PENSJON_UTVIDET),
-		egneAnsatte = AdGruppe(adGruppeIdEgneAnsatte, EGNE_ANSATTE)
+		egneAnsatte = AdGruppe(adGruppeIdEgneAnsatte, EGNE_ANSATTE),
+		aktivitetsplanKvp = AdGruppe(adGruppeIdAktivitetsplanKvp, AKTIVITETSPLAN_KVP)
 	)
-
 
 	private val navIdentToAzureIdCache = Caffeine.newBuilder()
 		.maximumSize(10_000)
