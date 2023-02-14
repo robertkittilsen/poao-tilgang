@@ -263,6 +263,36 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 		decision shouldBe Decision.Deny("NAV-ansatt mangler tilgang til AD-gruppen \"0000-GA-Fortrolig_Adresse\"","MANGLER_TILGANG_TIL_AD_GRUPPE")
 	}
 
+	@Test
+	fun `evaluatePolicy - should permit NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER`() {
+		mockAdGrupperResponse(
+			navIdent, navAnsattId, listOf(
+				adGruppeProvider.hentTilgjengeligeAdGrupper().egneAnsatte,
+			)
+		)
+
+		val decision = client.evaluatePolicy(NavAnsattBehandleSkjermedePersonerPolicyInput(
+			navAnsattAzureId = navAnsattId
+		)).getOrThrow()
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
+	fun `evaluatePolicy - should deny NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER`() {
+		mockAdGrupperResponse(
+			navIdent, navAnsattId, listOf(
+				adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell
+			)
+		)
+
+		val decision = client.evaluatePolicy(NavAnsattBehandleSkjermedePersonerPolicyInput(
+			navAnsattAzureId = navAnsattId
+		)).getOrThrow()
+
+		decision shouldBe Decision.Deny("NAV-ansatt mangler tilgang til en av AD-gruppene [0000-GA-GOSYS_UTVIDET, 0000-GA-Pensjon_UTVIDET, 0000-GA-Egne_ansatte]", reason="MANGLER_TILGANG_TIL_AD_GRUPPE")
+	}
+
 	private fun mockAdGrupperResponse(navIdent: String, navAnsattId: UUID, adGrupper: List<AdGruppe>) {
 		mockMicrosoftGraphHttpServer.mockHentAzureIdMedNavIdentResponse(navIdent, navAnsattId)
 

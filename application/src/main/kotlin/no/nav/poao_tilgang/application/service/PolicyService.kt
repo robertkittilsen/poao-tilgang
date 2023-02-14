@@ -8,6 +8,7 @@ import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.Policy
 import no.nav.poao_tilgang.core.domain.PolicyInput
 import no.nav.poao_tilgang.core.policy.*
+import no.nav.poao_tilgang.core.policy.impl.NavAnsattTilgangTilSkjermetPersonPolicyImpl
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.system.measureTimeMillis
@@ -20,7 +21,9 @@ class PolicyService(
 	private val navAnsattTilgangTilNavEnhetPolicy: NavAnsattTilgangTilNavEnhetPolicy,
 	private val navAnsattBehandleStrengtFortroligBrukerePolicy: NavAnsattBehandleStrengtFortroligBrukerePolicy,
 	private val navAnsattBehandleFortroligBrukerePolicy: NavAnsattBehandleFortroligBrukerePolicy,
-	private val navAnsattTiltangTilEnhetMedSperrePolicy: NavAnsattTilgangTilNavEnhetMedSperrePolicy
+	private val navAnsattTiltangTilEnhetMedSperrePolicy: NavAnsattTilgangTilNavEnhetMedSperrePolicy,
+	private val navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy
+
 ) {
 
 	fun evaluatePolicyRequest(request: PolicyEvaluationRequest): PolicyEvaluationResult {
@@ -68,6 +71,7 @@ class PolicyService(
 			is NavAnsattBehandleFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleFortroligBrukerePolicy)
 			is NavAnsattBehandleStrengtFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleStrengtFortroligBrukerePolicy)
 			is NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input -> evaluate(input, navAnsattTiltangTilEnhetMedSperrePolicy)
+			is NavAnsattBehandleSkjermedePersonerPolicy.Input -> evaluate(input, navAnsattBehandleSkjermedePersonerPolicy)
 			else -> throw PolicyNotImplementedException("Håndtering av policy ${input.javaClass.canonicalName} er ikke implementert")
 		}
 	}

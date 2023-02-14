@@ -173,7 +173,7 @@ data class NavAnsattBehandleFortroligBrukerePolicyInput(
 ) : PolicyInput()
 
 /* 
- Sjekker om en NAV ansatt kan behandle egne ansatte
+ Sjekker om en NAV ansatt kan behandle skjermede personer (egne ansatte)
 */
 data class NavAnsattBehandleSkjermedePersonerPolicyInput(
     val navAnsattAzureId: UUID
