@@ -264,7 +264,7 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `evaluatePolicy - should permit NAV_ANSATT_TILGANG_TIL_SKJERMEDE_PERSONER`() {
+	fun `evaluatePolicy - should permit NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER`() {
 		mockAdGrupperResponse(
 			navIdent, navAnsattId, listOf(
 				adGruppeProvider.hentTilgjengeligeAdGrupper().egneAnsatte,
@@ -279,7 +279,7 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `evaluatePolicy - should deny NAV_ANSATT_TILGANG_TIL_SKJERMEDE_PERSONER`() {
+	fun `evaluatePolicy - should deny NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER`() {
 		mockAdGrupperResponse(
 			navIdent, navAnsattId, listOf(
 				adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell
