@@ -38,7 +38,7 @@ class NorgHttpClientTest {
 
 		val request = mockServer.latestRequest()
 
-		request.path shouldBe "/api/v1/enhet/navkontor/12345"
+		request.path shouldBe "/norg2/api/v1/enhet/navkontor/12345"
 		request.method shouldBe "GET"
 	}
 

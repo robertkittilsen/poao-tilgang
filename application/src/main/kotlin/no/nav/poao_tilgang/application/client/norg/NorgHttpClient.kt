@@ -18,7 +18,7 @@ class NorgHttpClient(
 	): NavEnhetId {
 
 		val requestBuilder = Request.Builder()
-			.url(joinPaths(baseUrl, "/api/v1/enhet/navkontor/", geografiskTilknytning))
+			.url(joinPaths(baseUrl, "/norg2/api/v1/enhet/navkontor/", geografiskTilknytning))
 			.get()
 
 		val request = requestBuilder.build()
