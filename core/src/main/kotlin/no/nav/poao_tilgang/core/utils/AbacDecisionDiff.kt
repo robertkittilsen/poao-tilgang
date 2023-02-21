@@ -34,7 +34,7 @@ object AbacDecisionDiff {
 					secureLog.info("Decision diff for policy $policyName - likt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
 				}
 			} catch (e: Throwable) {
-				log.error("Feil i POAO-tilgang implementasjon", e)
+				secureLog.error("Feil i POAO-tilgang implementasjon", e)
 			}
 		}
 	}
