@@ -151,7 +151,11 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 		val message = UUID.randomUUID().toString()
 
 		mockDecision(
-			eksternBrukerNavEnhetPolicyDecision = deny(message)
+			adressebeskyttetBrukerPolicyDecision = deny(message),
+			skjermetPersonPolicyDecision = deny(message),
+			eksternBrukerNavEnhetPolicyDecision = deny(message),
+			oppfolgingPolicyDecision = deny(message),
+			modiaGenerellPolicyDecision = deny(message)
 		)
 
 		val decision =
