@@ -3,6 +3,7 @@ package no.nav.poao_tilgang.application.config
 import no.nav.common.abac.*
 import no.nav.common.abac.audit.AuditConfig
 import no.nav.common.abac.audit.NimbusSubjectProvider
+import no.nav.common.abac.audit.SpringAuditRequestInfoSupplier
 import no.nav.common.rest.filter.LogRequestFilter
 import no.nav.common.token_client.builder.AzureAdTokenClientBuilder
 import no.nav.common.token_client.client.MachineToMachineTokenClient
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+
 
 @Configuration
 @EnableJwtTokenValidation
@@ -77,7 +79,7 @@ open class ApplicationConfig {
 			APPLICATION_NAME,
 			abacClient,
 			NimbusSubjectProvider(),
-			AuditConfig(null, null, null)
+			AuditConfig(null, SpringAuditRequestInfoSupplier(), null)
 		)
 	}
 
