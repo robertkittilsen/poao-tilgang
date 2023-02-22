@@ -3,7 +3,7 @@ package no.nav.poao_tilgang.core.policy.impl
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerNavEnhetPolicy
-import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilOppfolgingPaNavEnhetPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.GeografiskTilknyttetEnhetProvider
 import no.nav.poao_tilgang.core.provider.OppfolgingsenhetProvider
@@ -12,7 +12,7 @@ import no.nav.poao_tilgang.core.utils.hasAtLeastOne
 class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 	private val oppfolgingsenhetProvider: OppfolgingsenhetProvider,
 	private val geografiskTilknyttetEnhetProvider: GeografiskTilknyttetEnhetProvider,
-	private val tilgangTilOppfolgingPaNavEnhetPolicy: NavAnsattTilgangTilOppfolgingPaNavEnhetPolicy,
+	private val tilgangTilNavEnhetPolicy: NavAnsattTilgangTilNavEnhetPolicy,
 	private val adGruppeProvider: AdGruppeProvider
 ) : NavAnsattTilgangTilEksternBrukerNavEnhetPolicy {
 
@@ -34,8 +34,8 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 			.whenPermit { return it }
 
 		oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)?.let { navEnhetId ->
-			return tilgangTilOppfolgingPaNavEnhetPolicy.evaluate(
-				NavAnsattTilgangTilOppfolgingPaNavEnhetPolicy.Input(
+			return tilgangTilNavEnhetPolicy.evaluate(
+				NavAnsattTilgangTilNavEnhetPolicy.Input(
 					navAnsattAzureId = navAnsattAzureId,
 					navEnhetId = navEnhetId
 				)
@@ -43,8 +43,8 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 		}
 
 		geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)?.let { navEnhetId ->
-			return tilgangTilOppfolgingPaNavEnhetPolicy.evaluate(
-				NavAnsattTilgangTilOppfolgingPaNavEnhetPolicy.Input(
+			return tilgangTilNavEnhetPolicy.evaluate(
+				NavAnsattTilgangTilNavEnhetPolicy.Input(
 					navAnsattAzureId = navAnsattAzureId,
 					navEnhetId = navEnhetId
 				)

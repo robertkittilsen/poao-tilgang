@@ -7,14 +7,14 @@ import io.mockk.verify
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerNavEnhetPolicy
-import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilOppfolgingPaNavEnhetPolicy
+import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.GeografiskTilknyttetEnhetProvider
 import no.nav.poao_tilgang.core.provider.OppfolgingsenhetProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 
 class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 
@@ -24,7 +24,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 
 	private val oppfolgingsenhetProvider = mockk<OppfolgingsenhetProvider>()
 	private val geografiskTilknyttetEnhetProvider = mockk<GeografiskTilknyttetEnhetProvider>()
-	private val tilgangTilNavEnhetPolicy = mockk<NavAnsattTilgangTilOppfolgingPaNavEnhetPolicy>()
+	private val tilgangTilNavEnhetPolicy = mockk<NavAnsattTilgangTilNavEnhetPolicy>()
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
 	private lateinit var policy: NavAnsattTilgangTilEksternBrukerNavEnhetPolicy
@@ -103,7 +103,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 
 		every {
 			tilgangTilNavEnhetPolicy.evaluate(
-				NavAnsattTilgangTilOppfolgingPaNavEnhetPolicy.Input(
+				NavAnsattTilgangTilNavEnhetPolicy.Input(
 					navAnsattAzureId = navAnsattAzureId,
 					navEnhetId = navEnhet
 				)
@@ -140,7 +140,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 
 		every {
 			tilgangTilNavEnhetPolicy.evaluate(
-				NavAnsattTilgangTilOppfolgingPaNavEnhetPolicy.Input(
+				NavAnsattTilgangTilNavEnhetPolicy.Input(
 					navAnsattAzureId = navAnsattAzureId,
 					navEnhetId = navEnhet
 				)
