@@ -59,19 +59,6 @@ open class PolicyConfig {
 	}
 
 	@Bean
-	open fun navAnsattTilgangTilOppfolgingPaNavEnhetPolicy(
-		navEnhetTilgangProvider: NavEnhetTilgangProvider,
-		adGruppeProvider: AdGruppeProvider,
-		abacProvider: AbacProvider
-	): NavAnsattTilgangTilOppfolgingPaNavEnhetPolicy {
-		return NavAnsattTilgangTilOppfolgingPaNavEnhetPolicyImpl(
-			navEnhetTilgangProvider,
-			adGruppeProvider,
-			abacProvider
-		)
-	}
-
-	@Bean
 	open fun navAnsattTilgangTilSkjermetPersonPolicy(
 		skjermetPersonProvider: SkjermetPersonProvider,
 		navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy
@@ -85,13 +72,13 @@ open class PolicyConfig {
 	open fun navAnsattTilgangTilEksternBrukerNavEnhetPolicy(
 		oppfolgingsenhetProvider: OppfolgingsenhetProvider,
 		geografiskTilknyttetEnhetProvider: GeografiskTilknyttetEnhetProvider,
-		tilgangTilOppfolgingPaNavEnhetPolicy: NavAnsattTilgangTilOppfolgingPaNavEnhetPolicy,
+		tilgangTilNavEnhetPolicy: NavAnsattTilgangTilNavEnhetPolicy,
 		adGruppeProvider: AdGruppeProvider
 	): NavAnsattTilgangTilEksternBrukerNavEnhetPolicy {
 		return NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 			oppfolgingsenhetProvider,
 			geografiskTilknyttetEnhetProvider,
-			tilgangTilOppfolgingPaNavEnhetPolicy,
+			tilgangTilNavEnhetPolicy,
 			adGruppeProvider
 		)
 	}
