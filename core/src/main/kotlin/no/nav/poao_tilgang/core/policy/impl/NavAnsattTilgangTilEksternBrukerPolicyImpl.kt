@@ -1,6 +1,7 @@
 package no.nav.poao_tilgang.core.policy.impl
 
 import no.nav.poao_tilgang.core.domain.Decision
+import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.domain.TilgangType
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.provider.AbacProvider
@@ -45,12 +46,12 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 			TilgangType.LESE ->
 				navAnsattTilgangTilModiaGenerellPolicy.evaluate(
 					NavAnsattTilgangTilModiaGenerellPolicy.Input(navAnsattAzureId)
-				).whenDeny { return it }
+				).whenPermit { return it }
 
 			TilgangType.SKRIVE ->
 				navAnsattTilgangTilOppfolgingPolicy.evaluate(
 					NavAnsattTilgangTilOppfolgingPolicy.Input(navAnsattAzureId)
-				).whenDeny { return it }
+				).whenPermit { return it }
 		}
 
 		navAnsattTilgangTilAdressebeskyttetBrukerPolicy.evaluate(
@@ -58,23 +59,26 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
-		).whenDeny { return it }
+		).whenPermit { return it }
 
 		navAnsattTilgangTilSkjermetPersonPolicy.evaluate(
 			NavAnsattTilgangTilSkjermetPersonPolicy.Input(
 				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
-		).whenDeny { return it }
+		).whenPermit { return it }
 
 		navAnsattTilgangTilEksternBrukerNavEnhetPolicy.evaluate(
 			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
 				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
-		).whenDeny { return it }
+		).whenPermit { return it }
 
-		return Decision.Permit
+		return Decision.Deny(
+			message = "NavAnsatt har ikke tilgang til ekstern bruker",
+			reason = DecisionDenyReason.UKLAR_TILGANG_MANGLENDE_INFORMASJON
+		)
 	}
 
 }
