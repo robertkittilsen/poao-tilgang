@@ -17,6 +17,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 ) : NavAnsattTilgangTilNavEnhetPolicy {
 
 	private val modiaAdmin = adGruppeProvider.hentTilgjengeligeAdGrupper().modiaAdmin
+	private val modiaOppfolging = adGruppeProvider.hentTilgjengeligeAdGrupper().modiaOppfolging
 
 	private val denyDecision = Decision.Deny(
 		message = "Har ikke tilgang til NAV enhet",
@@ -42,15 +43,21 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	// Er ikke private slik at vi kan teste implementasjonen
 	internal fun harTilgang(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
 		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
-			.has(modiaAdmin)
+			.has(modiaOppfolging)
 			.whenPermit { return it }
 
-		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
+		/*
+		 val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
 
 		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
 			.any { input.navEnhetId == it.enhetId }
 
-		return if (harTilgangTilEnhet) Decision.Permit else denyDecision
+		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
+			.has(modiaAdmin)
+			.whenPermit { return it }
+		*/
+
+		return denyDecision
 	}
 
 }
