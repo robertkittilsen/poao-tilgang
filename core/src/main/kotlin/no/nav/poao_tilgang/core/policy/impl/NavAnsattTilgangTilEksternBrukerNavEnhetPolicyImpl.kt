@@ -1,11 +1,14 @@
 package no.nav.poao_tilgang.core.policy.impl
 
+import no.nav.poao_tilgang.core.domain.AzureObjectId
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
+import no.nav.poao_tilgang.core.domain.NavEnhetId
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerNavEnhetPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.GeografiskTilknyttetEnhetProvider
+import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
 import no.nav.poao_tilgang.core.provider.OppfolgingsenhetProvider
 import no.nav.poao_tilgang.core.utils.hasAtLeastOne
 
@@ -13,7 +16,8 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 	private val oppfolgingsenhetProvider: OppfolgingsenhetProvider,
 	private val geografiskTilknyttetEnhetProvider: GeografiskTilknyttetEnhetProvider,
 	private val tilgangTilNavEnhetPolicy: NavAnsattTilgangTilNavEnhetPolicy,
-	private val adGruppeProvider: AdGruppeProvider
+	private val adGruppeProvider: AdGruppeProvider,
+	private val navEnhetTilgangProvider: NavEnhetTilgangProvider
 ) : NavAnsattTilgangTilEksternBrukerNavEnhetPolicy {
 
 	private val nasjonalTilgangGrupper = adGruppeProvider.hentTilgjengeligeAdGrupper().let {
@@ -25,6 +29,11 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 
 	override val name = "NavAnsattTilgangTilEksternBrukerNavEnhetPolicy"
 
+	val denyDecision = Decision.Deny(
+		message = "Brukeren har ikke oppfølgingsenhet eller geografisk enhet",
+		reason = DecisionDenyReason.UKLAR_TILGANG_MANGLENDE_INFORMASJON
+	)
+
 	override fun evaluate(input: NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input): Decision {
 		val (navAnsattAzureId, norskIdent) = input
 
@@ -33,27 +42,20 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 			.hasAtLeastOne(nasjonalTilgangGrupper)
 			.whenPermit { return it }
 
-		oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)?.let { navEnhetId ->
-			return tilgangTilNavEnhetPolicy.evaluate(
-				NavAnsattTilgangTilNavEnhetPolicy.Input(
-					navAnsattAzureId = navAnsattAzureId,
-					navEnhetId = navEnhetId
-				)
-			)
-		}
-
 		geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)?.let { navEnhetId ->
-			return tilgangTilNavEnhetPolicy.evaluate(
-				NavAnsattTilgangTilNavEnhetPolicy.Input(
-					navAnsattAzureId = navAnsattAzureId,
-					navEnhetId = navEnhetId
-				)
-			)
+			return harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId)
+		}
+		oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)?.let { navEnhetId ->
+			return harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId)
 		}
 
-		return Decision.Deny(
-			message = "Brukeren har ikke oppfølgingsenhet eller geografisk enhet",
-			reason = DecisionDenyReason.UKLAR_TILGANG_MANGLENDE_INFORMASJON
-		)
+		return denyDecision
+	}
+
+	fun harTilgangTilEnhetForBruker(navAnsattAzureId: AzureObjectId, navEnhetId: NavEnhetId): Decision {
+		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
+		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
+			.any { navEnhetId == it.enhetId }
+		return if (harTilgangTilEnhet) Decision.Permit else denyDecision
 	}
 }

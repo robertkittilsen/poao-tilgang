@@ -42,6 +42,29 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	internal fun harTilgang(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
 		val (navAnsattAzureId, tilgangType, norskIdent) = input
 
+		navAnsattTilgangTilAdressebeskyttetBrukerPolicy.evaluate(
+			NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(
+				navAnsattAzureId = navAnsattAzureId,
+				norskIdent = norskIdent
+			)
+		).whenDeny { return it }
+
+		navAnsattTilgangTilSkjermetPersonPolicy.evaluate(
+			NavAnsattTilgangTilSkjermetPersonPolicy.Input(
+				navAnsattAzureId = navAnsattAzureId,
+				norskIdent = norskIdent
+			)
+		).whenDeny { return it }
+
+		navAnsattTilgangTilEksternBrukerNavEnhetPolicy.evaluate(
+			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
+				navAnsattAzureId = navAnsattAzureId,
+				norskIdent = norskIdent
+			)
+		).whenPermit { return it }
+
+
+		/*
 		when (tilgangType) {
 			TilgangType.LESE ->
 				navAnsattTilgangTilModiaGenerellPolicy.evaluate(
@@ -53,6 +76,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 					NavAnsattTilgangTilOppfolgingPolicy.Input(navAnsattAzureId)
 				).whenPermit { return it }
 		}
+		 */
 
 		return Decision.Deny(
 			message = "NavAnsatt har ikke tilgang til ekstern bruker",
