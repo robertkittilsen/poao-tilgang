@@ -1,14 +1,15 @@
 package no.nav.poao_tilgang.application.config
 
 import no.nav.common.abac.*
-import no.nav.common.abac.audit.AuditConfig
-import no.nav.common.abac.audit.NimbusSubjectProvider
-import no.nav.common.abac.audit.SpringAuditRequestInfoSupplier
+import no.nav.common.abac.audit.*
+import no.nav.common.abac.domain.request.XacmlRequest
+import no.nav.common.abac.domain.response.XacmlResponse
 import no.nav.common.rest.filter.LogRequestFilter
 import no.nav.common.token_client.builder.AzureAdTokenClientBuilder
 import no.nav.common.token_client.client.MachineToMachineTokenClient
 import no.nav.common.utils.EnvironmentUtils
 import no.nav.poao_tilgang.application.middleware.RequesterLogFilter
+import no.nav.poao_tilgang.application.utils.SecureLog
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.beans.factory.annotation.Value
@@ -74,12 +75,19 @@ open class ApplicationConfig {
 	}
 
 	@Bean
-	open fun pep(abacClient: AbacClient): Pep {
+	open fun auditLogFilter():AuditLogFilter {
+		return AuditLogFilter { auditRequestInfo: AuditRequestInfo?, xacmlRequest: XacmlRequest?, xacmlResponse: XacmlResponse? ->
+			true
+		}
+	}
+
+	@Bean
+	open fun pep(abacClient: AbacClient, auditLogFilter: AuditLogFilter): Pep {
 		return VeilarbPep(
 			APPLICATION_NAME,
 			abacClient,
 			NimbusSubjectProvider(),
-			AuditConfig(null, SpringAuditRequestInfoSupplier(), null)
+			AuditConfig(AuditLogger(SecureLog.secureLog) { System.currentTimeMillis() }, SpringAuditRequestInfoSupplier(),auditLogFilter)
 		)
 	}
 
