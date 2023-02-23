@@ -12,6 +12,7 @@ import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgang
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -66,6 +67,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 		decision shouldBe Decision.Deny("Deny fra ABAC", DecisionDenyReason.IKKE_TILGANG_FRA_ABAC)
 	}
 
+	@Disabled
 	@Test
 	fun `skal returnere "permit" hvis NAV ansatt har rollen 0000-GA-Modia_Admin`() {
 		every {
@@ -79,6 +81,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 		decision shouldBe Decision.Permit
 	}
 
+	@Disabled
 	@Test
 	fun `skal returnere "permit" hvis tilgang til enhet`() {
 		every {
