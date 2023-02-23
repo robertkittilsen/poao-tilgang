@@ -54,27 +54,6 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 				).whenPermit { return it }
 		}
 
-		navAnsattTilgangTilAdressebeskyttetBrukerPolicy.evaluate(
-			NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input(
-				navAnsattAzureId = navAnsattAzureId,
-				norskIdent = norskIdent
-			)
-		).whenPermit { return it }
-
-		navAnsattTilgangTilSkjermetPersonPolicy.evaluate(
-			NavAnsattTilgangTilSkjermetPersonPolicy.Input(
-				navAnsattAzureId = navAnsattAzureId,
-				norskIdent = norskIdent
-			)
-		).whenPermit { return it }
-
-		navAnsattTilgangTilEksternBrukerNavEnhetPolicy.evaluate(
-			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
-				navAnsattAzureId = navAnsattAzureId,
-				norskIdent = norskIdent
-			)
-		).whenPermit { return it }
-
 		return Decision.Deny(
 			message = "NavAnsatt har ikke tilgang til ekstern bruker",
 			reason = DecisionDenyReason.UKLAR_TILGANG_MANGLENDE_INFORMASJON
