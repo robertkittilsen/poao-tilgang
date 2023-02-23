@@ -56,7 +56,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 			.has(modiaAdmin)
 			.whenPermit { return it }
 		*/
-		
+
 		return denyDecision
 	}
 

@@ -61,7 +61,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 				navAnsattAzureId = navAnsattAzureId,
 				norskIdent = norskIdent
 			)
-		).whenPermit { return it }
+		).whenDeny { return it }
 
 
 		/*
@@ -78,10 +78,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 		}
 		 */
 
-		return Decision.Deny(
-			message = "NavAnsatt har ikke tilgang til ekstern bruker",
-			reason = DecisionDenyReason.UKLAR_TILGANG_MANGLENDE_INFORMASJON
-		)
+		return Decision.Permit
 	}
 
 }
