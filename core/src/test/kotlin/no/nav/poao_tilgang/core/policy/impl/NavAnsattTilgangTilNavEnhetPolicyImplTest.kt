@@ -67,12 +67,12 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 		decision shouldBe Decision.Deny("Deny fra ABAC", DecisionDenyReason.IKKE_TILGANG_FRA_ABAC)
 	}
 
-	@Disabled
 	@Test
 	fun `skal returnere "permit" hvis NAV ansatt har rollen 0000-GA-Modia_Admin`() {
 		every {
 			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns listOf(
+			testAdGrupper.modiaOppfolging,
 			testAdGrupper.modiaAdmin
 		)
 
@@ -81,12 +81,11 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 		decision shouldBe Decision.Permit
 	}
 
-	@Disabled
 	@Test
 	fun `skal returnere "permit" hvis tilgang til enhet`() {
 		every {
 			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
-		} returns emptyList()
+		} returns listOf(testAdGrupper.modiaOppfolging)
 
 		every {
 			navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
@@ -100,10 +99,28 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 	}
 
 	@Test
-	fun `skal returnere "deny" hvis ikke tilgang til enhet`() {
+	fun `skal returnere "deny" hvis har ikke modia oppfolging`() {
 		every {
 			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns emptyList()
+
+		every {
+			navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
+		} returns emptyList()
+
+		val decision = policy.harTilgang(NavAnsattTilgangTilNavEnhetPolicy.Input(navAnsattAzureId, navEnhetId))
+
+		decision shouldBe Decision.Deny(
+			"NAV-ansatt mangler tilgang til AD-gruppen \"0000-GA-Modia-Oppfolging\"",
+			DecisionDenyReason.MANGLER_TILGANG_TIL_AD_GRUPPE
+		)
+	}
+
+	@Test
+	fun `skal returnere "deny" hvis ikke tilgang til enhet`() {
+		every {
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
+		} returns listOf(testAdGrupper.modiaOppfolging)
 
 		every {
 			navEnhetTilgangProvider.hentEnhetTilganger(navIdent)

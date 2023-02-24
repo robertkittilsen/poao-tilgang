@@ -11,7 +11,6 @@ import no.nav.poao_tilgang.core.domain.TilgangType.*
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.provider.AbacProvider
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -86,7 +85,6 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	}
 
 	@Test
-	@Disabled
 	internal fun `harTilgang should return PERMIT for LESE`() {
 		mockDecision()
 
@@ -104,7 +102,6 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	}
 
 	@Test
-	@Disabled
 	internal fun `harTilgang should return PERMIT for SKRIVE`() {
 		mockDecision()
 
@@ -122,7 +119,6 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	}
 
 	@Test
-	@Disabled
 	internal fun `harTilgang should return DENY if adressebeskyttet is DENY`() {
 		val message = UUID.randomUUID().toString()
 
@@ -137,7 +133,6 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	}
 
 	@Test
-	@Disabled
 	internal fun `harTilgang should return DENY if skjermetPerson is DENY`() {
 		val message = UUID.randomUUID().toString()
 
@@ -152,7 +147,6 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	}
 
 	@Test
-	@Disabled
 	internal fun `harTilgang should return DENY if eksternBrukerNavEnhet is DENY`() {
 		val message = UUID.randomUUID().toString()
 
@@ -171,7 +165,6 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	}
 
 	@Test
-	@Disabled
 	internal fun `harTilgang should return DENY if tilgangTilOppfolging is DENY`() {
 		val message = UUID.randomUUID().toString()
 
@@ -187,7 +180,6 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 
 
 	@Test
-	@Disabled
 	internal fun `harTilgang should return DENY if tilgangType is SKRIVE and tilgangTilOppfolging is DENY`() {
 		val message = UUID.randomUUID().toString()
 
@@ -202,7 +194,6 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	}
 
 	@Test
-	@Disabled
 	internal fun `harTilgang should return DENY if tilgangType is LESE and tilgangTilmodiaGenerell is DENY`() {
 		val message = UUID.randomUUID().toString()
 
