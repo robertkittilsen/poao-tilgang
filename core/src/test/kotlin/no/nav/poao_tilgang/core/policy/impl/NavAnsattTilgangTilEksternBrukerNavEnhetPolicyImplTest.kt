@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.core.policy.impl
 
+import io.kotest.assertions.any
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -9,10 +10,7 @@ import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerNavEnhetPolicy
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
-import no.nav.poao_tilgang.core.provider.AdGruppeProvider
-import no.nav.poao_tilgang.core.provider.GeografiskTilknyttetEnhetProvider
-import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
-import no.nav.poao_tilgang.core.provider.OppfolgingsenhetProvider
+import no.nav.poao_tilgang.core.provider.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -95,7 +93,6 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		}
 	}
 
-	@Disabled
 	@Test
 	internal fun `skal sjekke tilgang til oppfølgingsenhet hvis finnes`() {
 		every {
@@ -103,17 +100,24 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		} returns emptyList()
 
 		every {
+			adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
+		} returns ""
+
+		every {
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
+		} returns null
+
+		every {
 			oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)
 		} returns navEnhet
 
-		every {
-			tilgangTilNavEnhetPolicy.evaluate(
-				NavAnsattTilgangTilNavEnhetPolicy.Input(
-					navAnsattAzureId = navAnsattAzureId,
-					navEnhetId = navEnhet
-				)
+		every { navEnhetTilgangProvider.hentEnhetTilganger(any()) } returns listOf(
+			NavEnhetTilgang(
+				navEnhet,
+				"",
+				listOf()
 			)
-		} returns Decision.Permit
+		)
 
 		val decision = policy.evaluate(
 			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
@@ -124,17 +128,20 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 
 		decision shouldBe Decision.Permit
 
-		verify(exactly = 0) {
+		verify(exactly = 1) {
 			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(any())
 		}
 	}
 
-	@Disabled
 	@Test
 	internal fun `skal sjekke tilgang til geografisk enhet hvis oppfølgingsenheten ikke finnes`() {
 		every {
 			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
 		} returns emptyList()
+
+		every {
+			adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
+		} returns ""
 
 		every {
 			oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)
@@ -144,14 +151,13 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
 		} returns navEnhet
 
-		every {
-			tilgangTilNavEnhetPolicy.evaluate(
-				NavAnsattTilgangTilNavEnhetPolicy.Input(
-					navAnsattAzureId = navAnsattAzureId,
-					navEnhetId = navEnhet
-				)
+		every { navEnhetTilgangProvider.hentEnhetTilganger(any()) } returns listOf(
+			NavEnhetTilgang(
+				navEnhet,
+				"",
+				listOf()
 			)
-		} returns Decision.Permit
+		)
 
 		val decision = policy.evaluate(
 			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
@@ -161,6 +167,9 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		)
 
 		decision shouldBe Decision.Permit
+		verify(exactly = 0) {
+			oppfolgingsenhetProvider.hentOppfolgingsenhet(any())
+		}
 	}
 
 	@Test

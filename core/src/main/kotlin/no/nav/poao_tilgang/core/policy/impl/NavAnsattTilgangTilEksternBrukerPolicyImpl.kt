@@ -63,20 +63,17 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 			)
 		).whenDeny { return it }
 
-
-		/*
 		when (tilgangType) {
 			TilgangType.LESE ->
 				navAnsattTilgangTilModiaGenerellPolicy.evaluate(
 					NavAnsattTilgangTilModiaGenerellPolicy.Input(navAnsattAzureId)
-				).whenPermit { return it }
+				).whenDeny { return it }
 
 			TilgangType.SKRIVE ->
 				navAnsattTilgangTilOppfolgingPolicy.evaluate(
 					NavAnsattTilgangTilOppfolgingPolicy.Input(navAnsattAzureId)
-				).whenPermit { return it }
+				).whenDeny { return it }
 		}
-		 */
 
 		return Decision.Permit
 	}

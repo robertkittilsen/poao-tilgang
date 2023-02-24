@@ -16,7 +16,7 @@ class NavAnsattTilgangTilAdressebeskyttetBrukerPolicyImpl(
 ) : NavAnsattTilgangTilAdressebeskyttetBrukerPolicy {
 
 	override val name = "NavAnsattTilgangTilAdresseBesyttetBruker"
-
+	//TODO: Bør vi implementere muligheten for å ta inn en liste av fnr og sette begrensning på 20? Dette skjer i abac.
 	override fun evaluate(input: NavAnsattTilgangTilAdressebeskyttetBrukerPolicy.Input): Decision {
 		val diskresjonskode = diskresjonskodeProvider.hentDiskresjonskode(input.norskIdent)
 			?: return Decision.Permit
