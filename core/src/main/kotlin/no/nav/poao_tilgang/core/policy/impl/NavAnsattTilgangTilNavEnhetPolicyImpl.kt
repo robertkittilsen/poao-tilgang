@@ -9,6 +9,7 @@ import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.asyncLogDecisionDiff
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.toAbacDecision
 import no.nav.poao_tilgang.core.utils.has
+import no.nav.poao_tilgang.core.utils.hasAtLeastOne
 
 class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	private val navEnhetTilgangProvider: NavEnhetTilgangProvider,
@@ -18,6 +19,13 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 
 	private val modiaAdmin = adGruppeProvider.hentTilgjengeligeAdGrupper().modiaAdmin
 	private val modiaOppfolging = adGruppeProvider.hentTilgjengeligeAdGrupper().modiaOppfolging
+
+	private val modiaOppfolgingOgAdmin = adGruppeProvider.hentTilgjengeligeAdGrupper().let {
+		listOf(
+			it.modiaOppfolging,
+			it.modiaAdmin,
+		)
+	}
 
 	private val denyDecision = Decision.Deny(
 		message = "Har ikke tilgang til NAV enhet",
@@ -44,20 +52,18 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	internal fun harTilgang(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
 		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
 			.has(modiaOppfolging)
-			.whenPermit { return it }
-
-		/*
-		 val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
-
-		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
-			.any { input.navEnhetId == it.enhetId }
+			.whenDeny { return it }
 
 		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
 			.has(modiaAdmin)
 			.whenPermit { return it }
-		*/
 
-		return denyDecision
+		 val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
+
+		 val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
+			.any { input.navEnhetId == it.enhetId }
+
+		return if (harTilgangTilEnhet) return Decision.Permit else denyDecision
 	}
 
 }
