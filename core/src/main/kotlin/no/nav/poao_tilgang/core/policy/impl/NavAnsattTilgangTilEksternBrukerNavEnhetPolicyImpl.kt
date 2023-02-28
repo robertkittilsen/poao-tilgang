@@ -60,7 +60,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
 			.any { navEnhetId == it.enhetId }
-		secureLog.info("$name, harTilgangTilEnhet: $harTilgangTilEnhet, navEnhetForBruker: $navEnhetId for type Enhet: $typeEnhet")
+		secureLog.info("$name, harTilgangTilEnhet: $harTilgangTilEnhet, navEnhetForBruker: $navEnhetId, navident: $navIdent, azureId: $navAnsattAzureId, for type Enhet: $typeEnhet")
 		return if (harTilgangTilEnhet) Decision.Permit else denyDecision
 	}
 }
