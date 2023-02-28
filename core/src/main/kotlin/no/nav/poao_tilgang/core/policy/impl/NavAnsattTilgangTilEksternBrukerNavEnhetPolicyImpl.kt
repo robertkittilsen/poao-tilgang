@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory
 class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 	private val oppfolgingsenhetProvider: OppfolgingsenhetProvider,
 	private val geografiskTilknyttetEnhetProvider: GeografiskTilknyttetEnhetProvider,
-	private val tilgangTilNavEnhetPolicy: NavAnsattTilgangTilNavEnhetPolicy,
 	private val adGruppeProvider: AdGruppeProvider,
 	private val navEnhetTilgangProvider: NavEnhetTilgangProvider
 ) : NavAnsattTilgangTilEksternBrukerNavEnhetPolicy {
@@ -45,13 +44,13 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 			.whenPermit { return it }
 
 		geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)?.let { navEnhetId ->
-			return harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "geografiskEnhet")
+			harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "geografiskEnhet")
+			.whenPermit { return it }
 		}
 		oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)?.let { navEnhetId ->
-			return harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "oppfolgingsEnhet")
+			harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "oppfolgingsEnhet")
+			.whenPermit { return it }
 		}
-
-		secureLog.info("Returnerer Deny i $name")
 
 		return denyDecision
 	}
