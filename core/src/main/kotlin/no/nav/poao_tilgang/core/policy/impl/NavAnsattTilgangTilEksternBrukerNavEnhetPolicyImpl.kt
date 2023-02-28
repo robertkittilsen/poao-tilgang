@@ -11,6 +11,7 @@ import no.nav.poao_tilgang.core.provider.GeografiskTilknyttetEnhetProvider
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
 import no.nav.poao_tilgang.core.provider.OppfolgingsenhetProvider
 import no.nav.poao_tilgang.core.utils.hasAtLeastOne
+import org.slf4j.LoggerFactory
 
 class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 	private val oppfolgingsenhetProvider: OppfolgingsenhetProvider,
@@ -20,6 +21,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 	private val navEnhetTilgangProvider: NavEnhetTilgangProvider
 ) : NavAnsattTilgangTilEksternBrukerNavEnhetPolicy {
 
+	private val secureLog = LoggerFactory.getLogger("SecureLog")
 	private val nasjonalTilgangGrupper = adGruppeProvider.hentTilgjengeligeAdGrupper().let {
 		listOf(
 			it.gosysNasjonal,
@@ -43,19 +45,22 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 			.whenPermit { return it }
 
 		geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)?.let { navEnhetId ->
-			return harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId)
+			return harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "geografiskEnhet")
 		}
 		oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)?.let { navEnhetId ->
-			return harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId)
+			return harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "oppfolgingsEnhet")
 		}
+
+		secureLog.info("Returnerer Deny i $name")
 
 		return denyDecision
 	}
 
-	fun harTilgangTilEnhetForBruker(navAnsattAzureId: AzureObjectId, navEnhetId: NavEnhetId): Decision {
+	fun harTilgangTilEnhetForBruker(navAnsattAzureId: AzureObjectId, navEnhetId: NavEnhetId, typeEnhet: String): Decision {
 		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
 			.any { navEnhetId == it.enhetId }
+		secureLog.info("$name, harTilgangTilEnhet: $harTilgangTilEnhet, navEnhetForBruker: $navEnhetId for type Enhet: $typeEnhet")
 		return if (harTilgangTilEnhet) Decision.Permit else denyDecision
 	}
 }
