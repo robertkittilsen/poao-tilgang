@@ -2,6 +2,7 @@ package no.nav.poao_tilgang.application.client.axsys
 
 import no.nav.common.rest.client.RestClient.baseClient
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonString
+import no.nav.poao_tilgang.application.utils.SecureLog.secureLog
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.http.HttpHeaders
@@ -26,6 +27,8 @@ internal class AxsysClientImpl(
 			}
 
 			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
+
+			secureLog.info("Axsys response, hentTilganger for navIdent: $navIdent, body: $body")
 
 			val tilgangResponse = fromJsonString<TilgangResponse>(body)
 

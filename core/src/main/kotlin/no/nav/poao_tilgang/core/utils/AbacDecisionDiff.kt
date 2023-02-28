@@ -28,7 +28,8 @@ object AbacDecisionDiff {
 			try {
 				val poaoTilgangDecision = policy.invoke(input)
 
-				if (abacDecision != poaoTilgangDecision) {
+				if (abacDecision.type != poaoTilgangDecision.type) {
+					//TODO: Endre til warning
 					secureLog.info("Decision diff for policy $policyName - ulikt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
 				} else {
 					secureLog.info("Decision diff for policy $policyName - likt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
