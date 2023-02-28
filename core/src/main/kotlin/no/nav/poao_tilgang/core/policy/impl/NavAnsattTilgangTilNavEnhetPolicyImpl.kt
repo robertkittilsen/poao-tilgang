@@ -9,7 +9,6 @@ import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.asyncLogDecisionDiff
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.toAbacDecision
 import no.nav.poao_tilgang.core.utils.has
-import org.slf4j.LoggerFactory
 
 class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	private val navEnhetTilgangProvider: NavEnhetTilgangProvider,
@@ -17,7 +16,6 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	private val abacProvider: AbacProvider
 ) : NavAnsattTilgangTilNavEnhetPolicy {
 
-	private val secureLog = LoggerFactory.getLogger("SecureLog")
 	private val modiaAdmin = adGruppeProvider.hentTilgjengeligeAdGrupper().modiaAdmin
 	private val modiaOppfolging = adGruppeProvider.hentTilgjengeligeAdGrupper().modiaOppfolging
 
@@ -56,8 +54,6 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 
 		 val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
 			.any { input.navEnhetId == it.enhetId }
-
-		secureLog.info("NavAnsattTilgangTilNavEnhetPolicy, harTilgangTilEnhet: $harTilgangTilEnhet, navEnhetForBruker: $input.navEnhetId")
 
 		return if (harTilgangTilEnhet) return Decision.Permit else denyDecision
 	}
