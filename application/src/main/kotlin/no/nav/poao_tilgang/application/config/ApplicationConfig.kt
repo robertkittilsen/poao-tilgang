@@ -1,5 +1,7 @@
 package no.nav.poao_tilgang.application.config
 
+import io.micrometer.core.aop.TimedAspect
+import io.micrometer.core.instrument.MeterRegistry
 import no.nav.common.abac.*
 import no.nav.common.abac.audit.*
 import no.nav.common.rest.filter.LogRequestFilter
@@ -85,6 +87,11 @@ open class ApplicationConfig {
 	@Bean
 	open fun healthChecks(abacClient: AbacClient) : HealthChecksPoaoTilgang {
 		return HealthChecksPoaoTilgang(abacClient)
+	}
+
+	@Bean
+	open fun timedAspect(registry: MeterRegistry?): TimedAspect? {
+		return TimedAspect(registry)
 	}
 
 }

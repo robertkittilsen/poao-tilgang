@@ -27,7 +27,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 
 	override val name = "NavAnsattTilgangTilNavEnhet"
 
-	@Timed("NavAnsattTilgangTilNavEnhet")
+	@Timed(value = "NavAnsattTilgangTilNavEnhet")
 	override fun evaluate(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
 		val harTilgangAbac = harTilgangAbac(input)
 

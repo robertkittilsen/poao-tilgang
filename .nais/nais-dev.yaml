@@ -15,12 +15,14 @@ spec:
     path: /internal/prometheus
   readiness:
     path: /internal/health/readiness
-    initialDelay: 20
-    timeout: 10
+    initialDelay: 45
+    periodSeconds: 1
+    failureThreshold: 10
   liveness:
     path: /internal/health/liveness
-    initialDelay: 20
-    timeout: 10
+    initialDelay: 45
+    periodSeconds: 1
+    failureThreshold: 10
   replicas:
     min: 1
     max: 2
