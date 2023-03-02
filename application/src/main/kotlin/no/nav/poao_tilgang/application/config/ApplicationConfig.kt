@@ -1,7 +1,8 @@
 package no.nav.poao_tilgang.application.config
 
 import io.micrometer.core.aop.TimedAspect
-import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.prometheus.PrometheusConfig
+import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.common.abac.*
 import no.nav.common.abac.audit.*
 import no.nav.common.rest.filter.LogRequestFilter
@@ -90,8 +91,9 @@ open class ApplicationConfig {
 	}
 
 	@Bean
-	open fun timedAspect(registry: MeterRegistry?): TimedAspect? {
-		return TimedAspect(registry)
+	open fun timedAspect(): TimedAspect? {
+		val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
+		return TimedAspect(appMicrometerRegistry)
 	}
 
 }
