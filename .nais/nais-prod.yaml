@@ -16,9 +16,11 @@ spec:
   readiness:
     path: /internal/health/readiness
     initialDelay: 60
+    timeout: 10
   liveness:
     path: /internal/health/liveness
     initialDelay: 60
+    timeout: 10
   replicas:
     min: 2
     max: 4
