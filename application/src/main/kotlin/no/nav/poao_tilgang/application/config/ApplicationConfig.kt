@@ -4,6 +4,8 @@ import no.nav.common.abac.*
 import no.nav.common.abac.audit.*
 import no.nav.common.abac.domain.request.XacmlRequest
 import no.nav.common.abac.domain.response.XacmlResponse
+import no.nav.common.health.selftest.SelfTestCheck
+import no.nav.common.health.selftest.SelfTestChecks
 import no.nav.common.rest.filter.LogRequestFilter
 import no.nav.common.token_client.builder.AzureAdTokenClientBuilder
 import no.nav.common.token_client.client.MachineToMachineTokenClient
@@ -89,6 +91,11 @@ open class ApplicationConfig {
 			NimbusSubjectProvider(),
 			AuditConfig(AuditLogger(SecureLog.secureLog) { System.currentTimeMillis() }, SpringAuditRequestInfoSupplier(),auditLogFilter)
 		)
+	}
+
+	@Bean
+	open fun healthCheck(abacClient: AbacClient) : SelfTestChecks{
+		return SelfTestChecks(listOf(SelfTestCheck("ABAC", true, abacClient)))
 	}
 
 }
