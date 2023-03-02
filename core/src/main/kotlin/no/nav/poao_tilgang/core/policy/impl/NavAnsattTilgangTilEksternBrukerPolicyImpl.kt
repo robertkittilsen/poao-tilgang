@@ -1,6 +1,7 @@
 package no.nav.poao_tilgang.core.policy.impl
 
-import io.micrometer.core.annotation.Timed
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Timer
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.TilgangType
 import no.nav.poao_tilgang.core.policy.*
@@ -8,6 +9,7 @@ import no.nav.poao_tilgang.core.provider.AbacProvider
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.asyncLogDecisionDiff
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.toAbacDecision
+import java.time.Duration
 
 class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	private val abacProvider: AbacProvider,
@@ -16,12 +18,12 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	private val navAnsattTilgangTilEksternBrukerNavEnhetPolicy: NavAnsattTilgangTilEksternBrukerNavEnhetPolicy,
 	private val navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy,
 	private val navAnsattTilgangTilModiaGenerellPolicy: NavAnsattTilgangTilModiaGenerellPolicy,
-	private val adGruppeProvider: AdGruppeProvider
+	private val adGruppeProvider: AdGruppeProvider,
+	private val meterRegistry: MeterRegistry
 ) : NavAnsattTilgangTilEksternBrukerPolicy {
 
 	override val name = "NavAnsattTilgangTilEksternBruker"
 
-	@Timed("NavAnsattTilgangTilEksternBruker")
 	override fun evaluate(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
 		val harTilgangAbac = harTilgangAbac(input)
 
@@ -34,7 +36,13 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 		val (navAnsattAzureId, tilgangType, norskIdent) = input
 
 		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
+
+		val timer: Timer = meterRegistry.timer("app.poao-tilgang.NavAnsattTilgangTilEksternBruker")
+		val startTime=System.currentTimeMillis();
+
 		val harTilgang = abacProvider.harVeilederTilgangTilPerson(navIdent, tilgangType, norskIdent)
+
+		timer.record(Duration.ofMillis(System.currentTimeMillis()-startTime))
 
 		return toAbacDecision(harTilgang)
 	}

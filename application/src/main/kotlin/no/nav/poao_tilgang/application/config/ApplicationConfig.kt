@@ -1,8 +1,5 @@
 package no.nav.poao_tilgang.application.config
 
-import io.micrometer.core.aop.TimedAspect
-import io.micrometer.prometheus.PrometheusConfig
-import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.common.abac.*
 import no.nav.common.abac.audit.*
 import no.nav.common.rest.filter.LogRequestFilter
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 
 
 @Configuration
@@ -89,13 +85,6 @@ open class ApplicationConfig {
 	@Bean
 	open fun healthChecks(abacClient: AbacClient) : HealthChecksPoaoTilgang {
 		return HealthChecksPoaoTilgang(abacClient)
-	}
-
-	@Bean
-	@Profile("!test")
-	open fun timedAspect(): TimedAspect? {
-		val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
-		return TimedAspect(appMicrometerRegistry)
 	}
 
 }
