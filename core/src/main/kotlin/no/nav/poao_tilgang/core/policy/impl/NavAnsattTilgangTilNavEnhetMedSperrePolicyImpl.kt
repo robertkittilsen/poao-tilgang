@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.core.policy.impl
 
+import io.micrometer.core.annotation.Timed
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetMedSperrePolicy
@@ -25,6 +26,7 @@ class NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 
 	override val name = "NavAnsattTilgangTilNavEnhetMedSperre"
 
+	@Timed("NavAnsattTilgangTilNavEnhetMedSperre")
 	override fun evaluate(input: NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input): Decision {
 		val harTilgangAbac = harTilgangAbac(input)
 
