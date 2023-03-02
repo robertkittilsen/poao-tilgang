@@ -35,6 +35,8 @@ class VeilarbarenaClientImpl(
 
 			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
 
+			secureLog.info("Veilarbarena response, hentOppfolgingsEnhetId for norskIdent: $norskIdent, body: $body")
+
 			val statusDto = fromJsonString<BrukerArenaStatusDto>(body)
 
 			return statusDto.oppfolgingsenhet
