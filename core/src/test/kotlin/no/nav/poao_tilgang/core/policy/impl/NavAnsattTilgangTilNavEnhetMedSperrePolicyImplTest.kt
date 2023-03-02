@@ -1,6 +1,8 @@
 package no.nav.poao_tilgang.core.policy.impl
 
 import io.kotest.matchers.shouldBe
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.poao_tilgang.core.domain.Decision
@@ -31,6 +33,8 @@ class NavAnsattTilgangTilNavEnhetMedSperrePolicyImplTest {
 
 	private val navEnhetId = "1234"
 
+	private val meterRegistry: MeterRegistry = SimpleMeterRegistry()
+
 	@BeforeEach
 	internal fun setUp() {
 		every {
@@ -41,7 +45,7 @@ class NavAnsattTilgangTilNavEnhetMedSperrePolicyImplTest {
 			adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 		} returns navIdent
 
-		policy = NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(navEnhetTilgangProvider, adGruppeProvider, abacProvider)
+		policy = NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(navEnhetTilgangProvider, adGruppeProvider, abacProvider, meterRegistry)
 	}
 
 	@Test

@@ -1,13 +1,16 @@
 package no.nav.poao_tilgang.core.policy.impl
 
 import io.kotest.matchers.shouldBe
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifyAll
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.domain.TilgangType
-import no.nav.poao_tilgang.core.domain.TilgangType.*
+import no.nav.poao_tilgang.core.domain.TilgangType.LESE
+import no.nav.poao_tilgang.core.domain.TilgangType.SKRIVE
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.provider.AbacProvider
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
@@ -29,6 +32,8 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	private val navAnsattTilgangTilModiaGenerellPolicy = mockk<NavAnsattTilgangTilModiaGenerellPolicy>()
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
 
+	private val meterRegistry: MeterRegistry = SimpleMeterRegistry()
+
 	private val policy = NavAnsattTilgangTilEksternBrukerPolicyImpl(
 		abacProvider,
 		navAnsattTilgangTilAdressebeskyttetBrukerPolicy,
@@ -36,7 +41,8 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 		navAnsattTilgangTilEksternBrukerNavEnhetPolicy,
 		navAnsattTilgangTilOppfolgingPolicy,
 		navAnsattTilgangTilModiaGenerellPolicy,
-		adGruppeProvider
+		adGruppeProvider,
+		meterRegistry
 	)
 
 	@Test

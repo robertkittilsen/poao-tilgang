@@ -1,6 +1,8 @@
 package no.nav.poao_tilgang.core.policy.impl
 
 import io.kotest.matchers.shouldBe
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.poao_tilgang.core.domain.Decision
@@ -12,7 +14,6 @@ import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgang
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -32,6 +33,8 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 
 	private val navEnhetId = "1234"
 
+	private val meterRegistry: MeterRegistry = SimpleMeterRegistry()
+
 	@BeforeEach
 	internal fun setUp() {
 		every {
@@ -42,7 +45,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 			adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 		} returns navIdent
 
-		policy = NavAnsattTilgangTilNavEnhetPolicyImpl(navEnhetTilgangProvider, adGruppeProvider, abacProvider)
+		policy = NavAnsattTilgangTilNavEnhetPolicyImpl(navEnhetTilgangProvider, adGruppeProvider, abacProvider, meterRegistry)
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.config
 
+import io.micrometer.core.instrument.MeterRegistry
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.policy.impl.*
 import no.nav.poao_tilgang.core.provider.*
@@ -17,7 +18,8 @@ open class PolicyConfig {
 		navAnsattTilgangTilEksternBrukerNavEnhetPolicy: NavAnsattTilgangTilEksternBrukerNavEnhetPolicy,
 		navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy,
 		navAnsattTilgangTilModiaGenerellPolicy: NavAnsattTilgangTilModiaGenerellPolicy,
-		adGruppeProvider: AdGruppeProvider
+		adGruppeProvider: AdGruppeProvider,
+		meterRegistry: MeterRegistry
 	): NavAnsattTilgangTilEksternBrukerPolicy {
 		return NavAnsattTilgangTilEksternBrukerPolicyImpl(
 			abacProvider,
@@ -26,7 +28,8 @@ open class PolicyConfig {
 			navAnsattTilgangTilEksternBrukerNavEnhetPolicy,
 			navAnsattTilgangTilOppfolgingPolicy,
 			navAnsattTilgangTilModiaGenerellPolicy,
-			adGruppeProvider
+			adGruppeProvider,
+			meterRegistry
 		)
 	}
 
@@ -49,12 +52,14 @@ open class PolicyConfig {
 	open fun navAnsattTilgangTilNavEnhetMedSperrePolicy(
 		navEnhetTilgangProvider: NavEnhetTilgangProvider,
 		adGruppeProvider: AdGruppeProvider,
-		abacProvider: AbacProvider
+		abacProvider: AbacProvider,
+		meterRegistry: MeterRegistry
 	): NavAnsattTilgangTilNavEnhetMedSperrePolicy {
 		return NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 			navEnhetTilgangProvider,
 			adGruppeProvider,
-			abacProvider
+			abacProvider,
+			meterRegistry
 		)
 	}
 
@@ -87,10 +92,11 @@ open class PolicyConfig {
 	open fun tilgangTilNavEnhetPolicy(
 		navEnhetTilgangProvider: NavEnhetTilgangProvider,
 		adGruppeProvider: AdGruppeProvider,
-		abacProvider: AbacProvider
+		abacProvider: AbacProvider,
+		meterRegistry: MeterRegistry
 	): NavAnsattTilgangTilNavEnhetPolicy {
 		return NavAnsattTilgangTilNavEnhetPolicyImpl(
-			navEnhetTilgangProvider, adGruppeProvider, abacProvider
+			navEnhetTilgangProvider, adGruppeProvider, abacProvider,meterRegistry
 		)
 	}
 
