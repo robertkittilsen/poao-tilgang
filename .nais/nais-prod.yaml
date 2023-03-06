@@ -26,14 +26,14 @@ spec:
   replicas:
     min: 2
     max: 4
-    cpuThresholdPercentage: 75
+    cpuThresholdPercentage: 90
   resources:
     limits:
       cpu: "1"
-      memory: 1024Mi
+      memory: 2000m
     requests:
       cpu: 250m
-      memory: 512Mi
+      memory: 2000m
   azure:
     application:
       enabled: true
