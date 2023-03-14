@@ -19,7 +19,7 @@ class RequestTimingFilter : Filter {
 			chain.doFilter(request, response)
 		} finally {
 			val duration = System.currentTimeMillis() - startTime
-			if (duration > 100) {
+			if (duration > 250) {
 				val httpRequest = request as HttpServletRequest
 				log.debug("Slow request detected: {} {} ({}ms)", httpRequest.method, httpRequest.requestURI, duration)
 			}
