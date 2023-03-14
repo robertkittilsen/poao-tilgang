@@ -30,11 +30,4 @@ class RequestTimingFilter : Filter {
 			}
 		}
 	}
-
-	@PreDestroy
-	fun preDestroy() {
-		log.info("Predestroy - sleep 2s initiated")
-		Thread.sleep(5_000)
-		log.info("Predestroy - sleep 2s complete")
-	}
 }

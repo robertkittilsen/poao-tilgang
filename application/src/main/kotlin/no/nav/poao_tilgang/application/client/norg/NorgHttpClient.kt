@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.client.norg
 
+import io.micrometer.core.annotation.Timed
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.UrlUtils.joinPaths
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonString
@@ -8,11 +9,12 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.http.HttpHeaders
 
-class NorgHttpClient(
+open class NorgHttpClient(
 	private val baseUrl: String,
 	private val httpClient: OkHttpClient = RestClient.baseClient(),
 ) : NorgClient {
 
+	@Timed("norg_http_client.hent_tilhorende_enhet", histogram = true, percentiles = [0.5, 0.95, 0.99])
 	override fun hentTilhorendeEnhet(
 		geografiskTilknytning: String,
 	): NavEnhetId {
