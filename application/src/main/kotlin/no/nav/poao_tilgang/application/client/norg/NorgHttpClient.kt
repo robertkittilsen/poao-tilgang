@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.http.HttpHeaders
 
-class NorgHttpClient(
+open class NorgHttpClient(
 	private val baseUrl: String,
 	private val httpClient: OkHttpClient = RestClient.baseClient(),
 ) : NorgClient {

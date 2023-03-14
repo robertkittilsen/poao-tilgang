@@ -9,7 +9,7 @@ import no.nav.poao_tilgang.application.utils.RestUtils.toJsonRequestBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class SkjermetPersonClientImpl(
+open class SkjermetPersonClientImpl(
 	private val baseUrl: String,
 	private val tokenProvider: () -> String,
 	private val client: OkHttpClient = baseClient()

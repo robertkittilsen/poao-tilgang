@@ -9,7 +9,7 @@ import no.nav.poao_tilgang.core.domain.NorskIdent
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class VeilarbarenaClientImpl(
+open class VeilarbarenaClientImpl(
 	private val baseUrl: String,
 	private val tokenProvider: () -> String,
 	private val httpClient: OkHttpClient = baseClient(),

@@ -9,7 +9,7 @@ import okhttp3.Request
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 
-internal class AxsysClientImpl(
+internal open class AxsysClientImpl(
 	private val baseUrl: String,
 	private val tokenProvider: () -> String,
 	private val httpClient: OkHttpClient = baseClient(),

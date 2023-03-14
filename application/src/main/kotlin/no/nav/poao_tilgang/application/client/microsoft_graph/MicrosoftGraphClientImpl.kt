@@ -11,7 +11,7 @@ import no.nav.poao_tilgang.core.domain.NavIdent
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class MicrosoftGraphClientImpl(
+open class MicrosoftGraphClientImpl(
 	private val baseUrl: String,
 	private val tokenProvider: () -> String,
 	private val client: OkHttpClient = baseClient()
@@ -63,7 +63,6 @@ class MicrosoftGraphClientImpl(
 	}
 
 	@Timed("microsoft_graph.hent_azure_id_med_nav_identhent_azure_id_med_nav_ident", histogram = true, percentiles = [0.5, 0.95, 0.99])
-
 	override fun hentAzureIdMedNavIdent(navIdent: NavIdent): AzureObjectId {
 		val request = Request.Builder()
 			.url("$baseUrl/v1.0/users?\$select=id&\$count=true&\$filter=onPremisesSamAccountName eq '$navIdent'")
