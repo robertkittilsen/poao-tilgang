@@ -1,0 +1,28 @@
+package no.nav.poao_tilgang.application.config
+
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
+import java.io.IOException
+import javax.servlet.Filter
+import javax.servlet.FilterChain
+import javax.servlet.ServletException
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
+import javax.servlet.http.HttpServletRequest
+@Component
+class RequestTimingFilter : Filter {
+	private val log = LoggerFactory.getLogger(javaClass)
+	@Throws(IOException::class, ServletException::class)
+	override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
+		val startTime = System.currentTimeMillis()
+		try {
+			chain.doFilter(request, response)
+		} finally {
+			val duration = System.currentTimeMillis() - startTime
+			if (duration > 100) {
+				val httpRequest = request as HttpServletRequest
+				log.debug("Slow request detected: {} {} ({}ms)", httpRequest.method, httpRequest.requestURI, duration)
+			}
+		}
+	}
+}
