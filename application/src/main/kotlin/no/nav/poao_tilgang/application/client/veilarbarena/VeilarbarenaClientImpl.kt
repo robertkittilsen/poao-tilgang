@@ -16,7 +16,7 @@ open class VeilarbarenaClientImpl(
 	private val consumerId: String,
 ) : VeilarbarenaClient {
 
-	@Timed("veilarbarena_client.hent_bruker_oppfolgingsenhet_id", histogram = true, percentiles = [0.5, 0.95, 0.99])
+	@Timed("veilarbarena_client.hent_bruker_oppfolgingsenhet_id", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
 	override fun hentBrukerOppfolgingsenhetId(norskIdent: NorskIdent): NavEnhetId? {
 		val request = Request.Builder()
 			.url("$baseUrl/api/arena/status?fnr=$norskIdent")

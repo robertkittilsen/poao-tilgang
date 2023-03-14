@@ -15,7 +15,7 @@ open class SkjermetPersonClientImpl(
 	private val client: OkHttpClient = baseClient()
 ) : SkjermetPersonClient {
 
-	@Timed("skjermet_person.er_skjermet", histogram = true, percentiles = [0.5, 0.95, 0.99])
+	@Timed("skjermet_person.er_skjermet", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
 	override fun erSkjermet(norskeIdenter: List<String>): Map<String, Boolean> {
 		val requestJson = toJsonString(ErSkjermet.Request(norskeIdenter))
 

@@ -14,7 +14,7 @@ open class NorgHttpClient(
 	private val httpClient: OkHttpClient = RestClient.baseClient(),
 ) : NorgClient {
 
-	@Timed("norg_http_client.hent_tilhorende_enhet", histogram = true, percentiles = [0.5, 0.95, 0.99])
+	@Timed("norg_http_client.hent_tilhorende_enhet", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
 	override fun hentTilhorendeEnhet(
 		geografiskTilknytning: String,
 	): NavEnhetId {
