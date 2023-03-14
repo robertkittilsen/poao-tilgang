@@ -64,6 +64,15 @@ open class ApplicationConfig {
 	}
 
 	@Bean
+	open fun requestTimingFilterRegistrationBean(): FilterRegistrationBean<RequestTimingFilter> {
+		val registration = FilterRegistrationBean<RequestTimingFilter>()
+		registration.filter = RequestTimingFilter()
+		registration.order = 3
+		registration.addUrlPatterns("/api/*")
+		return registration
+	}
+
+	@Bean
 	open fun abacClient(
 		machineToMachineTokenClient: MachineToMachineTokenClient,
 		@Value("\${abac.url}") abacUrl: String,
