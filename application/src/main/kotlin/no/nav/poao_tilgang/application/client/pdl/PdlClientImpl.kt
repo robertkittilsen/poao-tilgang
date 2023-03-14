@@ -17,7 +17,7 @@ open class PdlClientImpl(
 
 	private val mediaTypeJson = "application/json".toMediaType()
 
-	@Timed("pdl_client_impl.hent_bruker_info", histogram = true, percentiles = [0.5, 0.95, 0.99])
+	@Timed("pdl_client_impl.hent_bruker_info", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
 	override fun hentBrukerInfo(brukerIdent: String): BrukerInfo {
 		val requestBody = toJsonString(
 			Graphql.GraphqlQuery(
