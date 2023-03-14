@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import java.io.IOException
+import javax.annotation.PreDestroy
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
@@ -28,5 +29,12 @@ class RequestTimingFilter : Filter {
 				MDC.remove(xRequestTime)
 			}
 		}
+	}
+
+	@PreDestroy
+	fun preDestroy() {
+		log.info("Predestroy - sleep 2s initiated")
+		Thread.sleep(2_000)
+		log.info("Predestroy - sleep 2s complete")
 	}
 }
