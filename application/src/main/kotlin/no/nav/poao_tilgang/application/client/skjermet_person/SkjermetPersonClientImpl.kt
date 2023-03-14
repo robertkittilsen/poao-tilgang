@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.client.skjermet_person
 
+import io.micrometer.core.annotation.Timed
 import no.nav.common.rest.client.RestClient.baseClient
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonString
 import no.nav.poao_tilgang.application.utils.JsonUtils.toJsonString
@@ -14,6 +15,7 @@ class SkjermetPersonClientImpl(
 	private val client: OkHttpClient = baseClient()
 ) : SkjermetPersonClient {
 
+	@Timed("skjermet_person.er_skjermet", histogram = true, percentiles = [0.5, 0.95, 0.99])
 	override fun erSkjermet(norskeIdenter: List<String>): Map<String, Boolean> {
 		val requestJson = toJsonString(ErSkjermet.Request(norskeIdenter))
 

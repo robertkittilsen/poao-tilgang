@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.client.veilarbarena
 
+import io.micrometer.core.annotation.Timed
 import no.nav.common.rest.client.RestClient.baseClient
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonString
 import no.nav.poao_tilgang.application.utils.SecureLog.secureLog
@@ -15,6 +16,7 @@ class VeilarbarenaClientImpl(
 	private val consumerId: String,
 ) : VeilarbarenaClient {
 
+	@Timed("veilarbarena_client.hent_bruker_oppfolgingsenhet_id", histogram = true, percentiles = [0.5, 0.95, 0.99])
 	override fun hentBrukerOppfolgingsenhetId(norskIdent: NorskIdent): NavEnhetId? {
 		val request = Request.Builder()
 			.url("$baseUrl/api/arena/status?fnr=$norskIdent")

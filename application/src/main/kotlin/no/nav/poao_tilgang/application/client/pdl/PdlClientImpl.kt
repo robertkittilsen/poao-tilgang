@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.client.pdl
 
+import io.micrometer.core.annotation.Timed
 import no.nav.common.rest.client.RestClient.baseClient
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonString
 import no.nav.poao_tilgang.application.utils.JsonUtils.toJsonString
@@ -16,6 +17,7 @@ class PdlClientImpl(
 
 	private val mediaTypeJson = "application/json".toMediaType()
 
+	@Timed("pdl_client_impl.hent_bruker_info", histogram = true, percentiles = [0.5, 0.95, 0.99])
 	override fun hentBrukerInfo(brukerIdent: String): BrukerInfo {
 		val requestBody = toJsonString(
 			Graphql.GraphqlQuery(
