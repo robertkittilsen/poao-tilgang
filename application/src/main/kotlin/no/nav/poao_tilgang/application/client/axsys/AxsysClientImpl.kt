@@ -15,7 +15,7 @@ internal class AxsysClientImpl(
 	private val httpClient: OkHttpClient = baseClient(),
 ) : AxsysClient {
 
-	@Timed(value = "poao_tilgang.axsys.hentTilganger", histogram = true, percentiles = [0.5, 0.95, 0.99])
+	@Timed(value = "axsys_client.hentTilganger", histogram = true, percentiles = [0.5, 0.95, 0.99])
 	override fun hentTilganger(navIdent: String): List<EnhetTilgang> {
 		val request = Request.Builder()
 			.url("$baseUrl/api/v2/tilgang/$navIdent?inkluderAlleEnheter=false")
