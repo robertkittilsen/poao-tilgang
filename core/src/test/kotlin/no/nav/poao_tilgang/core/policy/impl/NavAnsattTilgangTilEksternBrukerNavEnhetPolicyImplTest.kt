@@ -11,6 +11,7 @@ import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
 import no.nav.poao_tilgang.core.provider.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.net.http.HttpResponse
 import java.util.UUID
 
 class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
@@ -232,6 +233,31 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 			message = "Brukeren har ikke oppfølgingsenhet eller geografisk enhet",
 			reason = DecisionDenyReason.UKLAR_TILGANG_MANGLENDE_INFORMASJON
 		)
+	}
+
+	@Test
+	internal fun `skal gå videre til sjekk av oppfølgingsenhet dersom man får 404 fra norg (geografisk tilknytning)`() {
+		every {
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
+		} returns emptyList()
+
+		every {
+			oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)
+		} returns null
+
+		every {
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
+		} throws java.lang.UnsupportedOperationException()
+
+		val decision = policy.evaluate(
+			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
+				navAnsattAzureId = navAnsattAzureId,
+				norskIdent = norskIdent
+			)
+		)
+		verify(exactly = 1) {
+			oppfolgingsenhetProvider.hentOppfolgingsenhet(any())
+		}
 	}
 
 

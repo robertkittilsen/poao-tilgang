@@ -7,7 +7,6 @@ import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonString
 import no.nav.poao_tilgang.core.domain.NavEnhetId
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.springframework.http.HttpHeaders
 
 open class NorgHttpClient(
 	private val baseUrl: String,
@@ -17,7 +16,7 @@ open class NorgHttpClient(
 	@Timed("norg_http_client.hent_tilhorende_enhet", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
 	override fun hentTilhorendeEnhet(
 		geografiskTilknytning: String,
-	): NavEnhetId {
+	): NavEnhetId? {
 
 		val requestBuilder = Request.Builder()
 			.url(joinPaths(baseUrl, "/norg2/api/v1/enhet/navkontor/", geografiskTilknytning))
@@ -28,9 +27,13 @@ open class NorgHttpClient(
 		httpClient.newCall(request).execute().use { response ->
 
 			if (!response.isSuccessful) {
-				throw RuntimeException(
-					"Klarte ikke å hente NAV-enhet basert på geografisk tilknytning = $geografiskTilknytning fra Norg. Status: ${response.code}"
-				)
+				if (response.code == 404) {
+					throw ExpectedExceptionFromNorg()
+				} else {
+					throw RuntimeException(
+						"Klarte ikke å hente NAV-enhet basert på geografisk tilknytning = $geografiskTilknytning fra Norg. Status: ${response.code}"
+					)
+				}
 			}
 
 			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
