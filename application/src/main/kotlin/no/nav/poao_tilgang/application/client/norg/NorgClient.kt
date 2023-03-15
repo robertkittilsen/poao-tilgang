@@ -8,5 +8,5 @@ interface NorgClient {
      * @param geografiskTilknytning Geografisk identifikator, kommune eller bydel, for NAV kontoret (f.eks NAV Frogner tilhører 030105)
      * @return NAV enhet som tilhører det geografiske området
      */
-    fun hentTilhorendeEnhet(geografiskTilknytning: String): NavEnhetId
+    fun hentTilhorendeEnhet(geografiskTilknytning: String): NavEnhetId?
 }
