@@ -14,7 +14,12 @@ open class NorgHttpClient(
 	private val httpClient: OkHttpClient = RestClient.baseClient(),
 ) : NorgClient {
 
-	@Timed("norg_http_client.hent_tilhorende_enhet", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
+	@Timed(
+		"norg_http_client.hent_tilhorende_enhet",
+		histogram = true,
+		percentiles = [0.5, 0.95, 0.99],
+		extraTags = ["type", "client"]
+	)
 	override fun hentTilhorendeEnhet(
 		geografiskTilknytning: String,
 	): NavEnhetId? {
@@ -27,17 +32,16 @@ open class NorgHttpClient(
 
 		httpClient.newCall(request).execute().use { response ->
 
-			if (!response.isSuccessful) {
-				if (response.code == 404) {
-						SecureLog.secureLog.info("Fant ikke NAV-enhet basert på geografisk tilknytning = $geografiskTilknytning i Norg.")
-						return null
-					}
-				} else {
-					throw RuntimeException(
-						"Klarte ikke å hente NAV-enhet basert på geografisk tilknytning = $geografiskTilknytning fra Norg. Status: ${response.code}"
-					)
-				}
+			if (response.code == 404) {
+				SecureLog.secureLog.info("Fant ikke NAV-enhet basert på geografisk tilknytning = $geografiskTilknytning i Norg.")
+				return null
+			}
 
+			if (!response.isSuccessful) {
+				throw RuntimeException(
+					"Klarte ikke å hente NAV-enhet basert på geografisk tilknytning = $geografiskTilknytning fra Norg. Status: ${response.code}"
+				)
+			}
 
 			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
 

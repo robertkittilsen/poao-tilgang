@@ -42,15 +42,13 @@ class GeografiskTilknyttetEnhetProviderImplIntegrationTest : IntegrationTest() {
 	}
 
 	@Test
-	fun `feiler dersom tilhørende enhet for geografisk tilknyting ikke finnes`() {
+	fun `skal returnere null dersom tilhørende enhet for geografisk tilknyting ikke finnes`() {
 		mockPdlHttpServer.mockBrukerInfo(
 			norskIdent = "990", gtType = "KOMMUNE", gtKommune = "9999"
 		)
 
 		mockNorgHttpServer.mockIngenTilhorendeEnhet("9999")
 
-		shouldThrow<RuntimeException> {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet("990")
-		}
+		geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet("990") shouldBe null
 	}
 }

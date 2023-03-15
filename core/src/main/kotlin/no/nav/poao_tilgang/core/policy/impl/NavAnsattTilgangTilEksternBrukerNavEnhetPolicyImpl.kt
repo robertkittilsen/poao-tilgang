@@ -43,19 +43,23 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 			.whenPermit { return it }
 
 		geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)?.let { navEnhetId ->
-				harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "geografiskEnhet")
-					.whenPermit { return it }
+			harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "geografiskEnhet")
+				.whenPermit { return it }
 		}
 
 		oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)?.let { navEnhetId ->
 			harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "oppfolgingsEnhet")
-			.whenPermit { return it }
+				.whenPermit { return it }
 		}
 
 		return denyDecision
 	}
 
-	fun harTilgangTilEnhetForBruker(navAnsattAzureId: AzureObjectId, navEnhetId: NavEnhetId, typeEnhet: String): Decision {
+	fun harTilgangTilEnhetForBruker(
+		navAnsattAzureId: AzureObjectId,
+		navEnhetId: NavEnhetId,
+		typeEnhet: String
+	): Decision {
 		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
 			.any { navEnhetId == it.enhetId }
