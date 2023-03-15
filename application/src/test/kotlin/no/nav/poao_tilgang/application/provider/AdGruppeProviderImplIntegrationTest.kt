@@ -15,6 +15,7 @@ class AdGruppeProviderImplIntegrationTest : IntegrationTest() {
 
 	@Test
 	fun `hentAdGrupper - skal cache kall til ms graph`() {
+		val init = mockMicrosoftGraphHttpServer.requestCount()
 		val navAnsattAzureId = UUID.randomUUID()
 
 		val adGroupId1 = UUID.randomUUID()
@@ -36,7 +37,7 @@ class AdGruppeProviderImplIntegrationTest : IntegrationTest() {
 
 		adGruppeProvider.hentAdGrupper(navAnsattAzureId).size shouldBe 2
 
-		mockMicrosoftGraphHttpServer.requestCount() shouldBe 2
+		mockMicrosoftGraphHttpServer.requestCount() - init  shouldBe 2
 	}
 
 }

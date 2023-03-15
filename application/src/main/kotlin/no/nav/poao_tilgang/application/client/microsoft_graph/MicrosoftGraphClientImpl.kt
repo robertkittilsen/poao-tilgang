@@ -85,7 +85,6 @@ open class MicrosoftGraphClientImpl(
 	}
 
 	@Timed("microsoft_graph.hent_nav_ident_med_azure_id", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
-
 	override fun hentNavIdentMedAzureId(navAnsattAzureId: AzureObjectId): NavIdent {
 		val request = Request.Builder()
 			.url("$baseUrl/v1.0/users?\$select=onPremisesSamAccountName&\$filter=id eq '$navAnsattAzureId'")
