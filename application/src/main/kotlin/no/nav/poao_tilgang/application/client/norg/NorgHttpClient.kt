@@ -4,6 +4,7 @@ import io.micrometer.core.annotation.Timed
 import no.nav.common.rest.client.RestClient
 import no.nav.common.utils.UrlUtils.joinPaths
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonString
+import no.nav.poao_tilgang.application.utils.SecureLog
 import no.nav.poao_tilgang.core.domain.NavEnhetId
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -28,13 +29,15 @@ open class NorgHttpClient(
 
 			if (!response.isSuccessful) {
 				if (response.code == 404) {
-					throw ExpectedExceptionFromNorg()
+						SecureLog.secureLog.info("Fant ikke NAV-enhet basert på geografisk tilknytning = $geografiskTilknytning i Norg.")
+						return null
+					}
 				} else {
 					throw RuntimeException(
 						"Klarte ikke å hente NAV-enhet basert på geografisk tilknytning = $geografiskTilknytning fra Norg. Status: ${response.code}"
 					)
 				}
-			}
+
 
 			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
 

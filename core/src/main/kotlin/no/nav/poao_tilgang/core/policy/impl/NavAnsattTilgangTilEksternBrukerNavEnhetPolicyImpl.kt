@@ -5,13 +5,11 @@ import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.domain.NavEnhetId
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerNavEnhetPolicy
-import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.GeografiskTilknyttetEnhetProvider
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
 import no.nav.poao_tilgang.core.provider.OppfolgingsenhetProvider
 import no.nav.poao_tilgang.core.utils.hasAtLeastOne
-import javax.ws.rs.NotFoundException
 import org.slf4j.LoggerFactory
 
 class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
@@ -44,13 +42,9 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 			.hasAtLeastOne(nasjonalTilgangGrupper)
 			.whenPermit { return it }
 
-		try {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)?.let { navEnhetId ->
+		geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)?.let { navEnhetId ->
 				harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "geografiskEnhet")
 					.whenPermit { return it }
-			}
-		} catch (e: ExpectedExceptionFromNorg){
-			Decision.Deny("", DecisionDenyReason.UKLAR_TILGANG_MANGLENDE_INFORMASJON)
 		}
 
 		oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)?.let { navEnhetId ->

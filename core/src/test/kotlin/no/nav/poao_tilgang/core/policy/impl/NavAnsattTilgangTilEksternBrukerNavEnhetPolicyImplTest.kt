@@ -11,7 +11,6 @@ import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
 import no.nav.poao_tilgang.core.provider.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.net.http.HttpResponse
 import java.util.UUID
 
 class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
@@ -61,7 +60,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		}
 
 		verify(exactly = 0) {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(any())
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(any())
 		}
 	}
 
@@ -85,7 +84,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		}
 
 		verify(exactly = 0) {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(any())
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(any())
 		}
 	}
 
@@ -100,7 +99,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		} returns ""
 
 		every {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)
 		} returns null
 
 		every {
@@ -125,7 +124,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		decision shouldBe Decision.Permit
 
 		verify(exactly = 1) {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(any())
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(any())
 		}
 	}
 
@@ -140,7 +139,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		} returns ""
 
 		every {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)
 		} returns "12345"
 
 		every {
@@ -165,7 +164,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		decision shouldBe Decision.Permit
 
 		verify(exactly = 1) {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(any())
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(any())
 		}
 	}
 
@@ -184,7 +183,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		} returns null
 
 		every {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)
 		} returns navEnhet
 
 		every { navEnhetTilgangProvider.hentEnhetTilganger(any()) } returns listOf(
@@ -219,7 +218,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		} returns null
 
 		every {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)
 		} returns null
 
 		val decision = policy.evaluate(
@@ -246,8 +245,8 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		} returns null
 
 		every {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
-		} throws java.lang.UnsupportedOperationException()
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)
+		} returns null
 
 		val decision = policy.evaluate(
 			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(

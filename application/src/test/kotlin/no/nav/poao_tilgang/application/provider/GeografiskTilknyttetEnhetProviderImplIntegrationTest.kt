@@ -19,7 +19,7 @@ class GeografiskTilknyttetEnhetProviderImplIntegrationTest : IntegrationTest() {
 		)
 		mockNorgHttpServer.mockTilhorendeEnhet(geografiskTilknytning = "0570", tilhorendeEnhet = "1234")
 
-		geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet("987") shouldBe "1234"
+		geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet("987") shouldBe "1234"
 	}
 
 	@Test
@@ -29,7 +29,7 @@ class GeografiskTilknyttetEnhetProviderImplIntegrationTest : IntegrationTest() {
 		)
 		mockNorgHttpServer.mockTilhorendeEnhet(geografiskTilknytning = "057021", tilhorendeEnhet = "1235")
 
-		geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet("988") shouldBe "1235"
+		geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet("988") shouldBe "1235"
 	}
 
 	@Test
@@ -38,7 +38,7 @@ class GeografiskTilknyttetEnhetProviderImplIntegrationTest : IntegrationTest() {
 			norskIdent = "989", gtType = "UTLAND"
 		)
 
-		geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet("989") shouldBe null
+		geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet("989") shouldBe null
 	}
 
 	@Test
@@ -50,7 +50,7 @@ class GeografiskTilknyttetEnhetProviderImplIntegrationTest : IntegrationTest() {
 		mockNorgHttpServer.mockIngenTilhorendeEnhet("9999")
 
 		shouldThrow<RuntimeException> {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet("990")
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet("990")
 		}
 	}
 }
