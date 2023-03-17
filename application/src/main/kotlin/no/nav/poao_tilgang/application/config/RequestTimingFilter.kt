@@ -19,6 +19,7 @@ class RequestTimingFilter : Filter {
 	override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
 		val startTime = System.currentTimeMillis()
 		try {
+			log.debug("Request received: {} {}", (request as HttpServletRequest).method, (request as HttpServletRequest).requestURI)
 			chain.doFilter(request, response)
 		} finally {
 			val duration = System.currentTimeMillis() - startTime
