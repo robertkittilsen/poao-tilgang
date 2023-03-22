@@ -108,6 +108,7 @@ open class IntegrationTest {
 			System.setProperty("AD_GRUPPE_ID_PENSJON_UTVIDET", UUID.randomUUID().toString())
 			System.setProperty("AD_GRUPPE_ID_EGNE_ANSATTE", UUID.randomUUID().toString())
 			System.setProperty("AD_GRUPPE_ID_AKTIVITETSPLAN_KVP", UUID.randomUUID().toString())
+			System.setProperty("AD_GRUPPE_ID_VEILARB_SYSTEMBRUKER", UUID.randomUUID().toString())
 			System.setProperty("NAIS_APP_NAME", "poao-tilgang")
 		}
 

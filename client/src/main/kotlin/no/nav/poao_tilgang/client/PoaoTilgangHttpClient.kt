@@ -207,6 +207,14 @@ class PoaoTilgangHttpClient(
 				),
 				policyId = PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1
 			)
+
+			is SystembrukerTilgangTilVeilarbSystembrukerPolicyInput -> PolicyEvaluationRequestDto(
+				requestId = policyRequest.requestId,
+				policyInput = SystembrukerTilgangTilVeilarbSystembrukerPolicyV1Dto(
+					systembrukerName = policyRequest.policyInput.systembrukerNavn
+				),
+				policyId = PolicyId.SYSTEMBRUKER_TILGANG_TIL_VEILARB_SYSTEMBRUKER_V1
+			)
 		}
 	}
 }

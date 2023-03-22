@@ -22,7 +22,8 @@ class PolicyService(
 	private val navAnsattBehandleStrengtFortroligBrukerePolicy: NavAnsattBehandleStrengtFortroligBrukerePolicy,
 	private val navAnsattBehandleFortroligBrukerePolicy: NavAnsattBehandleFortroligBrukerePolicy,
 	private val navAnsattTiltangTilEnhetMedSperrePolicy: NavAnsattTilgangTilNavEnhetMedSperrePolicy,
-	private val navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy
+	private val navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy,
+	private val systembrukerTilgangTilVeilarbSystembrukerPolicy: SystembrukerTilgangTilVeilarbSystembrukerPolicy
 
 ) {
 
@@ -72,6 +73,7 @@ class PolicyService(
 			is NavAnsattBehandleStrengtFortroligBrukerePolicy.Input -> evaluate(input, navAnsattBehandleStrengtFortroligBrukerePolicy)
 			is NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input -> evaluate(input, navAnsattTiltangTilEnhetMedSperrePolicy)
 			is NavAnsattBehandleSkjermedePersonerPolicy.Input -> evaluate(input, navAnsattBehandleSkjermedePersonerPolicy)
+			is SystembrukerTilgangTilVeilarbSystembrukerPolicy.Input -> evaluate(input, systembrukerTilgangTilVeilarbSystembrukerPolicy)
 			else -> throw PolicyNotImplementedException("Håndtering av policy ${input.javaClass.canonicalName} er ikke implementert")
 		}
 	}

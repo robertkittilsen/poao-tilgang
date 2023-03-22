@@ -16,5 +16,7 @@ data class AdGrupper(
 	val pensjonUtvidet: AdGruppe,
 	val egneAnsatte: AdGruppe,
 
-	val aktivitetsplanKvp: AdGruppe
+	val aktivitetsplanKvp: AdGruppe,
+
+	val veilarbSystembruker: AdGruppe
 )

@@ -130,3 +130,5 @@ spec:
       value: dbe4ad45-320b-4e9a-aaa1-73cca4ee124d
     - name: AD_GRUPPE_ID_AKTIVITETSPLAN_KVP
       value: 1e9ea264-ab56-44a0-afa1-3f59ce192484
+    - name: AD_GRUPPE_ID_VEILARB_SYSTEMBRUKER
+      value: ca039238-d5d9-4c47-bc73-dce749e24d03

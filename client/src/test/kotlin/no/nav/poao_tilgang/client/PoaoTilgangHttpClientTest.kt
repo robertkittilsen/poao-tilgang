@@ -12,6 +12,7 @@ import no.nav.poao_tilgang.client.api.NetworkApiException
 import no.nav.poao_tilgang.core.domain.AdGruppe
 import no.nav.poao_tilgang.core.domain.TilgangType.LESE
 import no.nav.poao_tilgang.core.domain.TilgangType.SKRIVE
+import no.nav.poao_tilgang.core.policy.SystembrukerTilgangTilVeilarbSystembrukerPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -291,6 +292,38 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 		)).getOrThrow()
 
 		decision shouldBe Decision.Deny("NAV-ansatt mangler tilgang til en av AD-gruppene [0000-GA-GOSYS_UTVIDET, 0000-GA-Pensjon_UTVIDET, 0000-GA-Egne_ansatte]", reason="MANGLER_TILGANG_TIL_AD_GRUPPE")
+	}
+
+	@Test
+	fun `evaluatePolicy - should permit SYSTEMBRUKER_TILGANG_TIL_VEILARB_SYSTEMBRUKER`() {
+		val systembruker = "srvtest"
+		mockAdGrupperResponse(
+			systembruker, navAnsattId, listOf(
+				adGruppeProvider.hentTilgjengeligeAdGrupper().veilarbSystembruker,
+			)
+		)
+
+		val decision = client.evaluatePolicy(SystembrukerTilgangTilVeilarbSystembrukerPolicyInput(
+			systembrukerNavn = systembruker
+		)).getOrThrow()
+
+		decision shouldBe Decision.Permit
+	}
+
+	@Test
+	fun `evaluatePolicy - should deny SYSTEMBRUKER_TILGANG_TIL_VEILARB_SYSTEMBRUKER`() {
+		val systembruker = "srvtest"
+		mockAdGrupperResponse(
+			systembruker, navAnsattId, listOf(
+				adGruppeProvider.hentTilgjengeligeAdGrupper().modiaGenerell,
+			)
+		)
+
+		val decision = client.evaluatePolicy(SystembrukerTilgangTilVeilarbSystembrukerPolicyInput(
+			systembrukerNavn = systembruker
+		)).getOrThrow()
+
+		decision shouldBe Decision.Deny("NAV-ansatt mangler tilgang til AD-gruppen \"0000-GA-veilarb-systembruker\"", reason="MANGLER_TILGANG_TIL_AD_GRUPPE")
 	}
 
 	private fun mockAdGrupperResponse(navIdent: String, navAnsattId: UUID, adGrupper: List<AdGruppe>) {

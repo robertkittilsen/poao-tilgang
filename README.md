@@ -187,6 +187,14 @@ data class NavAnsattTilgangTilNavEnhetMedSperrePolicyInput(
     val navAnsattAzureId: UUID,
     val navEnhetId: String
 ) : PolicyInput()
+
+/* 
+ Sjekker om en systembruker har tilgang til veilarb systembruker.
+*/
+data class NavAnsattTilgangTilNavEnhetMedSperrePolicyInput(
+    val navAnsattAzureId: UUID,
+    val navEnhetId: String
+) : PolicyInput()
 ```
 
 ## Prosjektstruktur
@@ -199,3 +207,11 @@ Modulene er som følger:
 * **application** - kjører opp applikasjonen, definerer endepunkter, etc. Tar i bruk _core-modulen_ for å eksponere tilgangskontrollregler med et REST API
 * **client** - brukes ikke direkte av poao-tilgang, men av andre konsumerende applikasjoner som ønsker en ferdig testet klient for å gjøre requests mot poao-tilgang
 * **core** - inneholder implementasjon og definisjon av alle de ulike tilgangskontrollreglene til poao-tilgang   
+
+## Systembruker
+Regler for systembruker som abac hadde er ikke implementert i poao-tilgang. Policiene dette gjelder er: 
+* [veilarbdirigent tilgang](https://github.com/navikt/abac-veilarb/blob/main/abac-policies-alfa/src/main/alfa/veilarb-dirigent-tilgang.alfa)
+* [veilarbregistre tilgang](https://github.com/navikt/abac-veilarb/blob/main/abac-policies-alfa/src/main/alfa/veilarb-registre-tilgang.alfa)
+* [srvsyfoservice tilgang](https://github.com/navikt/abac-veilarb/blob/main/abac-policies-alfa/src/main/alfa/veilarb-srvsyfoservice.alfa)
+
+Vurder å heller legge på tilgang "0000-ga-veilarb-systembruker" på din systembruker eller legg inn disse sjekkene inn i appen som skal kalle poao-tilgang

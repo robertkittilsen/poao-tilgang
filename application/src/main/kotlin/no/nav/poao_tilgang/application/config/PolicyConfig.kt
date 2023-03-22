@@ -141,4 +141,9 @@ open class PolicyConfig {
 	open fun navAnsattTilgangTilModiaGenerellPolicy(adGruppeProvider: AdGruppeProvider): NavAnsattTilgangTilModiaGenerellPolicy {
 		return NavAnsattTilgangTilModiaGenerellPolicyImpl(adGruppeProvider)
 	}
+
+	@Bean
+	open fun systembrukerTilgangTilVeilarbSystembruker(adGruppeProvider: AdGruppeProvider): SystembrukerTilgangTilVeilarbSystembrukerPolicy {
+		return SystembrukerTilgangTilVeilarbSystembrukerPolicyImpl(adGruppeProvider)
+	}
 }

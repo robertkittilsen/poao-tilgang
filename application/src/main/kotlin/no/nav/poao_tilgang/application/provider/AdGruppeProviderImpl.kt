@@ -16,6 +16,7 @@ import no.nav.poao_tilgang.core.domain.AdGruppeNavn.MODIA_OPPFOLGING
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.PENSJON_UTVIDET
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.STRENGT_FORTROLIG_ADRESSE
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.SYFO_SENSITIV
+import no.nav.poao_tilgang.core.domain.AdGruppeNavn.VEILARB_SYSTEMBRUKER
 import no.nav.poao_tilgang.core.domain.AdGrupper
 import no.nav.poao_tilgang.core.domain.AzureObjectId
 import no.nav.poao_tilgang.core.domain.NavIdent
@@ -39,7 +40,8 @@ class AdGruppeProviderImpl(
 	@Value("\${ad-gruppe-id.syfo-sensitiv}") private val adGruppeIdSyfoSensitiv: UUID,
 	@Value("\${ad-gruppe-id.pensjon-utvidet}") private val adGruppeIdPensjonUtvidet: UUID,
 	@Value("\${ad-gruppe-id.egne-ansatte}") private val adGruppeIdEgneAnsatte: UUID,
-	@Value("\${ad-gruppe-id.aktivitetsplan-kvp}") private val adGruppeIdAktivitetsplanKvp: UUID
+	@Value("\${ad-gruppe-id.aktivitetsplan-kvp}") private val adGruppeIdAktivitetsplanKvp: UUID,
+	@Value("\${ad-gruppe-id.veilarb-systembruker}") private val adGruppeVeilarbSystembruker: UUID
 ) : AdGruppeProvider {
 
 	private val tilgjengligeAdGrupper = AdGrupper(
@@ -54,7 +56,8 @@ class AdGruppeProviderImpl(
 		syfoSensitiv = AdGruppe(adGruppeIdSyfoSensitiv, SYFO_SENSITIV),
 		pensjonUtvidet = AdGruppe(adGruppeIdPensjonUtvidet, PENSJON_UTVIDET),
 		egneAnsatte = AdGruppe(adGruppeIdEgneAnsatte, EGNE_ANSATTE),
-		aktivitetsplanKvp = AdGruppe(adGruppeIdAktivitetsplanKvp, AKTIVITETSPLAN_KVP)
+		aktivitetsplanKvp = AdGruppe(adGruppeIdAktivitetsplanKvp, AKTIVITETSPLAN_KVP),
+		veilarbSystembruker = AdGruppe(adGruppeVeilarbSystembruker, VEILARB_SYSTEMBRUKER)
 	)
 
 	private val navIdentToAzureIdCache = Caffeine.newBuilder()

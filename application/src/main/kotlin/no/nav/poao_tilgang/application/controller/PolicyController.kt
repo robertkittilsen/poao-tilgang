@@ -124,6 +124,10 @@ class PolicyController(
 					navAnsattAzureId = dto.navAnsattAzureId
 				)
 			}
+			PolicyId.SYSTEMBRUKER_TILGANG_TIL_VEILARB_SYSTEMBRUKER_V1 -> {
+				val dto = fromJsonNode<SystembrukerTilgangTilVeilarbSystembrukerPolicyV1Dto>(policyInput)
+				SystembrukerTilgangTilVeilarbSystembrukerPolicy.Input(dto.systembrukerName)
+			}
 		}
 	}
 
