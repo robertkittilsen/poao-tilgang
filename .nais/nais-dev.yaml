@@ -79,9 +79,8 @@ spec:
       rules:
         - application: skjermede-personer-pip
           namespace: nom
-        - application: abac-veilarb-proxy
-          namespace: pto
-          cluster: dev-fss
+      external:
+        - host: abac-veilarb-proxy.dev-fss-pub.nais.io
   env:
     - name: MICROSOFT_GRAPH_SCOPE
       value: https://graph.microsoft.com/.default
