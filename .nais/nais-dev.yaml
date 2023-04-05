@@ -81,6 +81,11 @@ spec:
           namespace: nom
       external:
         - host: abac-veilarb-proxy.dev-fss-pub.nais.io
+        - host: axsys.dev-fss-pub.nais.io
+        - host: veilarbarena.dev-fss-pub.nais.io
+        - host: pdl-api.dev-fss-pub.nais.io
+        - host: norg2.dev-fss-pub.nais.io
+        - host: graph.microsoft.com
   env:
     - name: MICROSOFT_GRAPH_SCOPE
       value: https://graph.microsoft.com/.default
