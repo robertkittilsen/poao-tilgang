@@ -94,18 +94,3 @@ jobs:
           RESOURCE: .nais/nais-dev.yaml
           VAR: version=${{ env.IMAGE_TAG }}
 
-  deploy-prod-fss:
-    name: Deploy application to prod
-    needs: deploy-dev-fss
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Deploy application
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-fss
-          RESOURCE: .nais/nais-prod.yaml
-          VAR: version=${{ env.IMAGE_TAG }}

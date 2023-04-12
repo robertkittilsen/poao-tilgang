@@ -36,6 +36,7 @@ spec:
           - azp_name
   secureLogs:
     enabled: true
+  webproxy: true
   accessPolicy:
     inbound:
       rules:
