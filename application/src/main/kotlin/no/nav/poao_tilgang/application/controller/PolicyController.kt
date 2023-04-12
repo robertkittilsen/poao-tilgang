@@ -56,8 +56,8 @@ class PolicyController(
 
 	private fun mapToPolicyInput(policyId: PolicyId, policyInput: JsonNode): PolicyInput {
 		return when (policyId) {
-			PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V1 -> {
-				val dto = fromJsonNode<NavAnsattTilgangTilEksternBrukerPolicyInputV1Dto>(policyInput)
+			PolicyId.NAV_ANSATT_NAV_IDENT_SKRIVETILGANG_TIL_EKSTERN_BRUKER_V1 -> {
+				val dto = fromJsonNode<NavAnsattNavIdentSkrivetilgangTilEksternBrukerPolicyInputV1Dto>(policyInput)
 
 				NavAnsattTilgangTilEksternBrukerPolicy.Input(
 					navAnsattAzureId = adGruppeProvider.hentAzureIdMedNavIdent(dto.navIdent),

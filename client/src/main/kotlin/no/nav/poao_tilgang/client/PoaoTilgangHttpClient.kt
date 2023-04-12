@@ -136,6 +136,16 @@ class PoaoTilgangHttpClient(
 	private fun toRequestDto(policyRequest: PolicyRequest): PolicyEvaluationRequestDto<Any> {
 		return when (policyRequest.policyInput) {
 
+			is NavAnsattNavIdentSkrivetilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
+				requestId = policyRequest.requestId,
+				policyInput = NavAnsattNavIdentSkrivetilgangTilEksternBrukerPolicyInputV1Dto(
+					navIdent = policyRequest.policyInput.navIdent,
+					norskIdent = policyRequest.policyInput.norskIdent,
+
+				),
+				policyId = PolicyId.NAV_ANSATT_NAV_IDENT_SKRIVETILGANG_TIL_EKSTERN_BRUKER_V1
+			)
+
 			is NavAnsattTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
 				requestId = policyRequest.requestId,
 				policyInput = NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto(

@@ -4,13 +4,12 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import java.io.IOException
-import javax.annotation.PreDestroy
-import javax.servlet.Filter
-import javax.servlet.FilterChain
-import javax.servlet.ServletException
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.Filter
+import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletException
+import jakarta.servlet.ServletRequest
+import jakarta.servlet.ServletResponse
+import jakarta.servlet.http.HttpServletRequest
 @Component
 class RequestTimingFilter : Filter {
 	private val log = LoggerFactory.getLogger(javaClass)
@@ -19,7 +18,7 @@ class RequestTimingFilter : Filter {
 	override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
 		val startTime = System.currentTimeMillis()
 		try {
-			log.debug("Request received: {} {}", (request as HttpServletRequest).method, (request as HttpServletRequest).requestURI)
+			log.debug("Request received: {} {}", (request as HttpServletRequest).method, request.requestURI)
 			chain.doFilter(request, response)
 		} finally {
 			val duration = System.currentTimeMillis() - startTime
