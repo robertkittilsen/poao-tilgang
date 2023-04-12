@@ -1,0 +1,123 @@
+kind: Application
+apiVersion: nais.io/v1alpha1
+metadata:
+  name: poao-tilgang
+  namespace: poao
+  labels:
+    team: poao
+spec:
+  image: ghcr.io/navikt/poao-tilgang/poao-tilgang:{{version}}
+  port: 8080
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  readiness:
+    path: /internal/health/readiness
+    initialDelay: 22
+  liveness:
+    path: /internal/health/liveness
+    initialDelay: 22
+  replicas:
+    min: 2
+    max: 4
+    cpuThresholdPercentage: 90
+  resources:
+    limits:
+      cpu: "1"
+      memory: 2000Mi
+    requests:
+      cpu: 250m
+      memory: 2000Mi
+  azure:
+    application:
+      enabled: true
+      claims:
+        extra:
+          - azp_name
+  secureLogs:
+    enabled: true
+  accessPolicy:
+    inbound:
+      rules:
+        - application: veilarbportefolje
+          namespace: pto
+        - application: veilarbveileder
+          namespace: pto
+        - application: veilarbvedtaksstotte
+          namespace: pto
+        - application: pto-admin
+          namespace: pto
+        - application: veilarbfilter
+          namespace: pto
+        - application: veilarbarena
+          namespace: pto
+        - application: veilarbperson
+          namespace: pto
+        - application: veilarboppgave
+          namespace: pto
+        - application: veilarboppfolging
+          namespace: pto
+        - application: veilarbvedtakinfo
+          namespace: pto
+    outbound:
+      rules:
+        - application: skjermede-personer-pip
+          namespace: nom
+      external:
+        - host: abac-veilarb-proxy.prod-fss-pub.nais.io
+        - host: axsys.prod-fss-pub.nais.io
+        - host: veilarbarena.prod-fss-pub.nais.io
+        - host: pdl-api.prod-fss-pub.nais.io
+        - host: norg2.prod-fss-pub.nais.io
+        - host: graph.microsoft.com
+  env:
+    - name: MICROSOFT_GRAPH_SCOPE
+      value: https://graph.microsoft.com/.default
+    - name: MICROSOFT_GRAPH_URL
+      value: https://graph.microsoft.com
+    - name: SKJERMET_PERSON_SCOPE
+      value: api://prod-fss.nom.skjermede-personer-pip/.default
+    - name: SKJERMET_PERSON_URL
+      value: http://skjermede-personer-pip.nom
+    - name: AXSYS_URL
+      value: https://axsys.org
+    - name: AXSYS_SCOPE
+      value: api://prod-fss.org.axsys/.default
+    - name: ABAC_URL
+      value: http://abac-veilarb.pto/api/proxy/abac
+    - name: ABAC_SCOPE
+      value: api://prod-fss.pto.abac-veilarb/.default
+    - name: VEILARBARENA_URL
+      value: http://veilarbarena.pto/veilarbarena
+    - name: VEILARBARENA_SCOPE
+      value: api://prod-fss.pto.veilarbarena/.default
+    - name: PDL_SCOPE
+      value: api://prod-fss.pdl.pdl-api/.default
+    - name: PDL_URL
+      value: http://pdl-api.pdl
+    - name: NORG_URL
+      value: https://norg2.org
+    - name: AD_GRUPPE_ID_FORTROLIG_ADRESSE
+      value: 9ec6487d-f37a-4aad-a027-cd221c1ac32b
+    - name: AD_GRUPPE_ID_STRENGT_FORTROLIG_ADRESSE
+      value: ad7b87a6-9180-467c-affc-20a566b0fec0
+    - name: AD_GRUPPE_ID_MODIA_ADMIN
+      value: d69a34b7-13fe-4b65-9711-14edf866ddcd
+    - name: AD_GRUPPE_ID_MODIA_OPPFOLGING
+      value: b9bc6348-d25c-450d-85c2-044c0955fbe3
+    - name: AD_GRUPPE_ID_MODIA_GENERELL
+      value: ea34edea-1e80-4759-a1d2-fbe696cf1709
+    - name: AD_GRUPPE_ID_GOSYS_NASJONAL
+      value: 3063daf5-24c6-409c-9139-2d843cb4327b
+    - name: AD_GRUPPE_ID_GOSYS_UTVIDBAR_TIL_NASJONAL
+      value: ad3ee064-44b7-4c58-a618-5df1e1cb05db
+    - name: AD_GRUPPE_ID_GOSYS_UTVIDET
+      value: 73ff0e76-f2b1-4586-8387-b33f15617381
+    - name: AD_GRUPPE_ID_SYFO_SENSITIV
+      value: 100e88eb-79af-4136-8bfe-f79b32021f43
+    - name: AD_GRUPPE_ID_PENSJON_UTVIDET
+      value: 676b5e1f-84e6-46e5-8814-04233699ed4b
+    - name: AD_GRUPPE_ID_EGNE_ANSATTE
+      value: e750ceb5-b70b-4d94-b4fa-9d22467b786b
+    - name: AD_GRUPPE_ID_AKTIVITETSPLAN_KVP
+      value: f743db0b-bf8e-4a10-b5be-08a9170346fb
