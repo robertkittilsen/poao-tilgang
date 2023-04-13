@@ -65,13 +65,10 @@ spec:
         - application: skjermede-personer-pip
           namespace: nom
       external:
-        - host: abac-veilarb-proxy.dev-fss-pub.nais.io
-        - host: axsys.dev-fss-pub.nais.io
-        - host: veilarbarena.dev-fss-pub.nais.io
-        - host: pdl-api.dev-fss-pub.nais.io
-        - host: norg2.dev-fss-pub.nais.io
         - host: graph.microsoft.com
   env:
+    - name: spring_profiles_active
+      value: fss
     - name: MICROSOFT_GRAPH_SCOPE
       value: https://graph.microsoft.com/.default
     - name: MICROSOFT_GRAPH_URL
@@ -122,3 +119,8 @@ spec:
       value: dbe4ad45-320b-4e9a-aaa1-73cca4ee124d
     - name: AD_GRUPPE_ID_AKTIVITETSPLAN_KVP
       value: 1e9ea264-ab56-44a0-afa1-3f59ce192484
+  vault:
+    enabled: true
+    paths:
+      - kvPath: /serviceuser/data/dev/src-poao-tilgang
+        mountPath: /var/run/secrets/nais.io/service_user

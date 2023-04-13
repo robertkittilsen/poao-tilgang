@@ -8,7 +8,9 @@ import no.nav.common.abac.audit.*
 import no.nav.common.rest.filter.LogRequestFilter
 import no.nav.common.token_client.builder.AzureAdTokenClientBuilder
 import no.nav.common.token_client.client.MachineToMachineTokenClient
+import no.nav.common.utils.Credentials
 import no.nav.common.utils.EnvironmentUtils
+import no.nav.common.utils.NaisUtils
 import no.nav.poao_tilgang.application.controller.internal.HealthChecksPoaoTilgang
 import no.nav.poao_tilgang.application.middleware.RequesterLogFilter
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 
 
 @Configuration
@@ -73,6 +76,7 @@ open class ApplicationConfig {
 	}
 
 	@Bean
+	@Profile("!fss")
 	open fun abacClient(
 		machineToMachineTokenClient: MachineToMachineTokenClient,
 		@Value("\${abac.url}") abacUrl: String,
@@ -83,6 +87,23 @@ open class ApplicationConfig {
 
 		return AbacCachedClient(client)
 	}
+
+	@Bean
+	@Profile("fss")
+	open fun abacClientFss(
+		credentials: Credentials,
+		@Value("\${abac.url}") abacUrl: String,
+	): AbacClient {
+		val client = AbacHttpClient(abacUrl, credentials.username, credentials.password)
+		return AbacCachedClient(client)
+	}
+
+	@Bean
+	@Profile("fss")
+	open fun serviceUserCredentials(): Credentials {
+		return NaisUtils.getCredentials("service_user")
+	}
+
 
 	@Bean
 	open fun pep(abacClient: AbacClient): Pep {
