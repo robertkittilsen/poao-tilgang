@@ -122,5 +122,5 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: /serviceuser/data/dev/src-poao-tilgang
+      - kvPath: /serviceuser/data/dev/srv-poao-tilgang
         mountPath: /var/run/secrets/nais.io/service_user
