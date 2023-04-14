@@ -11,6 +11,7 @@ import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.asyncLogDecisionDiff
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.toAbacDecision
 import no.nav.poao_tilgang.core.utils.has
+import org.slf4j.LoggerFactory
 import java.time.Duration
 
 class NavAnsattTilgangTilNavEnhetPolicyImpl(
@@ -30,6 +31,8 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 
 	override val name = "NavAnsattTilgangTilNavEnhet"
 
+	val secureLog = LoggerFactory.getLogger("SecureLog")
+
 	override fun evaluate(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
 		val harTilgangAbac = harTilgangAbac(input)
 
@@ -42,11 +45,11 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
 
 		val timer: Timer = meterRegistry.timer("app.poao-tilgang.NavAnsattTilgangTilNavEnhet")
-		val startTime=System.currentTimeMillis();
+		val startTime = System.currentTimeMillis();
 
 		val harTilgangAbac = abacProvider.harVeilederTilgangTilNavEnhet(navIdent, input.navEnhetId)
 
-		timer.record(Duration.ofMillis(System.currentTimeMillis()-startTime))
+		timer.record(Duration.ofMillis(System.currentTimeMillis() - startTime))
 
 		return toAbacDecision(harTilgangAbac)
 	}
@@ -57,13 +60,14 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 			.has(modiaOppfolging)
 			.whenDeny { return it }
 
-		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
-			.has(modiaAdmin)
-			.whenPermit { return it }
+		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId).has(modiaAdmin).whenPermit {
+			secureLog.info("Tilgang gitt basert paa 0000-GA-Modia_Admin")
+			return it
+		}
 
-		 val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
+		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
 
-		 val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
+		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
 			.any { input.navEnhetId == it.enhetId }
 
 		return if (harTilgangTilEnhet) return Decision.Permit else denyDecision
