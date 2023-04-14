@@ -8,6 +8,8 @@ metadata:
 spec:
   image: ghcr.io/navikt/poao-tilgang/poao-tilgang:{{version}}
   port: 8080
+  ingresses:
+    - https://poao-tilgang-fss.intern.dev.nav.no
   prometheus:
     enabled: true
     path: /internal/prometheus
