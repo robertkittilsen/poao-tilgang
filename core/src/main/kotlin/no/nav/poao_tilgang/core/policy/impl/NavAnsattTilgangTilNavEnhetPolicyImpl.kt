@@ -2,6 +2,7 @@ package no.nav.poao_tilgang.core.policy.impl
 
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
+import no.nav.poao_tilgang.application.utils.SecureLog
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
@@ -42,11 +43,11 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
 
 		val timer: Timer = meterRegistry.timer("app.poao-tilgang.NavAnsattTilgangTilNavEnhet")
-		val startTime=System.currentTimeMillis();
+		val startTime = System.currentTimeMillis();
 
 		val harTilgangAbac = abacProvider.harVeilederTilgangTilNavEnhet(navIdent, input.navEnhetId)
 
-		timer.record(Duration.ofMillis(System.currentTimeMillis()-startTime))
+		timer.record(Duration.ofMillis(System.currentTimeMillis() - startTime))
 
 		return toAbacDecision(harTilgangAbac)
 	}
@@ -57,13 +58,14 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 			.has(modiaOppfolging)
 			.whenDeny { return it }
 
-		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
-			.has(modiaAdmin)
-			.whenPermit { return it }
+		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId).has(modiaAdmin).whenPermit {
+			SecureLog.secureLog.info("Tilgang gitt basert på 0000-GA-Modia_Admin")
+			return it
+		}
 
-		 val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
+		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
 
-		 val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
+		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
 			.any { input.navEnhetId == it.enhetId }
 
 		return if (harTilgangTilEnhet) return Decision.Permit else denyDecision
