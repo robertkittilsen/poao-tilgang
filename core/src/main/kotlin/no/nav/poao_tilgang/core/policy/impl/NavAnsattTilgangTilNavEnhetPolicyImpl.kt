@@ -61,7 +61,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 			.whenDeny { return it }
 
 		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId).has(modiaAdmin).whenPermit {
-			secureLog.info("Tilgang gitt basert på 0000-GA-Modia_Admin")
+			secureLog.info("Tilgang gitt basert paa 0000-GA-Modia_Admin")
 			return it
 		}
 
