@@ -6,7 +6,6 @@ import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonString
 import no.nav.poao_tilgang.application.utils.JsonUtils.toJsonString
 import no.nav.poao_tilgang.application.utils.RestUtils.authorization
 import no.nav.poao_tilgang.application.utils.RestUtils.toJsonRequestBody
-import no.nav.poao_tilgang.application.utils.SecureLog
 import no.nav.poao_tilgang.core.domain.AzureObjectId
 import no.nav.poao_tilgang.core.domain.NavIdent
 import okhttp3.OkHttpClient
@@ -35,8 +34,6 @@ open class MicrosoftGraphClientImpl(
 
 			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
 
-			SecureLog.secureLog.info("hentAdGrupperForNavAnsatt, $body")
-
 			fromJsonString<HentAdGrupperForNavAnsatt.Response>(body).value
 		}
 	}
@@ -60,8 +57,6 @@ open class MicrosoftGraphClientImpl(
 			val body = response.body?.string() ?: throw RuntimeException("Body is missing")
 
 			val responseData = fromJsonString<HentAdGrupper.Response>(body)
-
-			SecureLog.secureLog.info("hentAdGrupper, $body")
 
 			responseData.value.map { AdGruppe(it.id, it.displayName) }
 
