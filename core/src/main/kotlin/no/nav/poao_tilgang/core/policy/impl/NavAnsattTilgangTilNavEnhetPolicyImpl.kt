@@ -2,7 +2,6 @@ package no.nav.poao_tilgang.core.policy.impl
 
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
-import no.nav.poao_tilgang.application.utils.SecureLog
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
@@ -12,6 +11,7 @@ import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.asyncLogDecisionDiff
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.toAbacDecision
 import no.nav.poao_tilgang.core.utils.has
+import org.slf4j.LoggerFactory
 import java.time.Duration
 
 class NavAnsattTilgangTilNavEnhetPolicyImpl(
@@ -30,6 +30,8 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	)
 
 	override val name = "NavAnsattTilgangTilNavEnhet"
+
+	val secureLog = LoggerFactory.getLogger("SecureLog")
 
 	override fun evaluate(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
 		val harTilgangAbac = harTilgangAbac(input)
@@ -59,7 +61,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 			.whenDeny { return it }
 
 		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId).has(modiaAdmin).whenPermit {
-			SecureLog.secureLog.info("Tilgang gitt basert på 0000-GA-Modia_Admin")
+			secureLog.info("Tilgang gitt basert på 0000-GA-Modia_Admin")
 			return it
 		}
 
