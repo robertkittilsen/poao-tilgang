@@ -85,7 +85,7 @@ spec:
     - name: AXSYS_SCOPE
       value: api://dev-fss.org.axsys/.default
     - name: ABAC_URL
-      value: http://abac-veilarb.pto.svc.nais.local/api/proxy/abac
+      value: http://abac-veilarb-q1.pto.svc.nais.local/application/asm-pdp/authorize
     - name: ABAC_SCOPE
       value: api://dev-fss.pto.abac-veilarb/.default
     - name: VEILARBARENA_URL
