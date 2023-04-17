@@ -79,25 +79,25 @@ spec:
     - name: SKJERMET_PERSON_SCOPE
       value: api://dev-fss.nom.skjermede-personer-pip/.default
     - name: SKJERMET_PERSON_URL
-      value: http://skjermede-personer-pip.nom
+      value: http://skjermede-personer-pip.nom.svc.nais.local
     - name: AXSYS_URL
-      value: https://axsys.org
+      value: http://axsys.org.svc.nais.local
     - name: AXSYS_SCOPE
       value: api://dev-fss.org.axsys/.default
     - name: ABAC_URL
-      value: http://abac-veilarb.pto/api/proxy/abac
+      value: http://abac-veilarb.pto.svc.nais.local/api/proxy/abac
     - name: ABAC_SCOPE
       value: api://dev-fss.pto.abac-veilarb/.default
     - name: VEILARBARENA_URL
-      value: http://veilarbarena.pto/veilarbarena
+      value: http://veilarbarena.pto.svc.nais.local/veilarbarena
     - name: VEILARBARENA_SCOPE
       value: api://dev-fss.pto.veilarbarena/.default
     - name: PDL_SCOPE
       value: api://dev-fss.pdl.pdl-api/.default
     - name: PDL_URL
-      value: http://pdl-api.pdl
+      value: http://pdl-api.svc.nais.local.pdl
     - name: NORG_URL
-      value: https://norg2.org
+      value: http://norg2.org.svc.nais.local
     - name: AD_GRUPPE_ID_FORTROLIG_ADRESSE
       value: ea930b6b-9397-44d9-b9e6-f4cf527a632a
     - name: AD_GRUPPE_ID_STRENGT_FORTROLIG_ADRESSE
