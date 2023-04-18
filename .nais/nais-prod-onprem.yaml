@@ -31,6 +31,7 @@ spec:
   azure:
     application:
       enabled: true
+      allowAllUsers: true
       claims:
         extra:
           - azp_name
@@ -65,13 +66,10 @@ spec:
         - application: skjermede-personer-pip
           namespace: nom
       external:
-        - host: abac-veilarb-proxy.prod-fss-pub.nais.io
-        - host: axsys.prod-fss-pub.nais.io
-        - host: veilarbarena.prod-fss-pub.nais.io
-        - host: pdl-api.prod-fss-pub.nais.io
-        - host: norg2.prod-fss-pub.nais.io
         - host: graph.microsoft.com
   env:
+    - name: spring_profiles_active
+      value: fss
     - name: MICROSOFT_GRAPH_SCOPE
       value: https://graph.microsoft.com/.default
     - name: MICROSOFT_GRAPH_URL
@@ -79,25 +77,25 @@ spec:
     - name: SKJERMET_PERSON_SCOPE
       value: api://prod-fss.nom.skjermede-personer-pip/.default
     - name: SKJERMET_PERSON_URL
-      value: http://skjermede-personer-pip.nom
+      value: http://skjermede-personer-pip.nom.svc.nais.local
     - name: AXSYS_URL
-      value: https://axsys.org
+      value: http://axsys.org.svc.nais.local
     - name: AXSYS_SCOPE
       value: api://prod-fss.org.axsys/.default
     - name: ABAC_URL
-      value: http://abac-veilarb.pto/api/proxy/abac
+      value: http://abac-veilarb.pto.svc.nais.local/application/asm-pdp/authorize
     - name: ABAC_SCOPE
       value: api://prod-fss.pto.abac-veilarb/.default
     - name: VEILARBARENA_URL
-      value: http://veilarbarena.pto/veilarbarena
+      value: http://veilarbarena.pto.svc.nais.local/veilarbarena
     - name: VEILARBARENA_SCOPE
       value: api://prod-fss.pto.veilarbarena/.default
     - name: PDL_SCOPE
       value: api://prod-fss.pdl.pdl-api/.default
     - name: PDL_URL
-      value: http://pdl-api.pdl
+      value: http://pdl-api.pdl.svc.nais.local
     - name: NORG_URL
-      value: https://norg2.org
+      value: http://norg2.org.svc.nais.local
     - name: AD_GRUPPE_ID_FORTROLIG_ADRESSE
       value: 9ec6487d-f37a-4aad-a027-cd221c1ac32b
     - name: AD_GRUPPE_ID_STRENGT_FORTROLIG_ADRESSE
@@ -122,3 +120,8 @@ spec:
       value: e750ceb5-b70b-4d94-b4fa-9d22467b786b
     - name: AD_GRUPPE_ID_AKTIVITETSPLAN_KVP
       value: f743db0b-bf8e-4a10-b5be-08a9170346fb
+  vault:
+    enabled: true
+    paths:
+      - kvPath: /serviceuser/data/prod/srv-poao-tilgang
+        mountPath: /var/run/secrets/nais.io/service_user
