@@ -100,7 +100,7 @@ jobs:
           VAR: version=${{ env.IMAGE_TAG }}
 
   deploy-prod-fss:
-    name: Deploy application to dev fss
+    name: Deploy application to prod fss
     needs: deploy-dev-fss
     runs-on: ubuntu-latest
     steps:
