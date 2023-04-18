@@ -1,0 +1,72 @@
+name: Deploy feature branch to dev
+run-name: Deploy feature branch ${{ github.ref_name }} by @${{ github.actor }}
+on:
+  workflow_dispatch: # This workflow can be triggered manually from: https://github.com/navikt/poao-tilgang/actions/workflows/deploy-feature-dev.yaml
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+env:
+  IMAGE_TAG: ${{ github.sha }}
+  IMAGE: ghcr.io/${{ github.repository }}/poao-tilgang
+  PRINT_PAYLOAD: true
+
+jobs:
+  test-build-and-push:
+    name: Test, build and push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Cache local Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build maven artifacts
+        run: mvn -B package
+      - name: Build and push Docker image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${GITHUB_REPOSITORY} --password-stdin
+          docker build -t ${IMAGE}:${IMAGE_TAG} .
+          docker push ${IMAGE}:${IMAGE_TAG}
+
+  deploy-dev:
+    name: Deploy application to dev gcp
+    needs: test-build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy application
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/nais-dev.yaml
+          VAR: version=${{ env.IMAGE_TAG }}
+
+  deploy-dev-fss:
+    name: Deploy application to dev fss
+    needs: test-build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy application
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-dev-onprem.yaml
+          VAR: version=${{ env.IMAGE_TAG }}
