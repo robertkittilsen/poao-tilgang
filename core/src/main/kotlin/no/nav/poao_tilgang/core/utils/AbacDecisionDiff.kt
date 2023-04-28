@@ -29,10 +29,9 @@ object AbacDecisionDiff {
 				val poaoTilgangDecision = policy.invoke(input)
 
 				if (abacDecision.type != poaoTilgangDecision.type) {
-					//TODO: Endre til warning
-					secureLog.info("Decision diff for policy $policyName - ulikt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
+					secureLog.warn("Decision diff for policy $policyName - ulikt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
 				} else {
-					secureLog.info("Decision diff for policy $policyName - likt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
+					secureLog.debug("Decision diff for policy $policyName - likt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
 				}
 			} catch (e: Throwable) {
 				log.error("Feil i POAO-tilgang implementasjon", e)

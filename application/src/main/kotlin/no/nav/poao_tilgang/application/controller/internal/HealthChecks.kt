@@ -13,12 +13,12 @@ class HealthChecksPoaoTilgang(
 ): HealthIndicator {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 	override fun health(): Health {
-		logger.info("Starter healthcheck for abacClient")
+		logger.debug("Starter healthcheck for abacClient")
 		if (abacClient.checkHealth().isHealthy){
-			logger.info("Healthcheck for abacClient: READY")
-			return Health.up().build();
+			logger.debug("Healthcheck for abacClient: READY")
+			return Health.up().build()
 		}
-		logger.info("Healthcheck for abacClient: NOT READY")
-		return Health.down().build();
+		logger.warn("Healthcheck for abacClient: NOT READY")
+		return Health.down().build()
 	}
 }
