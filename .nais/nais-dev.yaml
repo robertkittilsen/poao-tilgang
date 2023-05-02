@@ -9,7 +9,7 @@ spec:
   image: ghcr.io/navikt/poao-tilgang/poao-tilgang:{{version}}
   port: 8080
   ingresses:
-    - https://poao-tilgang.dev.intern.nav.no
+    - https://poao-tilgang.intern.dev.nav.no
   prometheus:
     enabled: true
     path: /internal/prometheus
