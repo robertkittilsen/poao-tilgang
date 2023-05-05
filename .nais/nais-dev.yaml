@@ -41,6 +41,9 @@ spec:
   accessPolicy:
     inbound:
       rules:
+        - application: aia-backend
+          namespace: paw
+          cluster: dev-gcp
         - application: amt-tiltak
           namespace: amt
         - application: mulighetsrommet-api
