@@ -39,7 +39,7 @@
         <token-validaiton.version>3.0.9</token-validaiton.version>
         <mockk.version>1.13.4</mockk.version>
         <kotest.version>5.5.0</kotest.version>
-        <common.version>3.2023.04.18_10.07-0576b4e09008</common.version>
+        <common.version>3.2023.05.25_12.58-6d52407f804a</common.version>
     </properties>
 
     <repositories>
