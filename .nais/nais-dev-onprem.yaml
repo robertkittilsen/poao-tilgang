@@ -110,12 +110,8 @@ spec:
       value: 924badcd-b936-44f4-b7bf-97c03de0893a
     - name: AD_GRUPPE_ID_GOSYS_UTVIDBAR_TIL_NASJONAL
       value: 2ffe3262-6c0e-44f3-94f0-34dfa5659a04
-    - name: AD_GRUPPE_ID_GOSYS_UTVIDET
-      value: de44052d-b062-4497-89a2-0c85b935b808
     - name: AD_GRUPPE_ID_SYFO_SENSITIV
       value: c8957e0a-909c-4b62-8e11-93aae6d295e6
-    - name: AD_GRUPPE_ID_PENSJON_UTVIDET
-      value: b1e04468-a53a-48fb-a3f7-996c06c8c163
     - name: AD_GRUPPE_ID_EGNE_ANSATTE
       value: dbe4ad45-320b-4e9a-aaa1-73cca4ee124d
     - name: AD_GRUPPE_ID_AKTIVITETSPLAN_KVP
