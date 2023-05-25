@@ -13,6 +13,7 @@ import no.nav.common.utils.EnvironmentUtils
 import no.nav.common.utils.NaisUtils
 import no.nav.poao_tilgang.application.controller.internal.HealthChecksPoaoTilgang
 import no.nav.poao_tilgang.application.middleware.RequesterLogFilter
+import no.nav.poao_tilgang.application.utils.SecureLog
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.beans.factory.annotation.Value
@@ -111,7 +112,8 @@ open class ApplicationConfig {
 			APPLICATION_NAME,
 			abacClient,
 			NimbusSubjectProvider(),
-			AuditConfig(null, SpringAuditRequestInfoSupplier(), null)
+			AuditConfig(null, SpringAuditRequestInfoSupplier(), null),
+			SecureLog.secureLog
 		)
 	}
 
