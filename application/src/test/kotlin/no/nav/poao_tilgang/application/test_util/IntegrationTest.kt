@@ -44,6 +44,7 @@ open class IntegrationTest {
 		val mockPdlHttpServer = MockPdlHttpServer()
 		val mockNorgHttpServer = MockNorgHttpServer()
 		val mockMachineToMachineHttpServer = MockMachineToMachineHttpServer()
+		val mockUnleashHttpServer = MockUnleashHttpServer()
 
 		@BeforeAll
 		@JvmStatic
@@ -95,6 +96,8 @@ open class IntegrationTest {
 
 			mockNorgHttpServer.start()
 			System.setProperty("NORG_URL", mockNorgHttpServer.serverUrl())
+
+			System.setProperty("UNLEASH_URL", mockUnleashHttpServer.serverUrl())
 		}
 
 		private fun setupAdGrupperIder() {

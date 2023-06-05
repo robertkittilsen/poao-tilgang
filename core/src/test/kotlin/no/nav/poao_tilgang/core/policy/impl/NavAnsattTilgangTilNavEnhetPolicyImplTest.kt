@@ -9,10 +9,7 @@ import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
-import no.nav.poao_tilgang.core.provider.AbacProvider
-import no.nav.poao_tilgang.core.provider.AdGruppeProvider
-import no.nav.poao_tilgang.core.provider.NavEnhetTilgang
-import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
+import no.nav.poao_tilgang.core.provider.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -35,8 +32,12 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 
 	private val meterRegistry: MeterRegistry = SimpleMeterRegistry()
 
+	private val toggleProvider = mockk<ToggleProvider>()
+
 	@BeforeEach
 	internal fun setUp() {
+		every { toggleProvider.brukAbacDesision() } returns true
+
 		every {
 			adGruppeProvider.hentTilgjengeligeAdGrupper()
 		} returns testAdGrupper
@@ -45,7 +46,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 			adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 		} returns navIdent
 
-		policy = NavAnsattTilgangTilNavEnhetPolicyImpl(navEnhetTilgangProvider, adGruppeProvider, abacProvider, meterRegistry)
+		policy = NavAnsattTilgangTilNavEnhetPolicyImpl(navEnhetTilgangProvider, adGruppeProvider, abacProvider, meterRegistry, toggleProvider)
 	}
 
 	@Test

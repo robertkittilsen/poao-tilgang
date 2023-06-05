@@ -69,6 +69,7 @@ spec:
           namespace: nom
       external:
         - host: graph.microsoft.com
+        - host: unleash.nais.io
   env:
     - name: spring_profiles_active
       value: fss
@@ -94,6 +95,8 @@ spec:
       value: api://dev-fss.pdl.pdl-api/.default
     - name: PDL_URL
       value: http://pdl-api.pdl.svc.nais.local
+    - name: UNLEASH_URL
+      value: https://unleash.nais.io/api/
     - name: NORG_URL
       value: http://norg2.org.svc.nais.local
     - name: AD_GRUPPE_ID_FORTROLIG_ADRESSE

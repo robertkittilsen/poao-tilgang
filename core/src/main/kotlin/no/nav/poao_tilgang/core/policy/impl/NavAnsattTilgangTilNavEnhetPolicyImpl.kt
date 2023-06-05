@@ -8,6 +8,7 @@ import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.provider.AbacProvider
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
+import no.nav.poao_tilgang.core.provider.ToggleProvider
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.asyncLogDecisionDiff
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.toAbacDecision
 import no.nav.poao_tilgang.core.utils.has
@@ -18,7 +19,8 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	private val navEnhetTilgangProvider: NavEnhetTilgangProvider,
 	private val adGruppeProvider: AdGruppeProvider,
 	private val abacProvider: AbacProvider,
-	private val meterRegistry: MeterRegistry
+	private val meterRegistry: MeterRegistry,
+	private val toggleProvider: ToggleProvider,
 ) : NavAnsattTilgangTilNavEnhetPolicy {
 
 	private val modiaAdmin = adGruppeProvider.hentTilgjengeligeAdGrupper().modiaAdmin
@@ -34,11 +36,18 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	val secureLog = LoggerFactory.getLogger("SecureLog")
 
 	override fun evaluate(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
-		val harTilgangAbac = harTilgangAbac(input)
+		return if (toggleProvider.brukAbacDesision()) {
+			val harTilgangAbac = harTilgangAbac(input)
 
-		asyncLogDecisionDiff(name, input, ::harTilgang, harTilgangAbac)
+			asyncLogDecisionDiff(name, input, ::harTilgang, { _ ->harTilgangAbac })
 
-		return harTilgangAbac
+			harTilgangAbac
+		} else {
+			val resultat = harTilgang(input)
+
+			asyncLogDecisionDiff(name, input, { _ -> resultat }, ::harTilgangAbac)
+			resultat
+		}
 	}
 
 	private fun harTilgangAbac(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {

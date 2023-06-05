@@ -14,6 +14,8 @@ import no.nav.poao_tilgang.core.domain.TilgangType.SKRIVE
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.provider.AbacProvider
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
+import no.nav.poao_tilgang.core.provider.ToggleProvider
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -31,6 +33,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 	private val navAnsattTilgangTilOppfolgingPolicy = mockk<NavAnsattTilgangTilOppfolgingPolicy>()
 	private val navAnsattTilgangTilModiaGenerellPolicy = mockk<NavAnsattTilgangTilModiaGenerellPolicy>()
 	private val adGruppeProvider = mockk<AdGruppeProvider>()
+	private val toggleProvider = mockk<ToggleProvider>()
 
 	private val meterRegistry: MeterRegistry = SimpleMeterRegistry()
 
@@ -42,8 +45,17 @@ class NavAnsattTilgangTilEksternBrukerPolicyImplTest {
 		navAnsattTilgangTilOppfolgingPolicy,
 		navAnsattTilgangTilModiaGenerellPolicy,
 		adGruppeProvider,
-		meterRegistry
+		meterRegistry,
+		toggleProvider
+
 	)
+
+	@BeforeEach
+	internal fun setupMocks() {
+		every { toggleProvider.brukAbacDesision() } returns true
+	}
+
+
 
 	@Test
 	fun `should return "permit" if ABAC returns "permit"`() {

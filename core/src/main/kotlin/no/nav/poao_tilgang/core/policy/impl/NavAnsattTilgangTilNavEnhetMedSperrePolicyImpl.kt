@@ -8,6 +8,7 @@ import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetMedSperrePolic
 import no.nav.poao_tilgang.core.provider.AbacProvider
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
+import no.nav.poao_tilgang.core.provider.ToggleProvider
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.asyncLogDecisionDiff
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.toAbacDecision
 import no.nav.poao_tilgang.core.utils.has
@@ -17,7 +18,8 @@ class NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 	private val navEnhetTilgangProvider: NavEnhetTilgangProvider,
 	private val adGruppeProvider: AdGruppeProvider,
 	private val abacProvider: AbacProvider,
-	private val meterRegistry: MeterRegistry
+	private val meterRegistry: MeterRegistry,
+	private val toggleProvider: ToggleProvider,
 ) : NavAnsattTilgangTilNavEnhetMedSperrePolicy {
 
 	private val aktivitetsplanKvp = adGruppeProvider.hentTilgjengeligeAdGrupper().aktivitetsplanKvp
@@ -30,11 +32,19 @@ class NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 	override val name = "NavAnsattTilgangTilNavEnhetMedSperre"
 
 	override fun evaluate(input: NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input): Decision {
-		val harTilgangAbac = harTilgangAbac(input)
 
-		asyncLogDecisionDiff(name, input, ::harTilgang, harTilgangAbac)
+		return if (toggleProvider.brukAbacDesision()) {
+			val harTilgangAbac = harTilgangAbac(input)
 
-		return harTilgangAbac
+			asyncLogDecisionDiff(name, input, ::harTilgang, { _ ->harTilgangAbac })
+
+			harTilgangAbac
+		} else {
+			val resultat = harTilgang(input)
+
+			asyncLogDecisionDiff(name, input, { _ -> resultat }, ::harTilgangAbac)
+			resultat
+		}
 	}
 
 	private fun harTilgangAbac(input: NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input): Decision {

@@ -23,10 +23,11 @@ object AbacDecisionDiff {
 	}
 
 	@OptIn(DelicateCoroutinesApi::class)
-	fun <I : PolicyInput> asyncLogDecisionDiff(policyName: String, input: I, policy: (input: I) -> Decision, abacDecision: Decision) {
+	fun <I : PolicyInput> asyncLogDecisionDiff(policyName: String, input: I, poaoTilgangPolicy: (input: I) -> Decision, abacPolicy: (input: I) ->  Decision) {
 		GlobalScope.launch(MDCContext()) {
 			try {
-				val poaoTilgangDecision = policy.invoke(input)
+				val poaoTilgangDecision = poaoTilgangPolicy.invoke(input)
+				val abacDecision = abacPolicy.invoke(input)
 
 				if (abacDecision.type != poaoTilgangDecision.type) {
 					secureLog.warn("Decision diff for policy $policyName - ulikt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")

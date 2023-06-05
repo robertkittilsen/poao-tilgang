@@ -112,6 +112,10 @@
             <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>rest</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.navikt.common-java-modules</groupId>
+            <artifactId>feature-toggle</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>no.nav.security</groupId>

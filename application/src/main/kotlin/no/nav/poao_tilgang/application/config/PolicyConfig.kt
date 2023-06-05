@@ -19,7 +19,8 @@ open class PolicyConfig {
 		navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy,
 		navAnsattTilgangTilModiaGenerellPolicy: NavAnsattTilgangTilModiaGenerellPolicy,
 		adGruppeProvider: AdGruppeProvider,
-		meterRegistry: MeterRegistry
+		meterRegistry: MeterRegistry,
+		toggleProvider: ToggleProvider,
 	): NavAnsattTilgangTilEksternBrukerPolicy {
 		return NavAnsattTilgangTilEksternBrukerPolicyImpl(
 			abacProvider,
@@ -29,7 +30,8 @@ open class PolicyConfig {
 			navAnsattTilgangTilOppfolgingPolicy,
 			navAnsattTilgangTilModiaGenerellPolicy,
 			adGruppeProvider,
-			meterRegistry
+			meterRegistry,
+			toggleProvider
 		)
 	}
 
@@ -53,13 +55,15 @@ open class PolicyConfig {
 		navEnhetTilgangProvider: NavEnhetTilgangProvider,
 		adGruppeProvider: AdGruppeProvider,
 		abacProvider: AbacProvider,
-		meterRegistry: MeterRegistry
-	): NavAnsattTilgangTilNavEnhetMedSperrePolicy {
+		meterRegistry: MeterRegistry,
+		toggleProvider: ToggleProvider,
+		): NavAnsattTilgangTilNavEnhetMedSperrePolicy {
 		return NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 			navEnhetTilgangProvider,
 			adGruppeProvider,
 			abacProvider,
-			meterRegistry
+			meterRegistry,
+			toggleProvider
 		)
 	}
 
@@ -93,10 +97,12 @@ open class PolicyConfig {
 		navEnhetTilgangProvider: NavEnhetTilgangProvider,
 		adGruppeProvider: AdGruppeProvider,
 		abacProvider: AbacProvider,
-		meterRegistry: MeterRegistry
-	): NavAnsattTilgangTilNavEnhetPolicy {
+		meterRegistry: MeterRegistry,
+		toggleProvider: ToggleProvider,
+		): NavAnsattTilgangTilNavEnhetPolicy {
 		return NavAnsattTilgangTilNavEnhetPolicyImpl(
-			navEnhetTilgangProvider, adGruppeProvider, abacProvider,meterRegistry
+			navEnhetTilgangProvider, adGruppeProvider, abacProvider,meterRegistry,
+			toggleProvider
 		)
 	}
 
