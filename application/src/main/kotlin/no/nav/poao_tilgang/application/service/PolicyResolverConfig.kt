@@ -1,7 +1,9 @@
 package no.nav.poao_tilgang.application.service
 
+import no.nav.poao_tilgang.api_core_mapper.ApiCoreMapper
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.policy.impl.PolicyResolver
+import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -29,5 +31,10 @@ open class PolicyResolverConfig {
 				navAnsattTiltangTilEnhetMedSperrePolicy,
 				navAnsattBehandleSkjermedePersonerPolicy
 		)
+	}
+
+	@Bean
+	open fun apiCoreMapper(adGruppeProvider: AdGruppeProvider): ApiCoreMapper {
+		return ApiCoreMapper(adGruppeProvider)
 	}
 }

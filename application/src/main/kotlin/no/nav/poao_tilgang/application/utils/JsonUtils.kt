@@ -10,6 +10,8 @@ import com.fasterxml.jackson.module.kotlin.treeToValue
 
 object JsonUtils {
 
+	//TODO burde denne flyttes til api-core-mapper? da har vi bare en instans av objectmapper
+	//eksisiterer også en instangs av objectmapper i api-core-mapper
 	val objectMapper: ObjectMapper = ObjectMapper()
 		.registerKotlinModule()
 		.registerModule(JavaTimeModule())
@@ -17,10 +19,6 @@ object JsonUtils {
 
 	inline fun <reified T> fromJsonString(jsonStr: String): T {
 		return objectMapper.readValue(jsonStr)
-	}
-
-	inline fun <reified T> fromJsonNode(jsonNode: JsonNode): T {
-		return objectMapper.treeToValue(jsonNode)
 	}
 
 	fun toJsonString(any: Any): String {
