@@ -14,6 +14,7 @@
         <module>api</module>
         <module>application</module>
         <module>client</module>
+        <module>api-core-mapper</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>

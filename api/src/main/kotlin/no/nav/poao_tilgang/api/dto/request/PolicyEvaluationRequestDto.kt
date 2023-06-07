@@ -5,5 +5,5 @@ import java.util.*
 data class PolicyEvaluationRequestDto<I>(
     val requestId: UUID,
     val policyInput: I,
-    val policyId: PolicyId
+    val policyId: PolicyId<*>
 )
