@@ -1,14 +1,13 @@
 package no.nav.poao_tilgang.core.policy.impl
 
 import io.kotest.matchers.shouldBe
-import io.micrometer.core.instrument.MeterRegistry
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.policy.test_utils.TestAdGrupper.testAdGrupper
+import no.nav.poao_tilgang.core.policy.test_utils.MockTimer
 import no.nav.poao_tilgang.core.provider.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -30,7 +29,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 
 	private val navEnhetId = "1234"
 
-	private val meterRegistry: MeterRegistry = SimpleMeterRegistry()
+	private val mockTimer = MockTimer()
 
 	private val toggleProvider = mockk<ToggleProvider>()
 
@@ -46,7 +45,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 			adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 		} returns navIdent
 
-		policy = NavAnsattTilgangTilNavEnhetPolicyImpl(navEnhetTilgangProvider, adGruppeProvider, abacProvider, meterRegistry, toggleProvider)
+		policy = NavAnsattTilgangTilNavEnhetPolicyImpl(navEnhetTilgangProvider, adGruppeProvider, abacProvider, mockTimer, toggleProvider)
 	}
 
 	@Test

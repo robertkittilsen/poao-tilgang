@@ -1,7 +1,5 @@
 package no.nav.poao_tilgang.core.policy.impl
 
-import io.micrometer.core.instrument.MeterRegistry
-import io.micrometer.core.instrument.Timer
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetMedSperrePolicy
@@ -11,6 +9,7 @@ import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
 import no.nav.poao_tilgang.core.provider.ToggleProvider
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.asyncLogDecisionDiff
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.toAbacDecision
+import no.nav.poao_tilgang.core.utils.Timer
 import no.nav.poao_tilgang.core.utils.has
 import java.time.Duration
 
@@ -18,7 +17,7 @@ class NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 	private val navEnhetTilgangProvider: NavEnhetTilgangProvider,
 	private val adGruppeProvider: AdGruppeProvider,
 	private val abacProvider: AbacProvider,
-	private val meterRegistry: MeterRegistry,
+	private val timer: Timer,
 	private val toggleProvider: ToggleProvider,
 ) : NavAnsattTilgangTilNavEnhetMedSperrePolicy {
 
@@ -50,12 +49,11 @@ class NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 	private fun harTilgangAbac(input: NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input): Decision {
 		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(input.navAnsattAzureId)
 
-		val timer: Timer = meterRegistry.timer("app.poao-tilgang.NavAnsattTilgangTilNavEnhetMedSperre")
 		val startTime=System.currentTimeMillis();
 
 		val harTilgangAbac = abacProvider.harVeilederTilgangTilNavEnhetMedSperre(navIdent, input.navEnhetId)
 
-		timer.record(Duration.ofMillis(System.currentTimeMillis()-startTime))
+		timer.record("app.poao-tilgang.NavAnsattTilgangTilNavEnhetMedSperre", Duration.ofMillis(System.currentTimeMillis()-startTime))
 
 		return toAbacDecision(harTilgangAbac)
 	}

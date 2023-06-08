@@ -1,7 +1,5 @@
 package no.nav.poao_tilgang.core.policy.impl
 
-import io.micrometer.core.instrument.MeterRegistry
-import io.micrometer.core.instrument.Timer
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.TilgangType
 import no.nav.poao_tilgang.core.policy.*
@@ -10,6 +8,7 @@ import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.ToggleProvider
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.asyncLogDecisionDiff
 import no.nav.poao_tilgang.core.utils.AbacDecisionDiff.toAbacDecision
+import no.nav.poao_tilgang.core.utils.Timer
 import java.time.Duration
 
 class NavAnsattTilgangTilEksternBrukerPolicyImpl(
@@ -20,7 +19,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	private val navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy,
 	private val navAnsattTilgangTilModiaGenerellPolicy: NavAnsattTilgangTilModiaGenerellPolicy,
 	private val adGruppeProvider: AdGruppeProvider,
-	private val meterRegistry: MeterRegistry,
+	private val timer: Timer,
 	private val toggleProvider: ToggleProvider,
 ) : NavAnsattTilgangTilEksternBrukerPolicy {
 
@@ -45,12 +44,11 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 
 		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 
-		val timer: Timer = meterRegistry.timer("app.poao-tilgang.NavAnsattTilgangTilEksternBruker")
 		val startTime=System.currentTimeMillis();
 
 		val harTilgang = abacProvider.harVeilederTilgangTilPerson(navIdent, tilgangType, norskIdent)
 
-		timer.record(Duration.ofMillis(System.currentTimeMillis()-startTime))
+		timer.record("app.poao-tilgang.NavAnsattTilgangTilEksternBruker", Duration.ofMillis(System.currentTimeMillis()-startTime))
 
 		return toAbacDecision(harTilgang)
 	}

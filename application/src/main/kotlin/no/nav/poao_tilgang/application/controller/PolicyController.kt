@@ -3,7 +3,6 @@ package no.nav.poao_tilgang.application.controller
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.poao_tilgang.api.dto.request.EvaluatePoliciesRequest
 import no.nav.poao_tilgang.api.dto.request.PolicyEvaluationRequestDto
-import no.nav.poao_tilgang.api.dto.request.PolicyId
 import no.nav.poao_tilgang.api.dto.request.policy_input.*
 import no.nav.poao_tilgang.api.dto.response.DecisionDto
 import no.nav.poao_tilgang.api.dto.response.DecisionType
