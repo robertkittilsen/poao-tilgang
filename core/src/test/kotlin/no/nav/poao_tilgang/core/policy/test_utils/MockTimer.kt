@@ -8,4 +8,7 @@ class MockTimer: Timer {
 
 	}
 
+	override fun <T> measure(name: String, vararg tags: String, method: () -> T): T {
+		return method()
+	}
 }

@@ -63,6 +63,13 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 
 	// Er ikke private slik at vi kan teste implementasjonen
 	internal fun harTilgang(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
+		val startTime = System.currentTimeMillis()
+		val harTilgangEgen = harTilgangEgen(input)
+		timer.record("app.poao-tilgang.NavAnsattTilgangTilNavEnhet", Duration.ofMillis(System.currentTimeMillis() - startTime))
+		return harTilgangEgen
+	}
+
+	private fun harTilgangEgen(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
 		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
 			.has(modiaOppfolging)
 			.whenDeny { return it }

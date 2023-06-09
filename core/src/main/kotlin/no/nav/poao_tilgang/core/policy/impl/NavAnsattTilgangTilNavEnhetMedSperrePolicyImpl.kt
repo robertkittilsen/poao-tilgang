@@ -60,6 +60,7 @@ class NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 
 	// Er ikke private slik at vi kan teste implementasjonen
 	internal fun harTilgang(input: NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input): Decision {
+		val startTime=System.currentTimeMillis()
 		adGruppeProvider.hentAdGrupper(input.navAnsattAzureId)
 			.has(aktivitetsplanKvp)
 			.whenPermit { return it }
@@ -68,6 +69,7 @@ class NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 
 		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
 			.any { input.navEnhetId == it.enhetId }
+		timer.record("app.poao-tilgang.NavAnsattTilgangTilNavEnhetMedSperre.egen", Duration.ofMillis(System.currentTimeMillis()-startTime))
 
 		return if (harTilgangTilEnhet) Decision.Permit else denyDecision
 	}
