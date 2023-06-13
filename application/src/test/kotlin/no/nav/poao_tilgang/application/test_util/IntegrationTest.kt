@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.extension.ExtendWith
@@ -127,6 +128,17 @@ open class IntegrationTest {
 		mockVeilarbarenaHttpServer.reset()
 		mockPdlHttpServer.reset()
 		mockNorgHttpServer.reset()
+	}
+
+	@AfterAll
+	fun close() {
+		mockMicrosoftGraphHttpServer.close()
+		mockSkjermetPersonHttpServer.close()
+		mockAxsysHttpServer.close()
+		mockAbacHttpServer.close()
+		mockVeilarbarenaHttpServer.close()
+		mockPdlHttpServer.close()
+		mockNorgHttpServer.close()
 	}
 
 	fun serverUrl() = "http://localhost:$port"
