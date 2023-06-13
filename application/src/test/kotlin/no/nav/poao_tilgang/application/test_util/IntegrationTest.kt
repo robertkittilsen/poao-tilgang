@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.test_util
 
+import no.nav.common.featuretoggle.UnleashClient
 import no.nav.poao_tilgang.application.Application
 import no.nav.poao_tilgang.application.config.MyApplicationRunner
 import no.nav.poao_tilgang.application.test_util.mock_clients.*
@@ -27,6 +28,9 @@ open class IntegrationTest {
 	@MockBean
 	lateinit var myApplicationRunner: MyApplicationRunner
 
+	@MockBean
+	lateinit var mockUnleashHttpServer: UnleashClient
+
 	@LocalServerPort
 	private var port: Int = 0
 
@@ -44,7 +48,6 @@ open class IntegrationTest {
 		val mockPdlHttpServer = MockPdlHttpServer()
 		val mockNorgHttpServer = MockNorgHttpServer()
 		val mockMachineToMachineHttpServer = MockMachineToMachineHttpServer()
-		val mockUnleashHttpServer = MockUnleashHttpServer()
 
 		@BeforeAll
 		@JvmStatic
@@ -97,7 +100,6 @@ open class IntegrationTest {
 			mockNorgHttpServer.start()
 			System.setProperty("NORG_URL", mockNorgHttpServer.serverUrl())
 
-			System.setProperty("UNLEASH_URL", mockUnleashHttpServer.serverUrl())
 		}
 
 		private fun setupAdGrupperIder() {
