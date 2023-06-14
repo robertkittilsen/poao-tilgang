@@ -41,7 +41,7 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: aia-backend
+        - application: paw-arbeidssoker-besvarelse
           namespace: paw
           cluster: prod-gcp
         - application: amt-tiltak
