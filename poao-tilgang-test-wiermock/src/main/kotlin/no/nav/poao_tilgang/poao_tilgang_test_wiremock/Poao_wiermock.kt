@@ -10,7 +10,6 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.common.FileSource
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.github.tomakehurst.wiremock.extension.Parameters
 import com.github.tomakehurst.wiremock.extension.ResponseDefinitionTransformer
@@ -28,45 +27,47 @@ import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
 import no.nav.poao_tilgang.poao_tilgang_test_core.Polecys
 import kotlin.reflect.KFunction1
 
-class Managed_wiermock(val portnummer: Int = 0) {
-	val poaoWiermock = Poao_wiermock()
+class Managed_wiermock(portnummer: Int = 0, baspath: String= "") {
+	val mocks = Poao_wiermock(baspath = baspath)
 	val wireMockServer = WireMockServer(
 		wireMockConfig()
 			.port(portnummer)
-			.extensions(*poaoWiermock.listOfExtension)
+			.extensions(*mocks.listOfExtension)
 	)
+
+	val navModell = mocks.navModell
 
 	init {
 		wireMockServer.stubFor(
-			WireMock.post("/api/v1/skjermet-person").willReturn(
-				WireMock.aResponse().withTransformers(poaoWiermock.skjermetPerson.name)
+			WireMock.post(mocks.skjermetPerson.path).willReturn(
+				WireMock.aResponse().withTransformers(mocks.skjermetPerson.name)
 			)
 		)
 		wireMockServer.stubFor(
-			WireMock.post("/api/v1/ad-gruppe").willReturn(
-				WireMock.aResponse().withTransformers(poaoWiermock.adgroupController.name)
+			WireMock.post(mocks.adgroupController.path).willReturn(
+				WireMock.aResponse().withTransformers(mocks.adgroupController.name)
 			)
 		)
 		wireMockServer.stubFor(
-			WireMock.post("/api/v1/tilgang/modia").willReturn(
-				WireMock.aResponse().withTransformers(poaoWiermock.tilgangsKontroller.name)
+			WireMock.post(mocks.tilgangsKontroller.path).willReturn(
+				WireMock.aResponse().withTransformers(mocks.tilgangsKontroller.name)
 			)
 		)
 		wireMockServer.stubFor(
-			WireMock.post("/api/v1/policy/evaluate").willReturn(
-				WireMock.aResponse().withTransformers(poaoWiermock.polecyController.name)
+			WireMock.post(mocks.polecyController.path).willReturn(
+				WireMock.aResponse().withTransformers(mocks.polecyController.name)
 			)
 		)
 
 		wireMockServer.start()
 	}
 }
-class Poao_wiermock(val polecys: Polecys = Polecys(), baspath : String = "/poao-tilgang") {
+class Poao_wiermock(val polecys: Polecys = Polecys(), baspath : String) {
 	val navModell = polecys.navModel
 
 
 	val skjermetPerson = Response("skjermetPerson", "$baspath/api/v1/skjermet-person", ::kjermetPerson, ErSkjermetPersonBulkRequest::class.java)
-	val adgroupController = Response("adgroupController", "$baspath/api/v1/adgroups", ::getAdGropper, HentAdGrupperForBrukerRequest::class.java)
+	val adgroupController = Response("adgroupController", "$baspath/api/v1/ad-gruppe", ::getAdGropper, HentAdGrupperForBrukerRequest::class.java)
 	val tilgangsKontroller = Response("tilgangsKontroller", "$baspath/api/v1/tilgang/modia", ::harTilgang, HarTilgangTilModiaRequest::class.java)
 	val polecyController = PolicyController(polecys, baspath)
 
@@ -115,8 +116,6 @@ class PolicyController(val polecys: Polecys, baspath: String) : ResponseDefiniti
 		files: FileSource?,
 		parameters: Parameters?
 	): ResponseDefinition {
-		if (request.url != path) return  responseDefinition
-
 		val bodyAsString = request.bodyAsString
 		val readValue = ClientObjectMapper.objectMapper.readValue(
 			bodyAsString,

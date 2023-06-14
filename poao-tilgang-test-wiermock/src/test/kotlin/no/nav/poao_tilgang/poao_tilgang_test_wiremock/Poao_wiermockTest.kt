@@ -1,8 +1,12 @@
 package no.nav.poao_tilgang.poao_tilgang_test_wiremock
 
+import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
+import no.nav.poao_tilgang.client.Decision
+import no.nav.poao_tilgang.client.NavAnsattTilgangTilModiaPolicyInput
 import no.nav.poao_tilgang.client.PoaoTilgangClient
 import no.nav.poao_tilgang.client.PoaoTilgangHttpClient
+import no.nav.poao_tilgang.poao_tilgang_test_core.NavAnsatt
 import no.nav.poao_tilgang.poao_tilgang_test_core.tilgjengligeAdGrupper
 import org.junit.jupiter.api.Test
 
@@ -10,7 +14,7 @@ import org.junit.jupiter.api.Test
 class Poao_wiermockTest {
 	val managedWiermock = Managed_wiermock()
 	val baseUrl = managedWiermock.wireMockServer.baseUrl()
-	val navModell = managedWiermock.poaoWiermock.navModell
+	val navModell = managedWiermock.navModell
 	val nyEksternBruker = navModell.nyEksternBruker()
 
 	val poaoTilgangHttpClient: PoaoTilgangClient = PoaoTilgangHttpClient(baseUrl, { "kake" })
@@ -34,14 +38,30 @@ class Poao_wiermockTest {
 		val hentAdGrupper = poaoTilgangHttpClient.hentAdGrupper(nyNksAnsatt.azureObjectId)
 		hentAdGrupper.get()!!.size shouldBe nyNksAnsatt.adGrupper.size
 
-
 		nyNksAnsatt.adGrupper.add(tilgjengligeAdGrupper.aktivitetsplanKvp)
 		val hentAdGrupper_pluss_1 = poaoTilgangHttpClient.hentAdGrupper(nyNksAnsatt.azureObjectId)
 		hentAdGrupper_pluss_1.get()!!.size shouldBe nyNksAnsatt.adGrupper.size
 
-		nyNksAnsatt.adGrupper.size shouldBe  anttal_roller +1 // sjekk at vi har lagt til i modellen
+		withClue("sjekk at vi har lagt til i modellen") {
+			nyNksAnsatt.adGrupper.size shouldBe  anttal_roller +1
+		}
 	}
 
+
+	@Test
+	fun skal_evaluere_polecy() {
+		val nyNksAnsatt = navModell.nyNksAnsatt()
+		val premitDesicion =
+			poaoTilgangHttpClient.evaluatePolicy(NavAnsattTilgangTilModiaPolicyInput(nyNksAnsatt.azureObjectId))
+
+		premitDesicion.get() shouldBe Decision.Permit
+
+		val utenTilgang = NavAnsatt()
+		navModell.leggTilNavAnsatt(utenTilgang)
+
+		poaoTilgangHttpClient.evaluatePolicy(NavAnsattTilgangTilModiaPolicyInput(utenTilgang.azureObjectId)).get()?.isDeny shouldBe true
+
+	}
 
 
 
