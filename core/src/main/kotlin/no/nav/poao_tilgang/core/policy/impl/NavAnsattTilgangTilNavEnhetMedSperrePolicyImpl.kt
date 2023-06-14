@@ -32,7 +32,7 @@ class NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 
 	override fun evaluate(input: NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input): Decision {
 
-		return if (toggleProvider.brukAbacDesision()) {
+		return if (toggleProvider.brukAbacDecision()) {
 			val harTilgangAbac = harTilgangAbac(input)
 
 			asyncLogDecisionDiff(name, input, ::harTilgang, { _ ->harTilgangAbac })

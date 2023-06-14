@@ -26,7 +26,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 	override val name = "NavAnsattTilgangTilEksternBruker"
 
 	override fun evaluate(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
-		return if (toggleProvider.brukAbacDesision()) {
+		return if (toggleProvider.brukAbacDecision()) {
 			val harTilgangAbac = harTilgangAbac(input)
 			asyncLogDecisionDiff(name, input, ::harTilgang, { _ -> harTilgangAbac })
 
