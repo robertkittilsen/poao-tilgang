@@ -7,6 +7,11 @@
         <artifactId>poao-tilgang</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>api-core-mapper</artifactId>
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>no.nav.poao-tilgang</groupId>
@@ -26,9 +31,7 @@
         </dependency>
     </dependencies>
 
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>api-core-mapper</artifactId>
-    <packaging>jar</packaging>
+
 
 
 </project>

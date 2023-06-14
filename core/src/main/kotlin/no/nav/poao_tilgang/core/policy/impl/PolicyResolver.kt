@@ -2,6 +2,8 @@ package no.nav.poao_tilgang.core.policy.impl
 
 import no.nav.poao_tilgang.core.domain.*
 import no.nav.poao_tilgang.core.policy.*
+import no.nav.poao_tilgang.core.provider.ToggleProvider
+import no.nav.poao_tilgang.core.utils.Timer
 
 class PolicyResolver(
 	private val navAnsattTilgangTilEksternBrukerPolicy: NavAnsattTilgangTilEksternBrukerPolicy,
@@ -11,7 +13,9 @@ class PolicyResolver(
 	private val navAnsattBehandleStrengtFortroligBrukerePolicy: NavAnsattBehandleStrengtFortroligBrukerePolicy,
 	private val navAnsattBehandleFortroligBrukerePolicy: NavAnsattBehandleFortroligBrukerePolicy,
 	private val navAnsattTiltangTilEnhetMedSperrePolicy: NavAnsattTilgangTilNavEnhetMedSperrePolicy,
-	private val navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy
+	private val navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy,
+	private val timer: Timer,
+	private val toggleProvider: ToggleProvider,
 ) {
 	fun evaluate(input: PolicyInput): PolicyResult {
 		return when (input) {
@@ -29,8 +33,10 @@ class PolicyResolver(
 
 
 	private fun <I : PolicyInput> evaluateWithName(input: I, policy: Policy<I>): PolicyResult {
-		var decision = policy.evaluate(input)
+		return timer.measure("app.poao-tilgang.policy.evaluate", "policy", policy.name, "brukAbacDesision", toggleProvider.brukAbacDesision().toString()) {
+			val decision = policy.evaluate(input)
+			PolicyResult(policy.name, decision)
+		}
 
-		return PolicyResult(policy.name, decision)
 	}
 }

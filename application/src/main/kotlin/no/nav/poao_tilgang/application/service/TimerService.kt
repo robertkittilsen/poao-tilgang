@@ -14,4 +14,9 @@ class TimerService(
 		timer.record(duration)
 	}
 
+	override fun <T> measure(name: String, vararg tags: String, method: () -> T): T {
+		val timer = meterRegistry.timer(name, *tags)
+		return timer.recordCallable(method)!!
+	}
+
 }

@@ -4,6 +4,8 @@ import no.nav.poao_tilgang.api_core_mapper.ApiCoreMapper
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.policy.impl.PolicyResolver
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
+import no.nav.poao_tilgang.core.provider.ToggleProvider
+import no.nav.poao_tilgang.core.utils.Timer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -19,7 +21,9 @@ open class PolicyResolverConfig {
 		navAnsattBehandleStrengtFortroligBrukerePolicy: NavAnsattBehandleStrengtFortroligBrukerePolicy,
 		navAnsattBehandleFortroligBrukerePolicy: NavAnsattBehandleFortroligBrukerePolicy,
 		navAnsattTiltangTilEnhetMedSperrePolicy: NavAnsattTilgangTilNavEnhetMedSperrePolicy,
-		navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy
+		navAnsattBehandleSkjermedePersonerPolicy: NavAnsattBehandleSkjermedePersonerPolicy,
+		timer: Timer,
+		toggleProvider: ToggleProvider
 	): PolicyResolver {
 		return PolicyResolver(
 			navAnsattTilgangTilEksternBrukerPolicy,
@@ -29,7 +33,9 @@ open class PolicyResolverConfig {
 				navAnsattBehandleStrengtFortroligBrukerePolicy,
 				navAnsattBehandleFortroligBrukerePolicy,
 				navAnsattTiltangTilEnhetMedSperrePolicy,
-				navAnsattBehandleSkjermedePersonerPolicy
+				navAnsattBehandleSkjermedePersonerPolicy,
+				timer,
+			toggleProvider
 		)
 	}
 

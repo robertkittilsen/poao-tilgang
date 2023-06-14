@@ -44,7 +44,7 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 
 		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 
-		val startTime=System.currentTimeMillis();
+		val startTime=System.currentTimeMillis()
 
 		val harTilgang = abacProvider.harVeilederTilgangTilPerson(navIdent, tilgangType, norskIdent)
 
@@ -55,6 +55,15 @@ class NavAnsattTilgangTilEksternBrukerPolicyImpl(
 
 	// Er ikke private slik at vi kan teste implementasjonen
 	internal fun harTilgang(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
+		val startTime=System.currentTimeMillis()
+
+		val harTilgangEgen = harTilgangEgen(input)
+
+		timer.record("app.poao-tilgang.NavAnsattTilgangTilEksternBruker.egen", Duration.ofMillis(System.currentTimeMillis()-startTime))
+		return harTilgangEgen
+	}
+
+	private fun harTilgangEgen(input: NavAnsattTilgangTilEksternBrukerPolicy.Input): Decision {
 		val (navAnsattAzureId, tilgangType, norskIdent) = input
 
 		navAnsattTilgangTilAdressebeskyttetBrukerPolicy.evaluate(
