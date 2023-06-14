@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test
 
 class PoaoTilgangMockClientTest {
 	val poaoTilgangMockClient = PoaoTilgangMockClient()
-	val navModel = poaoTilgangMockClient.navModel
+	val navModel = poaoTilgangMockClient.navContext
 
     @Test
     fun evaluatePolicy() {
-		val nyEksternBruker = navModel.nyEksternBruker()
-		val nyNksAnsatt = navModel.nyNksAnsatt()
+		val nyEksternBruker = navModel.privatBrukere.ny()
+		val nyNksAnsatt = navModel.navAnsatt.nyNksAnsatt()
 
 		val tod = NavAnsattTilgangTilEksternBrukerPolicyInput(
 			nyNksAnsatt.azureObjectId,
@@ -26,13 +26,8 @@ class PoaoTilgangMockClientTest {
 	}
 
     @Test
-    fun evaluatePolicies() {
-
-    }
-
-    @Test
     fun hentAdGrupper() {
-		val nyNksAnsatt = navModel.nyNksAnsatt()
+		val nyNksAnsatt = navModel.navAnsatt.nyNksAnsatt()
 		val adgrupper = poaoTilgangMockClient.hentAdGrupper(nyNksAnsatt.azureObjectId).get()!!
 		adgrupper.size shouldBe nyNksAnsatt.adGrupper.size
 		adgrupper.forEachIndexed { index, adGruppe ->
@@ -43,10 +38,11 @@ class PoaoTilgangMockClientTest {
 
     @Test
     fun erSkjermetPerson() {
-		val skjermetBruker = EksternBruker(erSkjermet = true)
-		navModel.leggTilEksternBruker(skjermetBruker)
-		val ikkeSkjermet = EksternBruker(erSkjermet = false)
-		navModel.leggTilEksternBruker(ikkeSkjermet)
+		val skjermetBruker = PrivatBruker(erSkjermet = true)
+		navModel.privatBrukere.add(skjermetBruker)
+		val ikkeSkjermet = PrivatBruker(erSkjermet = false)
+		navModel.privatBrukere.add(ikkeSkjermet)
+
 
 		poaoTilgangMockClient.erSkjermetPerson(skjermetBruker.norskIdent).get() shouldBe true
 		poaoTilgangMockClient.erSkjermetPerson(ikkeSkjermet.norskIdent).get() shouldBe false
@@ -54,10 +50,10 @@ class PoaoTilgangMockClientTest {
 
     @Test
     fun testErSkjermetPerson() {
-		val skjermetBruker = EksternBruker(erSkjermet = true)
-		navModel.leggTilEksternBruker(skjermetBruker)
-		val ikkeSkjermet = EksternBruker(erSkjermet = false)
-		navModel.leggTilEksternBruker(ikkeSkjermet)
+		val skjermetBruker = PrivatBruker(erSkjermet = true)
+		navModel.privatBrukere.add(skjermetBruker)
+		val ikkeSkjermet = PrivatBruker(erSkjermet = false)
+		navModel.privatBrukere.add(ikkeSkjermet)
 
 		val listOf = listOf(skjermetBruker.norskIdent, ikkeSkjermet.norskIdent)
 		poaoTilgangMockClient.erSkjermetPerson(listOf).get() shouldBe mapOf(skjermetBruker.norskIdent to true, ikkeSkjermet.norskIdent to false)

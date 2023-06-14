@@ -6,15 +6,15 @@ import no.nav.poao_tilgang.core.domain.TilgangType
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerPolicy
 import org.junit.jupiter.api.Test
 
-class NavModellTest {
-	val navModell = NavModell()
-	val providers = Polecys(navModell)
+class NavContextTest {
+	val navContext = NavContext()
+	val providers = Polecys(navContext)
 	val polecyResolver = providers.policyResolver
 
 	@Test
 	fun `veileder skal ha tilgang til bruker`() {
-		val nyEksternBruker = navModell.nyEksternBruker()
-		val veileder = navModell.nyVeilederFor(nyEksternBruker)
+		val nyEksternBruker = navContext.privatBrukere.ny()
+		val veileder = navContext.navAnsatt.nyFor(nyEksternBruker)
 
 		val input = NavAnsattTilgangTilEksternBrukerPolicy.Input(
 			navAnsattAzureId = veileder.azureObjectId,
@@ -29,8 +29,8 @@ class NavModellTest {
 
 	@Test
 	fun `nks skal ha tilgang til bruker`() {
-		val nyEksternBruker = navModell.nyEksternBruker()
-		val nks = navModell.nyNksAnsatt()
+		val nyEksternBruker = navContext.privatBrukere.ny()
+		val nks = navContext.navAnsatt.nyNksAnsatt()
 
 		val input = NavAnsattTilgangTilEksternBrukerPolicy.Input(
 			navAnsattAzureId = nks.azureObjectId,

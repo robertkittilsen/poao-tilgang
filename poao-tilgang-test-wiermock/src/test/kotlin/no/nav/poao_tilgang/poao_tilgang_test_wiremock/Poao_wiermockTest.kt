@@ -14,26 +14,26 @@ import org.junit.jupiter.api.Test
 class Poao_wiermockTest {
 	val managedWiermock = Managed_wiermock()
 	val baseUrl = managedWiermock.wireMockServer.baseUrl()
-	val navModell = managedWiermock.navModell
-	val nyEksternBruker = navModell.nyEksternBruker()
+	val navContext = managedWiermock.navContext
 
 	val poaoTilgangHttpClient: PoaoTilgangClient = PoaoTilgangHttpClient(baseUrl, { "kake" })
 
 
 	@Test
 	fun skjermet_person() {
-		val erSkjermetPersonFalse = poaoTilgangHttpClient.erSkjermetPerson(nyEksternBruker.norskIdent)
+		val privatBruker = navContext.privatBrukere.ny()
+		val erSkjermetPersonFalse = poaoTilgangHttpClient.erSkjermetPerson(privatBruker.norskIdent)
 		erSkjermetPersonFalse.get() shouldBe false
 
-		nyEksternBruker.erSkjermet = true
-		val erSkjermetPersonTrue = poaoTilgangHttpClient.erSkjermetPerson(nyEksternBruker.norskIdent)
+		privatBruker.erSkjermet = true
+		val erSkjermetPersonTrue = poaoTilgangHttpClient.erSkjermetPerson(privatBruker.norskIdent)
 		erSkjermetPersonTrue.get() shouldBe true
 
 	}
 
 	@Test
 	fun skal_hente_adGrupper() {
-		val nyNksAnsatt = navModell.nyNksAnsatt()
+		val nyNksAnsatt = navContext.navAnsatt.nyNksAnsatt()
 		val anttal_roller = nyNksAnsatt.adGrupper.size
 		val hentAdGrupper = poaoTilgangHttpClient.hentAdGrupper(nyNksAnsatt.azureObjectId)
 		hentAdGrupper.get()!!.size shouldBe nyNksAnsatt.adGrupper.size
@@ -50,19 +50,16 @@ class Poao_wiermockTest {
 
 	@Test
 	fun skal_evaluere_polecy() {
-		val nyNksAnsatt = navModell.nyNksAnsatt()
+		val nyNksAnsatt = navContext.navAnsatt.nyNksAnsatt()
 		val premitDesicion =
 			poaoTilgangHttpClient.evaluatePolicy(NavAnsattTilgangTilModiaPolicyInput(nyNksAnsatt.azureObjectId))
 
 		premitDesicion.get() shouldBe Decision.Permit
 
 		val utenTilgang = NavAnsatt()
-		navModell.leggTilNavAnsatt(utenTilgang)
+		navContext.navAnsatt.add(utenTilgang)
 
 		poaoTilgangHttpClient.evaluatePolicy(NavAnsattTilgangTilModiaPolicyInput(utenTilgang.azureObjectId)).get()?.isDeny shouldBe true
-
 	}
-
-
 
 }

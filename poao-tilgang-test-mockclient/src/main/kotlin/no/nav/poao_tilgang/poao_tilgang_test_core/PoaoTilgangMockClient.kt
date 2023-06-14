@@ -8,7 +8,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.poao_tilgang.api_core_mapper.ApiCoreMapper
 import no.nav.poao_tilgang.client.api.ApiResult
 import no.nav.poao_tilgang.client.api.ResponseDataApiException
-import no.nav.poao_tilgang.poao_tilgang_test_core.NavModell
+import no.nav.poao_tilgang.poao_tilgang_test_core.NavContext
 import no.nav.poao_tilgang.poao_tilgang_test_core.Polecys
 import java.util.*
 
@@ -18,9 +18,8 @@ internal object ClientObjectMapper {
 		.registerModule(JavaTimeModule())
 		.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 }
-class PoaoTilgangMockClient: PoaoTilgangClient {
-	val navModel = NavModell()
-	private val policyes = Polecys(navModel)
+class PoaoTilgangMockClient(val navContext: NavContext = NavContext()): PoaoTilgangClient {
+	private val policyes = Polecys(navContext)
 	private val apiCoreMapper = ApiCoreMapper(policyes.providers.adGruppeProvider)
 	private val resolver = policyes.policyResolver
 	override fun evaluatePolicy(input: PolicyInput): ApiResult<Decision> {
@@ -47,9 +46,10 @@ class PoaoTilgangMockClient: PoaoTilgangClient {
 		val valueToTree = ClientObjectMapper.objectMapper.valueToTree<JsonNode>(requestDto.policyInput)
 		val policyInput = apiCoreMapper.mapToPolicyInput(requestDto.policyId, valueToTree)
 		val result = resolver.evaluate(policyInput)
-		return when(result.decision) {
+		val decision = result.decision
+		return when(decision) {
 			is no.nav.poao_tilgang.core.domain.Decision.Permit -> Decision.Permit
-			is no.nav.poao_tilgang.core.domain.Decision.Deny -> Decision.Deny("mok message", "mock resaon") //TODO fiks denne
+			is no.nav.poao_tilgang.core.domain.Decision.Deny -> Decision.Deny(decision.message, decision.reason.name)
 		}
 
 	}
@@ -64,7 +64,7 @@ class PoaoTilgangMockClient: PoaoTilgangClient {
 	}
 
 	override fun erSkjermetPerson(norskIdent: NorskIdent): ApiResult<Boolean> {
-		val eksternBruker = navModel.hentEksternBruker(norskIdent) ?: return ApiResult.failure<Boolean>(
+		val eksternBruker = navContext.privatBrukere.get(norskIdent) ?: return ApiResult.failure<Boolean>(
 			ResponseDataApiException("Brukern finnes ikke")
 		)
 
@@ -72,7 +72,7 @@ class PoaoTilgangMockClient: PoaoTilgangClient {
 	}
 
 	override fun erSkjermetPerson(norskeIdenter: List<NorskIdent>): ApiResult<Map<NorskIdent, Boolean>> {
-		val toMap = navModel.erSkjermetPerson(norskeIdenter)
+		val toMap = navContext.erSkjermetPerson(norskeIdenter)
 		return ApiResult.success(toMap)
 	}
 }

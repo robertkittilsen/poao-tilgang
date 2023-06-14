@@ -35,7 +35,7 @@ class Managed_wiermock(portnummer: Int = 0, baspath: String= "") {
 			.extensions(*mocks.listOfExtension)
 	)
 
-	val navModell = mocks.navModell
+	val navContext = mocks.navContext
 
 	init {
 		wireMockServer.stubFor(
@@ -63,7 +63,7 @@ class Managed_wiermock(portnummer: Int = 0, baspath: String= "") {
 	}
 }
 class Poao_wiermock(val polecys: Polecys = Polecys(), baspath : String) {
-	val navModell = polecys.navModel
+	val navContext = polecys.navContext
 
 
 	val skjermetPerson = Response("skjermetPerson", "$baspath/api/v1/skjermet-person", ::kjermetPerson, ErSkjermetPersonBulkRequest::class.java)
@@ -74,11 +74,11 @@ class Poao_wiermock(val polecys: Polecys = Polecys(), baspath : String) {
 	val listOfExtension = arrayOf(skjermetPerson, adgroupController, polecyController, tilgangsKontroller)
 
 	private fun kjermetPerson(model: ErSkjermetPersonBulkRequest): Map<NorskIdent, Boolean> {
-		return navModell.erSkjermetPerson(model.norskeIdenter)
+		return navContext.erSkjermetPerson(model.norskeIdenter)
 	}
 	private fun harTilgang(harTilgangTilModiaRequest: HarTilgangTilModiaRequest): TilgangResponse {
 		val navIdent = harTilgangTilModiaRequest.navIdent
-		val navAnsatt = navModell.henNavAnsatt(navIdent)
+		val navAnsatt = navContext.navAnsatt.get(navIdent)
 			?: return TilgangResponse(DecisionDto(DecisionType.DENY, "ikke satt i mock", "Ikke ansatt"))
 
 
@@ -88,8 +88,8 @@ class Poao_wiermock(val polecys: Polecys = Polecys(), baspath : String) {
 
 	}
 	private fun getAdGropper(model: HentAdGrupperForBrukerRequest): HentAdGrupperForBrukerResponse? {
-		return navModell
-			.henNavAnsatt(model.navAnsattAzureId)
+		return navContext
+			.navAnsatt.get(model.navAnsattAzureId)
 			?.adGrupper
 			?.map {
 				AdGruppeDto(

@@ -16,8 +16,8 @@ class TimerService():Timer {
 }
 
 data class Polecys(
-	val navModel: NavModell = NavModell(),
-	val providers: Providers = Providers(navModel),
+	val navContext: NavContext = NavContext(),
+	val providers: Providers = Providers(navContext),
 	val timer: Timer= TimerService(),
 	val navAnsattTilgangTilNavEnhetMedSperrePolicy: NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl = NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 		providers.navEnhetTilgangProvider,
