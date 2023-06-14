@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 
 
 class Poao_wiermockTest {
-	val managedWiermock = Managed_wiermock()
+	val managedWiermock = ManagedWiremock()
 	val baseUrl = managedWiermock.wireMockServer.baseUrl()
 	val navContext = managedWiermock.navContext
 

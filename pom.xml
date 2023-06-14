@@ -17,7 +17,7 @@
         <module>api-core-mapper</module>
         <module>poao-tilgang-test-core</module>
         <module>poao-tilgang-test-mockclient</module>
-        <module>poao-tilgang-test-wiermock</module>
+        <module>poao-tilgang-test-wiremock</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>

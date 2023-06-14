@@ -15,7 +15,7 @@ class TimerService():Timer {
 
 }
 
-data class Polecys(
+data class Policies(
 	val navContext: NavContext = NavContext(),
 	val providers: Providers = Providers(navContext),
 	val timer: Timer= TimerService(),
@@ -89,7 +89,7 @@ data class Polecys(
 			navAnsattTilgangTilNavEnhetPolicy,
 			navAnsattBehandleStrengtFortroligBrukerePolicy,
 			navAnsattBehandleFortroligBrukerePolicy,
-			navAnsattTilgangTilNavEnhetMedSperrePolicy, //TODO sjekk retskrivning for denne andledes skrevet i policyResolver
+			navAnsattTilgangTilNavEnhetMedSperrePolicy,
 			navAnsattBehandleSkjermedePersonerPolicy,
 			timer,
 			providers.toggleProvider,

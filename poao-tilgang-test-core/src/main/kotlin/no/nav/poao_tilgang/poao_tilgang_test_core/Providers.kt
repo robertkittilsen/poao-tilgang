@@ -17,7 +17,7 @@ data class Providers(
 	val abacProvider: AbacProvider = AbacProviderImpl(),
 )
 class ToggleProviderImpl : ToggleProvider {
-	override fun brukAbacDesision(): Boolean {
+	override fun brukAbacDecision(): Boolean {
 		return false
 	}
 }
@@ -74,7 +74,6 @@ class AdGruppeProviderImpl(private val navContext: NavContext): AdGruppeProvider
 	}
 }
 class AbacProviderImpl(): AbacProvider {
-	//TODO: mocke denne eller implemeter togle/config for å ikke logge diff?
 	override fun harVeilederTilgangTilPerson(
 		veilederIdent: String,
 		tilgangType: TilgangType,

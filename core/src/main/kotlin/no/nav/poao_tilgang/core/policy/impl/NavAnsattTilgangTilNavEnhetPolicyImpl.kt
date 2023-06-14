@@ -35,7 +35,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImpl(
 	val secureLog = LoggerFactory.getLogger("SecureLog")
 
 	override fun evaluate(input: NavAnsattTilgangTilNavEnhetPolicy.Input): Decision {
-		return if (toggleProvider.brukAbacDesision()) {
+		return if (toggleProvider.brukAbacDecision()) {
 			val harTilgangAbac = harTilgangAbac(input)
 
 			asyncLogDecisionDiff(name, input, ::harTilgang, { _ ->harTilgangAbac })

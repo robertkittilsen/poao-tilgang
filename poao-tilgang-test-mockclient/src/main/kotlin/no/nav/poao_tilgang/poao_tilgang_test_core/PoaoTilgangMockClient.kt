@@ -9,7 +9,7 @@ import no.nav.poao_tilgang.api_core_mapper.ApiCoreMapper
 import no.nav.poao_tilgang.client.api.ApiResult
 import no.nav.poao_tilgang.client.api.ResponseDataApiException
 import no.nav.poao_tilgang.poao_tilgang_test_core.NavContext
-import no.nav.poao_tilgang.poao_tilgang_test_core.Polecys
+import no.nav.poao_tilgang.poao_tilgang_test_core.Policies
 import java.util.*
 
 internal object ClientObjectMapper {
@@ -19,7 +19,7 @@ internal object ClientObjectMapper {
 		.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 }
 class PoaoTilgangMockClient(val navContext: NavContext = NavContext()): PoaoTilgangClient {
-	private val policyes = Polecys(navContext)
+	private val policyes = Policies(navContext)
 	private val apiCoreMapper = ApiCoreMapper(policyes.providers.adGruppeProvider)
 	private val resolver = policyes.policyResolver
 	override fun evaluatePolicy(input: PolicyInput): ApiResult<Decision> {

@@ -24,11 +24,11 @@ import no.nav.poao_tilgang.api_core_mapper.ApiCoreMapper
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.NorskIdent
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
-import no.nav.poao_tilgang.poao_tilgang_test_core.Polecys
+import no.nav.poao_tilgang.poao_tilgang_test_core.Policies
 import kotlin.reflect.KFunction1
 
-class Managed_wiermock(portnummer: Int = 0, baspath: String= "") {
-	val mocks = Poao_wiermock(baspath = baspath)
+class ManagedWiremock(portnummer: Int = 0, baspath: String= "") {
+	val mocks = WiremockTransformers(baspath = baspath)
 	val wireMockServer = WireMockServer(
 		wireMockConfig()
 			.port(portnummer)
@@ -62,14 +62,14 @@ class Managed_wiermock(portnummer: Int = 0, baspath: String= "") {
 		wireMockServer.start()
 	}
 }
-class Poao_wiermock(val polecys: Polecys = Polecys(), baspath : String) {
-	val navContext = polecys.navContext
+class WiremockTransformers(val policies: Policies = Policies(), baspath : String) {
+	val navContext = policies.navContext
 
 
 	val skjermetPerson = Response("skjermetPerson", "$baspath/api/v1/skjermet-person", ::kjermetPerson, ErSkjermetPersonBulkRequest::class.java)
-	val adgroupController = Response("adgroupController", "$baspath/api/v1/ad-gruppe", ::getAdGropper, HentAdGrupperForBrukerRequest::class.java)
+	val adgroupController = Response("adgroupController", "$baspath/api/v1/ad-gruppe", ::getAdGrupper, HentAdGrupperForBrukerRequest::class.java)
 	val tilgangsKontroller = Response("tilgangsKontroller", "$baspath/api/v1/tilgang/modia", ::harTilgang, HarTilgangTilModiaRequest::class.java)
-	val polecyController = PolicyController(polecys, baspath)
+	val polecyController = PolicyController(policies, baspath)
 
 	val listOfExtension = arrayOf(skjermetPerson, adgroupController, polecyController, tilgangsKontroller)
 
@@ -82,12 +82,12 @@ class Poao_wiermock(val polecys: Polecys = Polecys(), baspath : String) {
 			?: return TilgangResponse(DecisionDto(DecisionType.DENY, "ikke satt i mock", "Ikke ansatt"))
 
 
-		val evaluate =  polecys.navAnsattTilgangTilModiaPolicy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navAnsatt.azureObjectId))
+		val evaluate =  policies.navAnsattTilgangTilModiaPolicy.evaluate(NavAnsattTilgangTilModiaPolicy.Input(navAnsatt.azureObjectId))
 		val decisionDto = decisionDto(evaluate)
 		return TilgangResponse(decisionDto)
 
 	}
-	private fun getAdGropper(model: HentAdGrupperForBrukerRequest): HentAdGrupperForBrukerResponse? {
+	private fun getAdGrupper(model: HentAdGrupperForBrukerRequest): HentAdGrupperForBrukerResponse? {
 		return navContext
 			.navAnsatt.get(model.navAnsattAzureId)
 			?.adGrupper
@@ -102,8 +102,8 @@ class Poao_wiermock(val polecys: Polecys = Polecys(), baspath : String) {
 
 
 
-class PolicyController(val polecys: Polecys, baspath: String) : ResponseDefinitionTransformer() {
-	val apiCoreMapper = ApiCoreMapper(polecys.providers.adGruppeProvider)
+class PolicyController(val policies: Policies, baspath: String) : ResponseDefinitionTransformer() {
+	val apiCoreMapper = ApiCoreMapper(policies.providers.adGruppeProvider)
 
 	val path = "$baspath/api/v1/policy/evaluate"
 	override fun getName(): String {
@@ -135,7 +135,7 @@ class PolicyController(val polecys: Polecys, baspath: String) : ResponseDefiniti
 	private fun response(requestDto: EvaluatePoliciesRequest<JsonNode>): EvaluatePoliciesResponse {
 		val a = requestDto.requests.map {
 			val kake = apiCoreMapper.mapToPolicyInput(it.policyId, it.policyInput)
-			val evaluate = polecys.policyResolver.evaluate(kake)
+			val evaluate = policies.policyResolver.evaluate(kake)
 			val value = decisionDto(evaluate.decision)
 
 			PolicyEvaluationResultDto(it.requestId,  value)

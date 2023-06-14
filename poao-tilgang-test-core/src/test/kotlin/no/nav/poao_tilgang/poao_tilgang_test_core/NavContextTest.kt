@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 
 class NavContextTest {
 	val navContext = NavContext()
-	val providers = Polecys(navContext)
+	val providers = Policies(navContext)
 	val polecyResolver = providers.policyResolver
 
 	@Test

@@ -33,7 +33,7 @@ class PolicyResolver(
 
 
 	private fun <I : PolicyInput> evaluateWithName(input: I, policy: Policy<I>): PolicyResult {
-		return timer.measure("app.poao-tilgang.policy.evaluate", "policy", policy.name, "brukAbacDesision", toggleProvider.brukAbacDesision().toString()) {
+		return timer.measure("app.poao-tilgang.policy.evaluate", "policy", policy.name, "brukAbacDesision", toggleProvider.brukAbacDecision().toString()) {
 			val decision = policy.evaluate(input)
 			PolicyResult(policy.name, decision)
 		}

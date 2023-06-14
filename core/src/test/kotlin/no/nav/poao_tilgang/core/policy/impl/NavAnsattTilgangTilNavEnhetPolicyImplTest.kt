@@ -35,7 +35,7 @@ class NavAnsattTilgangTilNavEnhetPolicyImplTest {
 
 	@BeforeEach
 	internal fun setUp() {
-		every { toggleProvider.brukAbacDesision() } returns true
+		every { toggleProvider.brukAbacDecision() } returns true
 
 		every {
 			adGruppeProvider.hentTilgjengeligeAdGrupper()
