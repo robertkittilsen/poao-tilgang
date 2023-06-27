@@ -5,9 +5,10 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.slf4j.LoggerFactory
+import java.io.Closeable
 import java.util.concurrent.TimeUnit
 
-open class MockHttpServer {
+open class MockHttpServer : Closeable {
 
 	private val server = MockWebServer()
 
@@ -74,10 +75,6 @@ open class MockHttpServer {
 		return server.requestCount - lastRequestCount
 	}
 
-	fun shutdown() {
-		server.shutdown()
-	}
-
 	private fun createResponseDispatcher(): Dispatcher {
 		return object : Dispatcher() {
 			override fun dispatch(request: RecordedRequest): MockResponse {
@@ -104,5 +101,9 @@ open class MockHttpServer {
 
 	private fun flushRequests() {
 		while (server.takeRequest(1, TimeUnit.NANOSECONDS) != null) {}
+	}
+
+	override fun close() {
+		server.close()
 	}
 }

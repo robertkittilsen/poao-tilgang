@@ -9,11 +9,9 @@ import no.nav.poao_tilgang.core.domain.AdGruppeNavn.EGNE_ANSATTE
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.FORTROLIG_ADRESSE
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.GOSYS_NASJONAL
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.GOSYS_UTVIDBAR_TIL_NASJONAL
-import no.nav.poao_tilgang.core.domain.AdGruppeNavn.GOSYS_UTVIDET
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.MODIA_ADMIN
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.MODIA_GENERELL
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.MODIA_OPPFOLGING
-import no.nav.poao_tilgang.core.domain.AdGruppeNavn.PENSJON_UTVIDET
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.STRENGT_FORTROLIG_ADRESSE
 import no.nav.poao_tilgang.core.domain.AdGruppeNavn.SYFO_SENSITIV
 import no.nav.poao_tilgang.core.domain.AdGrupper
@@ -35,9 +33,7 @@ class AdGruppeProviderImpl(
 	@Value("\${ad-gruppe-id.modia-generell}") private val adGruppeIdModiaGenerell: UUID,
 	@Value("\${ad-gruppe-id.gosys-nasjonal}") private val adGruppeIdGosysNasjonal: UUID,
 	@Value("\${ad-gruppe-id.gosys-utvidbar-til-nasjonal}") private val adGruppeIdGosysUtvidbarTilNasjonal: UUID,
-	@Value("\${ad-gruppe-id.gosys-utvidet}") private val adGruppeIdGosysUtvidet: UUID,
 	@Value("\${ad-gruppe-id.syfo-sensitiv}") private val adGruppeIdSyfoSensitiv: UUID,
-	@Value("\${ad-gruppe-id.pensjon-utvidet}") private val adGruppeIdPensjonUtvidet: UUID,
 	@Value("\${ad-gruppe-id.egne-ansatte}") private val adGruppeIdEgneAnsatte: UUID,
 	@Value("\${ad-gruppe-id.aktivitetsplan-kvp}") private val adGruppeIdAktivitetsplanKvp: UUID
 ) : AdGruppeProvider {
@@ -50,9 +46,7 @@ class AdGruppeProviderImpl(
 		modiaGenerell = AdGruppe(adGruppeIdModiaGenerell, MODIA_GENERELL),
 		gosysNasjonal = AdGruppe(adGruppeIdGosysNasjonal, GOSYS_NASJONAL),
 		gosysUtvidbarTilNasjonal = AdGruppe(adGruppeIdGosysUtvidbarTilNasjonal, GOSYS_UTVIDBAR_TIL_NASJONAL),
-		gosysUtvidet = AdGruppe(adGruppeIdGosysUtvidet, GOSYS_UTVIDET),
 		syfoSensitiv = AdGruppe(adGruppeIdSyfoSensitiv, SYFO_SENSITIV),
-		pensjonUtvidet = AdGruppe(adGruppeIdPensjonUtvidet, PENSJON_UTVIDET),
 		egneAnsatte = AdGruppe(adGruppeIdEgneAnsatte, EGNE_ANSATTE),
 		aktivitetsplanKvp = AdGruppe(adGruppeIdAktivitetsplanKvp, AKTIVITETSPLAN_KVP)
 	)

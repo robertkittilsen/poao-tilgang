@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.5</version>
+        <version>3.0.6</version>
     </parent>
 
     <modules>
@@ -14,6 +14,10 @@
         <module>api</module>
         <module>application</module>
         <module>client</module>
+        <module>api-core-mapper</module>
+        <module>poao-tilgang-test-core</module>
+        <module>poao-tilgang-test-mockclient</module>
+        <module>poao-tilgang-test-wiremock</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
@@ -39,7 +43,7 @@
         <token-validaiton.version>3.0.11</token-validaiton.version>
         <mockk.version>1.13.4</mockk.version>
         <kotest.version>5.5.0</kotest.version>
-        <common.version>3.2023.04.18_10.07-0576b4e09008</common.version>
+        <common.version>3.2023.05.25_12.58-6d52407f804a</common.version>
     </properties>
 
     <repositories>
@@ -76,6 +80,26 @@
                 <artifactId>client</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>no.nav.poao-tilgang</groupId>
+                <artifactId>api-core-mapper</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.poao-tilgang</groupId>
+                <artifactId>poao-tilgang-test-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.poao-tilgang</groupId>
+                <artifactId>poao-tilgang-test-mockclient</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.poao-tilgang</groupId>
+                <artifactId>poao-tilgang-test-wiermock</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.github.navikt.common-java-modules</groupId>
@@ -95,6 +119,11 @@
             <dependency>
                 <groupId>com.github.navikt.common-java-modules</groupId>
                 <artifactId>rest</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.navikt.common-java-modules</groupId>
+                <artifactId>feature-toggle</artifactId>
                 <version>${common.version}</version>
             </dependency>
 

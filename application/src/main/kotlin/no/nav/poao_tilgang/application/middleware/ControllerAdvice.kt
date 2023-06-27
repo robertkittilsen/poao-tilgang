@@ -1,6 +1,7 @@
 package no.nav.poao_tilgang.application.middleware
 
-import no.nav.poao_tilgang.application.exception.PolicyNotImplementedException
+
+import no.nav.poao_tilgang.core.domain.PolicyNotImplementedException
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

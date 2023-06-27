@@ -76,7 +76,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
-            <version>1.10.2</version>
+            <version>1.10.3</version>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
@@ -111,6 +111,10 @@
         <dependency>
             <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.navikt.common-java-modules</groupId>
+            <artifactId>feature-toggle</artifactId>
         </dependency>
 
         <dependency>
@@ -152,6 +156,11 @@
             <groupId>io.mockk</groupId>
             <artifactId>mockk-jvm</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.poao-tilgang</groupId>
+            <artifactId>api-core-mapper</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

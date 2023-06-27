@@ -290,7 +290,7 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 			navAnsattAzureId = navAnsattId
 		)).getOrThrow()
 
-		decision shouldBe Decision.Deny("NAV-ansatt mangler tilgang til en av AD-gruppene [0000-GA-GOSYS_UTVIDET, 0000-GA-Pensjon_UTVIDET, 0000-GA-Egne_ansatte]", reason="MANGLER_TILGANG_TIL_AD_GRUPPE")
+		decision shouldBe Decision.Deny("NAV-ansatt mangler tilgang til en av AD-gruppene [0000-GA-Egne_ansatte]", reason="MANGLER_TILGANG_TIL_AD_GRUPPE")
 	}
 
 	private fun mockAdGrupperResponse(navIdent: String, navAnsattId: UUID, adGrupper: List<AdGruppe>) {
