@@ -23,16 +23,16 @@ object AbacDecisionDiff {
 	}
 
 	@OptIn(DelicateCoroutinesApi::class)
-	fun <I : PolicyInput> asyncLogDecisionDiff(policyName: String, input: I, policy: (input: I) -> Decision, abacDecision: Decision) {
+	fun <I : PolicyInput> asyncLogDecisionDiff(policyName: String, input: I, poaoTilgangPolicy: (input: I) -> Decision, abacPolicy: (input: I) ->  Decision) {
 		GlobalScope.launch(MDCContext()) {
 			try {
-				val poaoTilgangDecision = policy.invoke(input)
+				val poaoTilgangDecision = poaoTilgangPolicy.invoke(input)
+				val abacDecision = abacPolicy.invoke(input)
 
 				if (abacDecision.type != poaoTilgangDecision.type) {
-					//TODO: Endre til warning
-					secureLog.info("Decision diff for policy $policyName - ulikt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
+					secureLog.warn("Decision diff for policy $policyName - ulikt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
 				} else {
-					secureLog.info("Decision diff for policy $policyName - likt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
+					secureLog.debug("Decision diff for policy $policyName - likt svar: ABAC=($abacDecision) POAO-tilgang=($poaoTilgangDecision) Input=$input")
 				}
 			} catch (e: Throwable) {
 				log.error("Feil i POAO-tilgang implementasjon", e)

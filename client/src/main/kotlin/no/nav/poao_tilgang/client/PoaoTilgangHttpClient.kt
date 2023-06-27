@@ -132,81 +132,91 @@ class PoaoTilgangHttpClient(
 			}
 		}
 	}
+}
 
-	private fun toRequestDto(policyRequest: PolicyRequest): PolicyEvaluationRequestDto<Any> {
-		return when (policyRequest.policyInput) {
+fun toRequestDto(policyRequest: PolicyRequest): PolicyEvaluationRequestDto<Any> {
+	return when (policyRequest.policyInput) {
 
-			is NavAnsattTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto(
-					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
-					norskIdent = policyRequest.policyInput.norskIdent,
-					tilgangType = when(policyRequest.policyInput.tilgangType) {
-						TilgangType.LESE -> no.nav.poao_tilgang.api.dto.request.TilgangType.LESE
-						TilgangType.SKRIVE -> no.nav.poao_tilgang.api.dto.request.TilgangType.SKRIVE
-					}
+		is NavAnsattNavIdentSkrivetilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattNavIdentSkrivetilgangTilEksternBrukerPolicyInputV1Dto(
+				navIdent = policyRequest.policyInput.navIdent,
+				norskIdent = policyRequest.policyInput.norskIdent,
+
 				),
-				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2
-			)
+			policyId = PolicyId.NAV_ANSATT_NAV_IDENT_SKRIVETILGANG_TIL_EKSTERN_BRUKER_V1
+		)
 
-			is NavAnsattTilgangTilModiaPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = NavAnsattTilgangTilModiaPolicyInputV1Dto(
-					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
-				),
-				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1
-			)
+		is NavAnsattTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto(
+				navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
+				norskIdent = policyRequest.policyInput.norskIdent,
+				tilgangType = when(policyRequest.policyInput.tilgangType) {
+					TilgangType.LESE -> no.nav.poao_tilgang.api.dto.request.TilgangType.LESE
+					TilgangType.SKRIVE -> no.nav.poao_tilgang.api.dto.request.TilgangType.SKRIVE
+				}
+			),
+			policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2
+		)
 
-			is EksternBrukerTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = EksternBrukerTilgangTilEksternBrukerPolicyInputV1Dto(
-					rekvirentNorskIdent = policyRequest.policyInput.rekvirentNorskIdent,
-					ressursNorskIdent = policyRequest.policyInput.ressursNorskIdent
-				),
-				policyId = PolicyId.EKSTERN_BRUKER_TILGANG_TIL_EKSTERN_BRUKER_V1
-			)
+		is NavAnsattTilgangTilModiaPolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattTilgangTilModiaPolicyInputV1Dto(
+				navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
+			),
+			policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1
+		)
 
-			is NavAnsattTilgangTilNavEnhetPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = NavAnsattTilgangTilNavEnhetPolicyInputV1Dto(
-					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
-					navEnhetId = policyRequest.policyInput.navEnhetId
-				),
-				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_V1
-			)
+		is EksternBrukerTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = EksternBrukerTilgangTilEksternBrukerPolicyInputV1Dto(
+				rekvirentNorskIdent = policyRequest.policyInput.rekvirentNorskIdent,
+				ressursNorskIdent = policyRequest.policyInput.ressursNorskIdent
+			),
+			policyId = PolicyId.EKSTERN_BRUKER_TILGANG_TIL_EKSTERN_BRUKER_V1
+		)
 
-			is NavAnsattBehandleStrengtFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = NavAnsattBehandleStrengtFortroligBrukerePolicyInputV1Dto(
-					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
-				),
-				policyId = PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1
-			)
+		is NavAnsattTilgangTilNavEnhetPolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattTilgangTilNavEnhetPolicyInputV1Dto(
+				navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
+				navEnhetId = policyRequest.policyInput.navEnhetId
+			),
+			policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_V1
+		)
 
-			is NavAnsattBehandleFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = NavAnsattBehandleFortroligBrukerePolicyInputV1Dto(
-					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
-				),
-				policyId = PolicyId.NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE_V1
-			)
+		is NavAnsattBehandleStrengtFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattBehandleStrengtFortroligBrukerePolicyInputV1Dto(
+				navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
+			),
+			policyId = PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1
+		)
 
-			is NavAnsattTilgangTilNavEnhetMedSperrePolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = NavAnsattTilgangTilNavEnhetMedSperrePolicyInputV1Dto(
-					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
-					navEnhetId = policyRequest.policyInput.navEnhetId
-				),
-				policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_MED_SPERRE_V1
-			)
+		is NavAnsattBehandleFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattBehandleFortroligBrukerePolicyInputV1Dto(
+				navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
+			),
+			policyId = PolicyId.NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE_V1
+		)
 
-			is NavAnsattBehandleSkjermedePersonerPolicyInput -> PolicyEvaluationRequestDto(
-				requestId = policyRequest.requestId,
-				policyInput = NavAnsattBehandleSkjermedePersonerPolicyInputV1Dto(
-					navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
-				),
-				policyId = PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1
-			)
-		}
+		is NavAnsattTilgangTilNavEnhetMedSperrePolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattTilgangTilNavEnhetMedSperrePolicyInputV1Dto(
+				navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
+				navEnhetId = policyRequest.policyInput.navEnhetId
+			),
+			policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_MED_SPERRE_V1
+		)
+
+		is NavAnsattBehandleSkjermedePersonerPolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattBehandleSkjermedePersonerPolicyInputV1Dto(
+				navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
+			),
+			policyId = PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1
+		)
 	}
 }

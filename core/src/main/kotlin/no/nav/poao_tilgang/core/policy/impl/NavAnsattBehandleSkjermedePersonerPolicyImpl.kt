@@ -13,8 +13,6 @@ class NavAnsattBehandleSkjermedePersonerPolicyImpl(
 
 	private val behandleSkjermedePersonerGrupper = adGruppeProvider.hentTilgjengeligeAdGrupper().let {
 		listOf(
-			it.gosysUtvidet,
-			it.pensjonUtvidet,
 			it.egneAnsatte
 		)
 	}

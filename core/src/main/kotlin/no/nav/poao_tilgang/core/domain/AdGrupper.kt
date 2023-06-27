@@ -10,10 +10,8 @@ data class AdGrupper(
 
 	val gosysNasjonal: AdGruppe,
 	val gosysUtvidbarTilNasjonal: AdGruppe,
-	val gosysUtvidet: AdGruppe,
 
 	val syfoSensitiv: AdGruppe,
-	val pensjonUtvidet: AdGruppe,
 	val egneAnsatte: AdGruppe,
 
 	val aktivitetsplanKvp: AdGruppe

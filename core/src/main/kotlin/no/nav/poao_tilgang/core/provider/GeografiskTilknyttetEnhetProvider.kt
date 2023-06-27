@@ -5,5 +5,5 @@ import no.nav.poao_tilgang.core.domain.NorskIdent
 
 interface GeografiskTilknyttetEnhetProvider {
 
-	fun hentGeografiskTilknytetEnhet(norskIdent: NorskIdent): NavEnhetId?
+	fun hentGeografiskTilknyttetEnhet(norskIdent: NorskIdent): NavEnhetId?
 }

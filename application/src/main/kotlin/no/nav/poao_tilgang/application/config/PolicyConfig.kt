@@ -1,6 +1,6 @@
 package no.nav.poao_tilgang.application.config
 
-import io.micrometer.core.instrument.MeterRegistry
+import no.nav.poao_tilgang.application.service.TimerService
 import no.nav.poao_tilgang.core.policy.*
 import no.nav.poao_tilgang.core.policy.impl.*
 import no.nav.poao_tilgang.core.provider.*
@@ -19,7 +19,8 @@ open class PolicyConfig {
 		navAnsattTilgangTilOppfolgingPolicy: NavAnsattTilgangTilOppfolgingPolicy,
 		navAnsattTilgangTilModiaGenerellPolicy: NavAnsattTilgangTilModiaGenerellPolicy,
 		adGruppeProvider: AdGruppeProvider,
-		meterRegistry: MeterRegistry
+		timerService: TimerService,
+		toggleProvider: ToggleProvider,
 	): NavAnsattTilgangTilEksternBrukerPolicy {
 		return NavAnsattTilgangTilEksternBrukerPolicyImpl(
 			abacProvider,
@@ -29,7 +30,8 @@ open class PolicyConfig {
 			navAnsattTilgangTilOppfolgingPolicy,
 			navAnsattTilgangTilModiaGenerellPolicy,
 			adGruppeProvider,
-			meterRegistry
+			timerService,
+			toggleProvider
 		)
 	}
 
@@ -53,13 +55,15 @@ open class PolicyConfig {
 		navEnhetTilgangProvider: NavEnhetTilgangProvider,
 		adGruppeProvider: AdGruppeProvider,
 		abacProvider: AbacProvider,
-		meterRegistry: MeterRegistry
-	): NavAnsattTilgangTilNavEnhetMedSperrePolicy {
+		timerService: TimerService,
+		toggleProvider: ToggleProvider,
+		): NavAnsattTilgangTilNavEnhetMedSperrePolicy {
 		return NavAnsattTilgangTilNavEnhetMedSperrePolicyImpl(
 			navEnhetTilgangProvider,
 			adGruppeProvider,
 			abacProvider,
-			meterRegistry
+			timerService,
+			toggleProvider
 		)
 	}
 
@@ -93,10 +97,12 @@ open class PolicyConfig {
 		navEnhetTilgangProvider: NavEnhetTilgangProvider,
 		adGruppeProvider: AdGruppeProvider,
 		abacProvider: AbacProvider,
-		meterRegistry: MeterRegistry
-	): NavAnsattTilgangTilNavEnhetPolicy {
+		timerService: TimerService,
+		toggleProvider: ToggleProvider,
+		): NavAnsattTilgangTilNavEnhetPolicy {
 		return NavAnsattTilgangTilNavEnhetPolicyImpl(
-			navEnhetTilgangProvider, adGruppeProvider, abacProvider,meterRegistry
+			navEnhetTilgangProvider, adGruppeProvider, abacProvider,timerService,
+			toggleProvider
 		)
 	}
 

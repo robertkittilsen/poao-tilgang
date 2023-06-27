@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.client.axsys
 
+import io.micrometer.core.annotation.Timed
 import no.nav.common.rest.client.RestClient.baseClient
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonString
 import no.nav.poao_tilgang.application.utils.SecureLog.secureLog
@@ -8,12 +9,13 @@ import okhttp3.Request
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 
-internal class AxsysClientImpl(
+internal open class AxsysClientImpl(
 	private val baseUrl: String,
 	private val tokenProvider: () -> String,
 	private val httpClient: OkHttpClient = baseClient(),
 ) : AxsysClient {
 
+	@Timed(value = "axsys_client.hentTilganger", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
 	override fun hentTilganger(navIdent: String): List<EnhetTilgang> {
 		val request = Request.Builder()
 			.url("$baseUrl/api/v2/tilgang/$navIdent?inkluderAlleEnheter=false")

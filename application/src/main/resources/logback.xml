@@ -2,4 +2,6 @@
 <configuration>
     <include resource="no/nav/common/log/logback-stdout-json.xml"/>
     <include resource="no/nav/common/log/logback-securelogs.xml"/>
+    <logger name="no.nav.poao_tilgang.application.config.RequestTimingFilter" level="DEBUG"/>
+    <logger name="SecureLog" level="DEBUG"/>
 </configuration>

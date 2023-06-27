@@ -188,10 +188,16 @@ data class NavAnsattTilgangTilNavEnhetMedSperrePolicyInput(
     val navEnhetId: String
 ) : PolicyInput()
 ```
+## Testing
+For å legge tilrette for enkel testing av poao-tilgang så er det laget en mockClient og wiremock oppsett.  
+Disse ligger i modulene `poao-tilgang-test-wiremock` og `poao-tilgang-test-mockClient`.  
+Eksempel på bruk finnes i testene.
+
 
 ## Prosjektstruktur
 
 Poao-tilgang er delt opp i flere moduler for å gjøre det enklere å vedlikeholde en tydelig arkitektur.
+
 
 Modulene er som følger:
 * **api** - felles DTOer som brukes av _client-modulen_ og _application-modulen_

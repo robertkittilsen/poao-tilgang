@@ -1,5 +1,6 @@
 package no.nav.poao_tilgang.application.client.microsoft_graph
 
+import io.micrometer.core.annotation.Timed
 import no.nav.common.rest.client.RestClient.baseClient
 import no.nav.poao_tilgang.application.utils.JsonUtils.fromJsonString
 import no.nav.poao_tilgang.application.utils.JsonUtils.toJsonString
@@ -10,12 +11,13 @@ import no.nav.poao_tilgang.core.domain.NavIdent
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class MicrosoftGraphClientImpl(
+open class MicrosoftGraphClientImpl(
 	private val baseUrl: String,
 	private val tokenProvider: () -> String,
 	private val client: OkHttpClient = baseClient()
 ) : MicrosoftGraphClient {
 
+	@Timed("microsoft_graph.hent_nav_ident_med_azure_id", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
 	override fun hentAdGrupperForNavAnsatt(navAnsattAzureId: AzureObjectId): List<AzureObjectId> {
 		val requestData = HentAdGrupperForNavAnsatt.Request(true)
 
@@ -36,6 +38,8 @@ class MicrosoftGraphClientImpl(
 		}
 	}
 
+	@Timed("microsoft_graph.hent_ad_grupper", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
+
 	override fun hentAdGrupper(adGruppeAzureIder: List<AzureObjectId>): List<AdGruppe> {
 		val requestData = HentAdGrupper.Request(adGruppeAzureIder)
 
@@ -55,9 +59,12 @@ class MicrosoftGraphClientImpl(
 			val responseData = fromJsonString<HentAdGrupper.Response>(body)
 
 			responseData.value.map { AdGruppe(it.id, it.displayName) }
+
+
 		}
 	}
 
+	@Timed("microsoft_graph.hent_azure_id_med_nav_identhent_azure_id_med_nav_ident", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
 	override fun hentAzureIdMedNavIdent(navIdent: NavIdent): AzureObjectId {
 		val request = Request.Builder()
 			.url("$baseUrl/v1.0/users?\$select=id&\$count=true&\$filter=onPremisesSamAccountName eq '$navIdent'")
@@ -79,6 +86,7 @@ class MicrosoftGraphClientImpl(
 		}
 	}
 
+	@Timed("microsoft_graph.hent_nav_ident_med_azure_id", histogram = true, percentiles = [0.5, 0.95, 0.99], extraTags = ["type", "client"])
 	override fun hentNavIdentMedAzureId(navAnsattAzureId: AzureObjectId): NavIdent {
 		val request = Request.Builder()
 			.url("$baseUrl/v1.0/users?\$select=onPremisesSamAccountName&\$filter=id eq '$navAnsattAzureId'")

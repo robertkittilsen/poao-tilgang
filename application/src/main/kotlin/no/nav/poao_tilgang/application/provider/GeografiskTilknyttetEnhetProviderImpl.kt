@@ -14,7 +14,7 @@ class GeografiskTilknyttetEnhetProviderImpl(
 	private val norgClient: NorgClient
 ) : GeografiskTilknyttetEnhetProvider {
 
-	override fun hentGeografiskTilknytetEnhet(norskIdent: NorskIdent): NavEnhetId? {
+	override fun hentGeografiskTilknyttetEnhet(norskIdent: NorskIdent): NavEnhetId? {
 		val brukerInfo = pdlClient.hentBrukerInfo(norskIdent)
 
 		return brukerInfo.geografiskTilknytning

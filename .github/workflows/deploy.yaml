@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
 env:
   IMAGE_TAG: ${{ github.sha }}
   IMAGE: ghcr.io/${{ github.repository }}/poao-tilgang
@@ -39,7 +44,7 @@ jobs:
           docker push ${IMAGE}:${IMAGE_TAG}
 
   deploy-dev:
-    name: Deploy application to dev
+    name: Deploy application to dev gcp
     needs: test-build-and-push
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +59,7 @@ jobs:
           VAR: version=${{ env.IMAGE_TAG }}
 
   deploy-prod:
-    name: Deploy application to prod
+    name: Deploy application to prod gcp
     needs: deploy-dev
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -78,3 +83,33 @@ jobs:
           tag_name: ${{ env.VERSION }}
           release_name: Release version ${{ env.VERSION }}
           prerelease: false
+
+  deploy-dev-fss:
+    name: Deploy application to dev fss
+    needs: test-build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy application
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-dev-onprem.yaml
+          VAR: version=${{ env.IMAGE_TAG }}
+
+  deploy-prod-fss:
+    name: Deploy application to prod fss
+    needs: deploy-dev-fss
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy application
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          RESOURCE: .nais/nais-prod-onprem.yaml
+          VAR: version=${{ env.IMAGE_TAG }}

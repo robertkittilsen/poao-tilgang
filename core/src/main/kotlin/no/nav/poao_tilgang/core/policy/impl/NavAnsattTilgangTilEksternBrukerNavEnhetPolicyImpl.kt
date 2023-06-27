@@ -5,7 +5,6 @@ import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.DecisionDenyReason
 import no.nav.poao_tilgang.core.domain.NavEnhetId
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilEksternBrukerNavEnhetPolicy
-import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilNavEnhetPolicy
 import no.nav.poao_tilgang.core.provider.AdGruppeProvider
 import no.nav.poao_tilgang.core.provider.GeografiskTilknyttetEnhetProvider
 import no.nav.poao_tilgang.core.provider.NavEnhetTilgangProvider
@@ -43,19 +42,24 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImpl(
 			.hasAtLeastOne(nasjonalTilgangGrupper)
 			.whenPermit { return it }
 
-		geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)?.let { navEnhetId ->
+		geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)?.let { navEnhetId ->
 			harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "geografiskEnhet")
-			.whenPermit { return it }
+				.whenPermit { return it }
 		}
+
 		oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)?.let { navEnhetId ->
 			harTilgangTilEnhetForBruker(navAnsattAzureId, navEnhetId, "oppfolgingsEnhet")
-			.whenPermit { return it }
+				.whenPermit { return it }
 		}
 
 		return denyDecision
 	}
 
-	fun harTilgangTilEnhetForBruker(navAnsattAzureId: AzureObjectId, navEnhetId: NavEnhetId, typeEnhet: String): Decision {
+	fun harTilgangTilEnhetForBruker(
+		navAnsattAzureId: AzureObjectId,
+		navEnhetId: NavEnhetId,
+		typeEnhet: String
+	): Decision {
 		val navIdent = adGruppeProvider.hentNavIdentMedAzureId(navAnsattAzureId)
 		val harTilgangTilEnhet = navEnhetTilgangProvider.hentEnhetTilganger(navIdent)
 			.any { navEnhetId == it.enhetId }

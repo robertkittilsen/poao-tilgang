@@ -1,6 +1,5 @@
 package no.nav.poao_tilgang.application.client.norg
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockNorgHttpServer
 import org.junit.jupiter.api.AfterEach
@@ -43,13 +42,15 @@ class NorgHttpClientTest {
 	}
 
 	@Test
-	fun `hentTilhorendeEnhet feiler hvis Norg returnerer 404`() {
+	fun `hentTilhorendeEnhet skal returnere null hvis Norg returnerer 404`() {
 		val client = NorgHttpClient(
 			baseUrl = mockServer.serverUrl()
 		)
 
 		mockServer.mockIngenTilhorendeEnhet("23456")
 
-		shouldThrow<RuntimeException> { client.hentTilhorendeEnhet("23456") }
+		val geografiskTilknyttetEnhet = client.hentTilhorendeEnhet("23456")
+
+		geografiskTilknyttetEnhet shouldBe null
 	}
 }

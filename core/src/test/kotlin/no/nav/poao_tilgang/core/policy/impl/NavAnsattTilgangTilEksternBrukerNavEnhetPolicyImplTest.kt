@@ -60,7 +60,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		}
 
 		verify(exactly = 0) {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(any())
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(any())
 		}
 	}
 
@@ -84,7 +84,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		}
 
 		verify(exactly = 0) {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(any())
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(any())
 		}
 	}
 
@@ -99,7 +99,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		} returns ""
 
 		every {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)
 		} returns null
 
 		every {
@@ -124,7 +124,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		decision shouldBe Decision.Permit
 
 		verify(exactly = 1) {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(any())
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(any())
 		}
 	}
 
@@ -139,7 +139,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		} returns ""
 
 		every {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)
 		} returns "12345"
 
 		every {
@@ -164,7 +164,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		decision shouldBe Decision.Permit
 
 		verify(exactly = 1) {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(any())
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(any())
 		}
 	}
 
@@ -183,7 +183,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		} returns null
 
 		every {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)
 		} returns navEnhet
 
 		every { navEnhetTilgangProvider.hentEnhetTilganger(any()) } returns listOf(
@@ -218,7 +218,7 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 		} returns null
 
 		every {
-			geografiskTilknyttetEnhetProvider.hentGeografiskTilknytetEnhet(norskIdent)
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)
 		} returns null
 
 		val decision = policy.evaluate(
@@ -232,6 +232,31 @@ class NavAnsattTilgangTilEksternBrukerNavEnhetPolicyImplTest {
 			message = "Brukeren har ikke oppfølgingsenhet eller geografisk enhet",
 			reason = DecisionDenyReason.UKLAR_TILGANG_MANGLENDE_INFORMASJON
 		)
+	}
+
+	@Test
+	internal fun `skal gå videre til sjekk av oppfølgingsenhet dersom man får 404 fra norg (geografisk tilknytning)`() {
+		every {
+			adGruppeProvider.hentAdGrupper(navAnsattAzureId)
+		} returns emptyList()
+
+		every {
+			oppfolgingsenhetProvider.hentOppfolgingsenhet(norskIdent)
+		} returns null
+
+		every {
+			geografiskTilknyttetEnhetProvider.hentGeografiskTilknyttetEnhet(norskIdent)
+		} returns null
+
+		val decision = policy.evaluate(
+			NavAnsattTilgangTilEksternBrukerNavEnhetPolicy.Input(
+				navAnsattAzureId = navAnsattAzureId,
+				norskIdent = norskIdent
+			)
+		)
+		verify(exactly = 1) {
+			oppfolgingsenhetProvider.hentOppfolgingsenhet(any())
+		}
 	}
 
 
