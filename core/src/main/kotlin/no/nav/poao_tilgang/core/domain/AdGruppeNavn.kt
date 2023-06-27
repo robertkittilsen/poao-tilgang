@@ -9,8 +9,6 @@ object AdGruppeNavn {
 	const val GOSYS_NASJONAL                = "0000-GA-GOSYS_NASJONAL"
     const val GOSYS_UTVIDBAR_TIL_NASJONAL   = "0000-GA-GOSYS_UTVIDBAR_TIL_NASJONAL"
 	const val SYFO_SENSITIV 				= "0000-GA-SYFO-SENSITIV"
-    const val GOSYS_UTVIDET                 = "0000-GA-GOSYS_UTVIDET"
-	const val PENSJON_UTVIDET               = "0000-GA-Pensjon_UTVIDET"
 	const val EGNE_ANSATTE               	= "0000-GA-Egne_ansatte"
 	const val AKTIVITETSPLAN_KVP            = "0000-GA-aktivitesplan_kvp"
 }

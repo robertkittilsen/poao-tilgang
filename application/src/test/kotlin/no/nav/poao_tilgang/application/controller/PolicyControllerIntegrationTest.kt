@@ -301,7 +301,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 
 		response.body?.string() shouldBe denyResponse(
 			requestId,
-			"NAV-ansatt mangler tilgang til en av AD-gruppene [0000-GA-GOSYS_UTVIDET, 0000-GA-Pensjon_UTVIDET, 0000-GA-Egne_ansatte]",
+			"NAV-ansatt mangler tilgang til en av AD-gruppene [0000-GA-Egne_ansatte]",
 			"MANGLER_TILGANG_TIL_AD_GRUPPE"
 		)
 	}
