@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 
 class Poao_wiermockTest {
 	val managedWiermock = PoaoTilgangWiremock()
-	val baseUrl = managedWiermock.wireMockServer.baseUrl()
+	val baseUrl = managedWiermock.baseUrl
 	val navContext = managedWiermock.navContext
 
 	val poaoTilgangHttpClient: PoaoTilgangClient = PoaoTilgangHttpClient(baseUrl, { "kake" })

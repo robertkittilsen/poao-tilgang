@@ -15,6 +15,8 @@ class PoaoTilgangWiremock(portnummer: Int = 0, baspath: String= "", navContext: 
 			.extensions(*mocks.listOfExtension)
 	)
 
+	val baseUrl = wireMockServer.baseUrl()
+
 	val navContext = mocks.navContext
 
 	init {
