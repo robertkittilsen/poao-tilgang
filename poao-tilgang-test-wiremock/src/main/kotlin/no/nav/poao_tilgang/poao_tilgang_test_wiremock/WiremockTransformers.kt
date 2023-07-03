@@ -24,44 +24,11 @@ import no.nav.poao_tilgang.api_core_mapper.ApiCoreMapper
 import no.nav.poao_tilgang.core.domain.Decision
 import no.nav.poao_tilgang.core.domain.NorskIdent
 import no.nav.poao_tilgang.core.policy.NavAnsattTilgangTilModiaPolicy
+import no.nav.poao_tilgang.poao_tilgang_test_core.NavContext
 import no.nav.poao_tilgang.poao_tilgang_test_core.Policies
 import kotlin.reflect.KFunction1
 
-class ManagedWiremock(portnummer: Int = 0, baspath: String= "") {
-	val mocks = WiremockTransformers(baspath = baspath)
-	val wireMockServer = WireMockServer(
-		wireMockConfig()
-			.port(portnummer)
-			.extensions(*mocks.listOfExtension)
-	)
 
-	val navContext = mocks.navContext
-
-	init {
-		wireMockServer.stubFor(
-			WireMock.post(mocks.skjermetPerson.path).willReturn(
-				WireMock.aResponse().withTransformers(mocks.skjermetPerson.name)
-			)
-		)
-		wireMockServer.stubFor(
-			WireMock.post(mocks.adgroupController.path).willReturn(
-				WireMock.aResponse().withTransformers(mocks.adgroupController.name)
-			)
-		)
-		wireMockServer.stubFor(
-			WireMock.post(mocks.tilgangsKontroller.path).willReturn(
-				WireMock.aResponse().withTransformers(mocks.tilgangsKontroller.name)
-			)
-		)
-		wireMockServer.stubFor(
-			WireMock.post(mocks.polecyController.path).willReturn(
-				WireMock.aResponse().withTransformers(mocks.polecyController.name)
-			)
-		)
-
-		wireMockServer.start()
-	}
-}
 class WiremockTransformers(val policies: Policies = Policies(), baspath : String) {
 	val navContext = policies.navContext
 
