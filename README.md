@@ -77,7 +77,7 @@ dependencies {
 ```kotlin
  val client: PoaoTilgangClient = PoaoTilgangCachedClient(
     PoaoTilgangHttpClient(
-        baseUrl = "http://poao-tilgang.poao.svc.cluster.local", // or use "https://poao-tilgang(.dev).intern.nav.no" if your sending the request from dev-fss/prod-fss
+        baseUrl = "http://poao-tilgang.poao.svc.cluster.local", // or use "http://poao-tilgang.poao.svc.nais.local" if your sending the request from dev-fss/prod-fss
         tokenProvider = { "machine-to-machine token" }
     )
 )
