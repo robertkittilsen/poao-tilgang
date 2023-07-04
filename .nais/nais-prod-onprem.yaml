@@ -63,6 +63,8 @@ spec:
           namespace: pto
         - application: tiltaksgjennomforing-api
           namespace: arbeidsgiver
+        - application: veilarbaktivitet
+          namespace: pto
     outbound:
       rules:
         - application: skjermede-personer-pip
