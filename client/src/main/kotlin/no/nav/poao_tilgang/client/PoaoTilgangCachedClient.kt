@@ -20,6 +20,14 @@ class PoaoTilgangCachedClient(
 		.build()
 ) : PoaoTilgangClient {
 
+	companion object {
+		@JvmStatic
+		fun createDefaultCacheClient(client: PoaoTilgangClient): PoaoTilgangCachedClient {
+			return PoaoTilgangCachedClient(client)
+		}
+	}
+
+
 	override fun evaluatePolicy(input: PolicyInput): ApiResult<Decision> {
 		val decision = tryCacheFirstNotNull(policyInputToDecisionCache, input) {
 			val resultat = client.evaluatePolicy(input)
