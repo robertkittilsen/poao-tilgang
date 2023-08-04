@@ -22,7 +22,7 @@ class PoaoTilgangCachedClient(
 
 	companion object {
 		@JvmStatic
-		fun deafultCaheClient(client: PoaoTilgangClient): PoaoTilgangCachedClient {
+		fun createDefaultCacheClient(client: PoaoTilgangClient): PoaoTilgangCachedClient {
 			return PoaoTilgangCachedClient(client)
 		}
 	}
