@@ -65,6 +65,8 @@ spec:
           namespace: arbeidsgiver
         - application: veilarbaktivitet
           namespace: pto
+        - application: veilarbdialog
+          namespace: pto
     outbound:
       rules:
         - application: skjermede-personer-pip
