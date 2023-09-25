@@ -12,20 +12,20 @@ Har også en HTTP-klient som kan trekkes inn som en avhengighet i applikasjoner 
 
 ## Bruk av HTTP-klient
 
-### 1.Legg til jitpack som repository
-Det er anbefalt å legge til Jitpack til slutt for å først søke igjennom andre repositories for avhengigheter.
+### 1.Legg til GitHub Package Registry som repository
+Det er anbefalt å legge til GitHub Package Registry til slutt for å først søke igjennom andre repositories for avhengigheter.
 
 Maven:
 ```xml
     <repositories>
-        <!-- Legger til central eksplisitt for prioritet over jitpack -->
+        <!-- Legger til central eksplisitt for prioritet over github -->
         <repository>
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
         <repository>
-            <id>jitpack</id>
-            <url>https://jitpack.io</url>
+            <id>github</id>
+            <url>https://github-package-registry-mirror.gc.nav.no/cached/maven-release</url>
         </repository>
     </repositories>
 ```
@@ -33,22 +33,20 @@ Maven:
 Gradle:
 ```groovy
 repositories {
-    // Legger til central eksplisitt for prioritet over jitpack
+    // Legger til central eksplisitt for prioritet over github
     mavenCentral()
-    maven { url "https://jitpack.io" }
+    maven { url "https://github-package-registry-mirror.gc.nav.no/cached/maven-release" }
 }
 ```
 
 ### 2. Legg til dependency for klienten 
 
-Hent siste versjon av klienten på https://github.com/navikt/poao-tilgang/releases og legg til avhengigheten.
-NB: Jitpack bygger avhengigheter lazy, dvs når noen først prøver å laste avhengigheten ned. Hvis du er den første som laster 
-ned en ny versjon, så kan det potensielt ta noen minutter før avhengigheten er bygget ferdig. 
+Hent siste versjon av klienten på https://github.com/navikt/poao-tilgang/releases og legg til avhengigheten. 
 
 Maven:
 ```xml
 <dependency>
-    <groupId>com.github.navikt.poao-tilgang</groupId>
+    <groupId>no.nav.poao-tilgang</groupId>
     <artifactId>client</artifactId>
     <version>YYYY.MM.DD_HH.mm-SHA</version>
 </dependency>
@@ -57,7 +55,7 @@ Maven:
 Gradle:
 ```groovy
 dependencies {
-    implementation 'com.github.navikt.poao-tilgang:client:YYYY.MM.DD_HH.mm-SHA'
+    implementation 'no.nav.poao-tilgang:client:YYYY.MM.DD_HH.mm-SHA'
 }
 ```
 
