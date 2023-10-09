@@ -6,7 +6,7 @@ import no.nav.poao_tilgang.core.domain.NavEnhetId
 private val navidener: HashSet<String> = hashSetOf()
 
 fun nyNavIdent(): String {
-	val navIdent = ('a'..'z').random() + (100000..999999).random().toString()
+	val navIdent = ('A'..'Z').random() + (100000..999999).random().toString()
 	if (navidener.contains(navIdent)) {
 		return nyNavIdent()
 	}
