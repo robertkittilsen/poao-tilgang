@@ -37,6 +37,15 @@ class ApiCoreMapper(private val adGruppeProvider: AdGruppeProvider) {
 					tilgangType = TilgangType.SKRIVE
 				)
 			}
+			PolicyId.NAV_ANSATT_NAV_IDENT_LESETILGANG_TIL_EKSTERN_BRUKER_V1 -> {
+				val dto = fromJsonNode<NavAnsattNavIdentLesetilgangTilEksternBrukerPolicyInputV1Dto>(policyInput)
+
+				NavAnsattTilgangTilEksternBrukerPolicy.Input(
+					navAnsattAzureId = adGruppeProvider.hentAzureIdMedNavIdent(dto.navIdent),
+					norskIdent = dto.norskIdent,
+					tilgangType = TilgangType.LESE
+				)
+			}
 			PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2 -> {
 				val dto = fromJsonNode<NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto>(policyInput)
 
@@ -70,6 +79,13 @@ class ApiCoreMapper(private val adGruppeProvider: AdGruppeProvider) {
 				)
 			}
 
+			PolicyId.NAV_ANSATT_NAV_IDENT_TILGANG_TIL_NAV_ENHET_V1 -> {
+				val dto = fromJsonNode<NavAnsattNavIdentTilgangTilNavEnhetPolicyInputV1Dto>(policyInput)
+				NavAnsattTilgangTilNavEnhetPolicy.Input(
+					navEnhetId = dto.navEnhetId,
+					navAnsattAzureId = adGruppeProvider.hentAzureIdMedNavIdent(dto.navIdent)
+				)
+			}
 			PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1 -> {
 				val dto = fromJsonNode<NavAnsattBehandleStrengtFortroligBrukerePolicyInputV1Dto>(policyInput)
 				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(
