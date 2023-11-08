@@ -26,6 +26,7 @@ class ApiCoreMapper(private val adGruppeProvider: AdGruppeProvider) {
 		return objectMapper.treeToValue(jsonNode)
 
 	}
+
 	fun mapToPolicyInput(policyId: PolicyId, policyInput: JsonNode): PolicyInput {
 		return when (policyId) {
 			PolicyId.NAV_ANSATT_NAV_IDENT_SKRIVETILGANG_TIL_EKSTERN_BRUKER_V1 -> {
@@ -37,6 +38,17 @@ class ApiCoreMapper(private val adGruppeProvider: AdGruppeProvider) {
 					tilgangType = TilgangType.SKRIVE
 				)
 			}
+
+			PolicyId.NAV_ANSATT_NAV_IDENT_LESETILGANG_TIL_EKSTERN_BRUKER_V1 -> {
+				val dto = fromJsonNode<NavAnsattNavIdentLesetilgangTilEksternBrukerPolicyInputV1Dto>(policyInput)
+
+				NavAnsattTilgangTilEksternBrukerPolicy.Input(
+					navAnsattAzureId = adGruppeProvider.hentAzureIdMedNavIdent(dto.navIdent),
+					norskIdent = dto.norskIdent,
+					tilgangType = TilgangType.LESE
+				)
+			}
+
 			PolicyId.NAV_ANSATT_TILGANG_TIL_EKSTERN_BRUKER_V2 -> {
 				val dto = fromJsonNode<NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto>(policyInput)
 
@@ -49,8 +61,9 @@ class ApiCoreMapper(private val adGruppeProvider: AdGruppeProvider) {
 					}
 				)
 			}
+
 			PolicyId.NAV_ANSATT_TILGANG_TIL_MODIA_V1 -> {
-				val dto =  fromJsonNode<NavAnsattTilgangTilModiaPolicyInputV1Dto>(policyInput)
+				val dto = fromJsonNode<NavAnsattTilgangTilModiaPolicyInputV1Dto>(policyInput)
 				NavAnsattTilgangTilModiaPolicy.Input(dto.navAnsattAzureId)
 			}
 
@@ -70,10 +83,25 @@ class ApiCoreMapper(private val adGruppeProvider: AdGruppeProvider) {
 				)
 			}
 
+			PolicyId.NAV_ANSATT_NAV_IDENT_TILGANG_TIL_NAV_ENHET_V1 -> {
+				val dto = fromJsonNode<NavAnsattNavIdentTilgangTilNavEnhetPolicyInputV1Dto>(policyInput)
+				NavAnsattTilgangTilNavEnhetPolicy.Input(
+					navEnhetId = dto.navEnhetId,
+					navAnsattAzureId = adGruppeProvider.hentAzureIdMedNavIdent(dto.navIdent)
+				)
+			}
+
 			PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1 -> {
 				val dto = fromJsonNode<NavAnsattBehandleStrengtFortroligBrukerePolicyInputV1Dto>(policyInput)
 				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(
 					navAnsattAzureId = dto.navAnsattAzureId
+				)
+			}
+
+			PolicyId.NAV_ANSATT_NAV_IDENT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1 -> {
+				val dto = fromJsonNode<NavAnsattNavIdentBehandleStrengtFortroligBrukerePolicyInputV1Dto>(policyInput)
+				NavAnsattBehandleStrengtFortroligBrukerePolicy.Input(
+					navAnsattAzureId = adGruppeProvider.hentAzureIdMedNavIdent(dto.navIdent)
 				)
 			}
 
@@ -83,6 +111,14 @@ class ApiCoreMapper(private val adGruppeProvider: AdGruppeProvider) {
 					navAnsattAzureId = dto.navAnsattAzureId
 				)
 			}
+
+			PolicyId.NAV_ANSATT_NAV_IDENT_BEHANDLE_FORTROLIG_BRUKERE_V1 -> {
+				val dto = fromJsonNode<NavAnsattNavIdentBehandleFortroligBrukerePolicyInputV1Dto>(policyInput)
+				NavAnsattBehandleFortroligBrukerePolicy.Input(
+					navAnsattAzureId = adGruppeProvider.hentAzureIdMedNavIdent(dto.navIdent)
+				)
+			}
+
 			PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_MED_SPERRE_V1 -> {
 				val dto = fromJsonNode<NavAnsattTilgangTilNavEnhetMedSperrePolicyInputV1Dto>(policyInput)
 				NavAnsattTilgangTilNavEnhetMedSperrePolicy.Input(
@@ -90,10 +126,18 @@ class ApiCoreMapper(private val adGruppeProvider: AdGruppeProvider) {
 					navEnhetId = dto.navEnhetId,
 				)
 			}
+
 			PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1 -> {
 				val dto = fromJsonNode<NavAnsattBehandleSkjermedePersonerPolicyInputV1Dto>(policyInput)
 				NavAnsattBehandleSkjermedePersonerPolicy.Input(
 					navAnsattAzureId = dto.navAnsattAzureId
+				)
+			}
+
+			PolicyId.NAV_ANSATT_NAV_IDENT_BEHANDLE_SKJERMEDE_PERSONER_V1 -> {
+				val dto = fromJsonNode<NavAnsattNavIdentBehandleSkjermedePersonerPolicyInputV1Dto>(policyInput)
+				NavAnsattBehandleSkjermedePersonerPolicy.Input(
+					navAnsattAzureId = adGruppeProvider.hentAzureIdMedNavIdent(dto.navIdent)
 				)
 			}
 		}

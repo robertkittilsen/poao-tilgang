@@ -19,6 +19,11 @@ data class NavAnsattNavIdentSkrivetilgangTilEksternBrukerPolicyInput(
 	val norskIdent: String
 ) : PolicyInput()
 
+data class NavAnsattNavIdentLesetilgangTilEksternBrukerPolicyInput(
+	val navIdent: String,
+	val norskIdent: String
+) : PolicyInput()
+
 data class NavAnsattTilgangTilModiaPolicyInput(
 	val navAnsattAzureId: UUID
 ) : PolicyInput()
@@ -33,12 +38,25 @@ data class NavAnsattTilgangTilNavEnhetPolicyInput(
 	val navEnhetId: String
 ) : PolicyInput()
 
+data class NavAnsattNavIdentTilgangTilNavEnhetPolicyInput(
+	val navIdent: String,
+	val navEnhetId: String
+) : PolicyInput()
+
 data class NavAnsattBehandleStrengtFortroligBrukerePolicyInput(
 	val navAnsattAzureId: UUID,
 ) : PolicyInput()
 
+data class NavAnsattNavIdentBehandleStrengtFortroligBrukerePolicyInput(
+	val navIdent: String,
+) : PolicyInput()
+
 data class NavAnsattBehandleFortroligBrukerePolicyInput(
 	val navAnsattAzureId: UUID,
+) : PolicyInput()
+
+data class NavAnsattNavIdentBehandleFortroligBrukerePolicyInput(
+	val navIdent: String,
 ) : PolicyInput()
 
 data class NavAnsattTilgangTilNavEnhetMedSperrePolicyInput(
@@ -48,4 +66,8 @@ data class NavAnsattTilgangTilNavEnhetMedSperrePolicyInput(
 
 data class NavAnsattBehandleSkjermedePersonerPolicyInput(
 	val navAnsattAzureId: UUID,
+) : PolicyInput()
+
+data class NavAnsattNavIdentBehandleSkjermedePersonerPolicyInput(
+	val navIdent: String,
 ) : PolicyInput()

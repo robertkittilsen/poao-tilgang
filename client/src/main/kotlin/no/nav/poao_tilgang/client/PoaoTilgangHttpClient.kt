@@ -147,12 +147,22 @@ fun toRequestDto(policyRequest: PolicyRequest): PolicyEvaluationRequestDto<Any> 
 			policyId = PolicyId.NAV_ANSATT_NAV_IDENT_SKRIVETILGANG_TIL_EKSTERN_BRUKER_V1
 		)
 
+		is NavAnsattNavIdentLesetilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattNavIdentLesetilgangTilEksternBrukerPolicyInputV1Dto(
+				navIdent = policyRequest.policyInput.navIdent,
+				norskIdent = policyRequest.policyInput.norskIdent,
+
+				),
+			policyId = PolicyId.NAV_ANSATT_NAV_IDENT_LESETILGANG_TIL_EKSTERN_BRUKER_V1
+		)
+
 		is NavAnsattTilgangTilEksternBrukerPolicyInput -> PolicyEvaluationRequestDto(
 			requestId = policyRequest.requestId,
 			policyInput = NavAnsattTilgangTilEksternBrukerPolicyInputV2Dto(
 				navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId,
 				norskIdent = policyRequest.policyInput.norskIdent,
-				tilgangType = when(policyRequest.policyInput.tilgangType) {
+				tilgangType = when (policyRequest.policyInput.tilgangType) {
 					TilgangType.LESE -> no.nav.poao_tilgang.api.dto.request.TilgangType.LESE
 					TilgangType.SKRIVE -> no.nav.poao_tilgang.api.dto.request.TilgangType.SKRIVE
 				}
@@ -186,6 +196,15 @@ fun toRequestDto(policyRequest: PolicyRequest): PolicyEvaluationRequestDto<Any> 
 			policyId = PolicyId.NAV_ANSATT_TILGANG_TIL_NAV_ENHET_V1
 		)
 
+		is NavAnsattNavIdentTilgangTilNavEnhetPolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattNavIdentTilgangTilNavEnhetPolicyInput(
+				navIdent = policyRequest.policyInput.navIdent,
+				navEnhetId = policyRequest.policyInput.navEnhetId
+			),
+			policyId = PolicyId.NAV_ANSATT_NAV_IDENT_TILGANG_TIL_NAV_ENHET_V1
+		)
+
 		is NavAnsattBehandleStrengtFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
 			requestId = policyRequest.requestId,
 			policyInput = NavAnsattBehandleStrengtFortroligBrukerePolicyInputV1Dto(
@@ -194,12 +213,28 @@ fun toRequestDto(policyRequest: PolicyRequest): PolicyEvaluationRequestDto<Any> 
 			policyId = PolicyId.NAV_ANSATT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1
 		)
 
+		is NavAnsattNavIdentBehandleStrengtFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattNavIdentBehandleStrengtFortroligBrukerePolicyInputV1Dto(
+				navIdent = policyRequest.policyInput.navIdent
+			),
+			policyId = PolicyId.NAV_ANSATT_NAV_IDENT_BEHANDLE_STRENGT_FORTROLIG_BRUKERE_V1
+		)
+
 		is NavAnsattBehandleFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
 			requestId = policyRequest.requestId,
 			policyInput = NavAnsattBehandleFortroligBrukerePolicyInputV1Dto(
 				navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
 			),
 			policyId = PolicyId.NAV_ANSATT_BEHANDLE_FORTROLIG_BRUKERE_V1
+		)
+
+		is NavAnsattNavIdentBehandleFortroligBrukerePolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattNavIdentBehandleFortroligBrukerePolicyInputV1Dto(
+				navIdent = policyRequest.policyInput.navIdent
+			),
+			policyId = PolicyId.NAV_ANSATT_NAV_IDENT_BEHANDLE_FORTROLIG_BRUKERE_V1
 		)
 
 		is NavAnsattTilgangTilNavEnhetMedSperrePolicyInput -> PolicyEvaluationRequestDto(
@@ -217,6 +252,14 @@ fun toRequestDto(policyRequest: PolicyRequest): PolicyEvaluationRequestDto<Any> 
 				navAnsattAzureId = policyRequest.policyInput.navAnsattAzureId
 			),
 			policyId = PolicyId.NAV_ANSATT_BEHANDLE_SKJERMEDE_PERSONER_V1
+		)
+
+		is NavAnsattNavIdentBehandleSkjermedePersonerPolicyInput -> PolicyEvaluationRequestDto(
+			requestId = policyRequest.requestId,
+			policyInput = NavAnsattNavIdentBehandleSkjermedePersonerPolicyInputV1Dto(
+				navIdent = policyRequest.policyInput.navIdent
+			),
+			policyId = PolicyId.NAV_ANSATT_NAV_IDENT_BEHANDLE_SKJERMEDE_PERSONER_V1
 		)
 	}
 }
