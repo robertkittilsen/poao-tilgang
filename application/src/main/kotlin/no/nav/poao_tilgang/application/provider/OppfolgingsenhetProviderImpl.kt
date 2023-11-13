@@ -1,6 +1,8 @@
 package no.nav.poao_tilgang.application.provider
 
 import com.github.benmanes.caffeine.cache.Caffeine
+import no.nav.common.types.identer.Fnr
+import no.nav.poao_tilgang.application.client.veilarbarena.PersonRequest
 import no.nav.poao_tilgang.application.client.veilarbarena.VeilarbarenaClient
 import no.nav.poao_tilgang.application.utils.CacheUtils.tryCacheFirstNullable
 import no.nav.poao_tilgang.core.domain.NavEnhetId
@@ -19,8 +21,9 @@ class OppfolgingsenhetProviderImpl(
 		.build<NorskIdent, NavEnhetId>()
 
 	override fun hentOppfolgingsenhet(norskIdent: NorskIdent): NavEnhetId? {
+		val personRequest = PersonRequest(Fnr.of(norskIdent))
 		return tryCacheFirstNullable(norskIdentToOppfolgingsenhetCache, norskIdent) {
-			return@tryCacheFirstNullable veilarbarenaClient.hentBrukerOppfolgingsenhetId(norskIdent)
+			return@tryCacheFirstNullable veilarbarenaClient.hentBrukerOppfolgingsenhetId(personRequest)
 		}
 	}
 

@@ -1,7 +1,9 @@
 package no.nav.poao_tilgang.application.client.veilarbarena
 
 import io.kotest.matchers.shouldBe
+import no.nav.common.types.identer.Fnr
 import no.nav.poao_tilgang.application.test_util.mock_clients.MockVeilarbarenaHttpServer
+import no.nav.poao_tilgang.application.utils.JsonUtils
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -31,18 +33,22 @@ class VeilarbarenaClientImplTest {
 			consumerId = "poao-tilgang"
 		)
 
-		mockServer.mockOppfolgingsenhet("987654", "1234")
+		val personRequest = PersonRequest(Fnr.of("987654"))
+		val personRequestJSON = JsonUtils.toJsonString(personRequest)
 
-		val oppfolgingsenhetId = client.hentBrukerOppfolgingsenhetId("987654")
+		mockServer.mockOppfolgingsenhet("1234")
+
+		val oppfolgingsenhetId = client.hentBrukerOppfolgingsenhetId(personRequest)
 
 		oppfolgingsenhetId shouldBe "1234"
 
 		val request = mockServer.latestRequest()
 
-		request.path shouldBe "/api/arena/status?fnr=987654"
-		request.method shouldBe "GET"
+		request.path shouldBe "/api/v2/arena/hent-status"
+		request.method shouldBe "POST"
 		request.getHeader("Authorization") shouldBe "Bearer TOKEN"
 		request.getHeader("Nav-Consumer-Id") shouldBe "poao-tilgang"
+		request.body.readUtf8() shouldBe personRequestJSON
 	}
 
 	@Test
@@ -53,9 +59,10 @@ class VeilarbarenaClientImplTest {
 			consumerId = "poao-tilgang"
 		)
 
-		mockServer.mockIngenOppfolgingsenhet("987654")
+		val personRequest = PersonRequest(Fnr.of("987654"))
+		mockServer.mockIngenOppfolgingsenhet(personRequest)
 
-		val oppfolgingsenhetId = client.hentBrukerOppfolgingsenhetId("987654")
+		val oppfolgingsenhetId = client.hentBrukerOppfolgingsenhetId(personRequest)
 
 		oppfolgingsenhetId shouldBe null
 	}

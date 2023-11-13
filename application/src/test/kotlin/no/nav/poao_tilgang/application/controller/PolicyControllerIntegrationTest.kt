@@ -403,7 +403,7 @@ class PolicyControllerIntegrationTest : IntegrationTest() {
 			)
 		)
 
-		mockVeilarbarenaHttpServer.mockOppfolgingsenhet(norskIdent, "1234")
+		mockVeilarbarenaHttpServer.mockOppfolgingsenhet("1234")
 		mockAdGrupperResponse(navIdent, navAnsattId, listOf(noAccessGroup))
 
 		mockAxsysHttpServer.mockHentTilgangerResponse(navIdent, listOf())

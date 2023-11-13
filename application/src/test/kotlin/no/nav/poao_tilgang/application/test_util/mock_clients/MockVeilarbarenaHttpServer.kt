@@ -1,13 +1,14 @@
 package no.nav.poao_tilgang.application.test_util.mock_clients
 
+import no.nav.poao_tilgang.application.client.veilarbarena.PersonRequest
 import no.nav.poao_tilgang.application.test_util.MockHttpServer
+import no.nav.poao_tilgang.application.utils.JsonUtils
 import no.nav.poao_tilgang.core.domain.NavEnhetId
-import no.nav.poao_tilgang.core.domain.NorskIdent
 import okhttp3.mockwebserver.MockResponse
 
 class MockVeilarbarenaHttpServer : MockHttpServer() {
 
-	fun mockOppfolgingsenhet(norskIdent: NorskIdent, oppfolgingsenhet: NavEnhetId) {
+	fun mockOppfolgingsenhet(oppfolgingsenhet: NavEnhetId) {
 		val response = MockResponse()
 			.setBody(
 				"""
@@ -22,19 +23,21 @@ class MockVeilarbarenaHttpServer : MockHttpServer() {
 			)
 
 		handleRequest(
-			matchPath = "/api/arena/status?fnr=$norskIdent",
-			matchMethod = "GET",
+			matchPath = "/api/v2/arena/hent-status",
+			matchMethod = "POST",
 			response = response
 		)
 	}
 
-	fun mockIngenOppfolgingsenhet(norskIdent: NorskIdent) {
+	fun mockIngenOppfolgingsenhet(personRequest: PersonRequest) {
+		val personRequestJSON = JsonUtils.toJsonString(personRequest)
 		val response = MockResponse()
 			.setResponseCode(404)
 
 		handleRequest(
-			matchPath = "/api/arena/status?fnr=$norskIdent",
-			matchMethod = "GET",
+			matchPath = "/api/v2/arena/hent-status",
+			matchMethod = "POST",
+			matchBodyContains = personRequestJSON,
 			response = response
 		)
 	}

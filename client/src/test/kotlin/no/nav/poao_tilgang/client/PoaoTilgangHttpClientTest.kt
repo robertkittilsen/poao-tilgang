@@ -315,7 +315,7 @@ class PoaoTilgangHttpClientTest : IntegrationTest() {
 			)
 		)
 
-		mockVeilarbarenaHttpServer.mockOppfolgingsenhet(norskIdent, "1234")
+		mockVeilarbarenaHttpServer.mockOppfolgingsenhet("1234")
 		mockAdGrupperResponse(
 			navIdent, navAnsattId, listOf(
 				AdGruppe(UUID.randomUUID(), "0000-some-group"),
