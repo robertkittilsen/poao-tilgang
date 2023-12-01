@@ -44,6 +44,9 @@ spec:
         - application: paw-arbeidssoker-besvarelse
           namespace: paw
           cluster: prod-gcp
+        - application: paw-arbeidssokerregisteret-api
+          namespace: paw
+          cluster: prod-gcp
         - application: amt-tiltak
           namespace: amt
         - application: amt-person-service
