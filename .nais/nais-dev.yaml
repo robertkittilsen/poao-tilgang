@@ -85,6 +85,9 @@ spec:
         - application: veilarbvedtakinfo
           namespace: pto
           cluster: dev-fss
+        - application: please
+          namespace: dab
+          cluster: dev-gcp
     outbound:
       rules:
         - application: skjermede-personer-pip
