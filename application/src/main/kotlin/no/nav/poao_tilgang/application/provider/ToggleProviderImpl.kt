@@ -5,8 +5,9 @@ import no.nav.poao_tilgang.core.provider.ToggleProvider
 import org.springframework.stereotype.Component
 
 @Component
-class ToggleProviderImpl(private val unleashClient: UnleashClient) : ToggleProvider {
+class ToggleProviderImpl(/*private val unleashClient: UnleashClient*/) : ToggleProvider {
 	override fun brukAbacDecision(): Boolean {
-		return !unleashClient.isEnabled("poao-tilgang.use-poao-tilgang-decision")
+		return !false
+//		return !unleashClient.isEnabled("poao-tilgang.use-poao-tilgang-decision")
 	}
 }
