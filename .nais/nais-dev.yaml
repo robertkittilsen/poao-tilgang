@@ -99,7 +99,6 @@ spec:
         - host: pdl-api.dev-fss-pub.nais.io
         - host: norg2.dev-fss-pub.nais.io
         - host: graph.microsoft.com
-        - host: unleash.nais.io
   env:
     - name: MICROSOFT_GRAPH_SCOPE
       value: https://graph.microsoft.com/.default
@@ -127,8 +126,6 @@ spec:
       value: https://pdl-api.dev-fss-pub.nais.io
     - name: NORG_URL
       value: https://norg2.dev-fss-pub.nais.io
-    - name: UNLEASH_URL
-      value: https://unleash.nais.io/api/
     - name: AD_GRUPPE_ID_FORTROLIG_ADRESSE
       value: ea930b6b-9397-44d9-b9e6-f4cf527a632a
     - name: AD_GRUPPE_ID_STRENGT_FORTROLIG_ADRESSE
