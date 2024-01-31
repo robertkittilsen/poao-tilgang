@@ -83,6 +83,9 @@ spec:
         - application: please
           namespace: dab
           cluster: prod-gcp
+        - application: paw-arbeidssokerregisteret-api-soek
+          namespace: paw
+          cluster: prod-gcp
     outbound:
       rules:
         - application: skjermede-personer-pip
