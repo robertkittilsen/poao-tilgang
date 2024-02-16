@@ -86,7 +86,7 @@ spec:
         - application: paw-arbeidssokerregisteret-api-soek
           namespace: paw
           cluster: prod-gcp
-        - application: paw-arbeidsoekerregisteret-api-oppslag
+        - application: paw-arbeidssoekerregisteret-api-oppslag
           namespace: paw
           cluster: prod-gcp
     outbound:
